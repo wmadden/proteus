@@ -11,22 +11,80 @@
 ################################################################################
 
 require 'yaml'
-require 'Component.rb'
+require 'Component'
+require 'Form'
+require 'Control'
 
-class HTMLBuilder
+module HTMLBuilder
+  
+  #
+  # Parses a YAML tree and returns a list of components.
+  #
+  def HTMLBuilder.parse(yaml)
+    puts yaml.class
+    case 
+      # If given a string
+      when yaml.is_a?(String):
+        # If it's a component, load it
+        if yaml.is_component?
+          return Component.load(yaml)
+        # Otherwise, return the string
+        else
+          return yaml
+        end
+      
+      # If given a list
+      when yaml.is_a?(Array):
+        # Go through it, parsing its elements
+        results = []
+        
+        yaml.each do |elem|
+          results.push parse(elem)
+        end
+        
+        return results
+      
+      # If given a hash
+      when yaml.is_a?(Hash):
+        results = {}
 
-  #
-  # Parses text and returns the resultant components.
-  #
-  def parse(source)
-    YAML::parse(source)
+        # If there's only one entry in the hash, and it's a component,
+        # initialize and return the component
+        if yaml.length == 1
+          yaml.each do |name, params|
+            if( name.is_component? )
+              return Component.load(name, parse(params))
+            end
+          end
+        end
+        
+        # Otherwise, go through each pair in the hash and parse them
+        yaml.each do |name, params|
+          # If it's a component, load it and store it in the hash as the key,
+          # with its name as its value
+          if name.is_component?
+            component = Component.load(name, parse(params))
+            results[component] = name
+            
+          # Otherwise, parse the value and store it in the hash with the same
+          # key
+          else
+            results[name] = parse(params)
+          end
+        end
+        
+        return results
+        
+      when yaml.is_a?(Object):
+        # When given anything else, just return the value
+        return yaml
+    end
   end
-
   
   #
   # Parses and renders the given source.
   #
-  def render(format, source)
+  def HTMLBuilder.render(format, source)
     output = ""
     components = parse(source)
     
@@ -37,10 +95,21 @@ class HTMLBuilder
   
 end
 
+class String
+  def is_component?
+    self =~ /^[A-Z]/
+  end
+end
+
 # Entry point
-h = HTMLBuilder.new
 
 for arg in ARGV do
-  puts "Parsing #{arg}"
-  puts h.parse( File.open(arg) ).to_yaml
+  puts "Parsing #{arg}: " + YAML::load_file(arg).inspect
+  components = HTMLBuilder::parse( YAML::load_file(arg) )
+  puts components.inspect
+  for component in components
+    puts component.render :xhtml
+  end
 end
+
+

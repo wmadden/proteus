@@ -1,15 +1,15 @@
----
-@Form:
-  @FormControl:
-    name: name
+- Form:
+  - Control:
+      name: name
   
-  @FormControl:
-    name: age
+  - Control:
+      name: age
     
-  @FormControl:
-    name: gender
-    type: select
-    options:
-      male
-      female
+  - Control:
+      name: gender
+      type: select
+      options:
+        - male
+        - female
 
+- Thing:
