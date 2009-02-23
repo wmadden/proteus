@@ -103,10 +103,12 @@ end
 # Entry point
 
 for arg in ARGV do
-  puts "Parsing #{arg}: #{arg}"
+  #puts "Parsing #{arg}: #{arg}"
+  
   components = HTMLBuilder::parse( YAML::load_file(arg) )
+  
   for component in components
-    puts component.render :xhtml
+    puts component.render(:xhtml)
   end
 end
 
