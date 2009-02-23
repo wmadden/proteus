@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 ################################################################################
 # HTMLBuilder.rb
 #
@@ -9,7 +10,8 @@
 # w.a.madden@gmail.com
 ################################################################################
 
-require "Component.rb"
+require 'yaml'
+require 'Component.rb'
 
 class HTMLBuilder
 
@@ -17,8 +19,7 @@ class HTMLBuilder
   # Parses text and returns the resultant components.
   #
   def parse(source)
-    # TODO: write me
-    return []
+    YAML::parse(source)
   end
 
   
@@ -34,4 +35,12 @@ class HTMLBuilder
     end
   end
   
+end
+
+# Entry point
+h = HTMLBuilder.new
+
+for arg in ARGV do
+  puts "Parsing #{arg}"
+  puts h.parse( File.open(arg) ).to_yaml
 end

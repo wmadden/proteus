@@ -1,14 +1,15 @@
 ---
-!ruby/object:Form
-  -!ruby/object:FormControl
+@Form:
+  @FormControl:
     name: name
   
-  -!ruby/object:FormControl
+  @FormControl:
     name: age
     
-  -!ruby/object:FormControl
+  @FormControl:
     name: gender
     type: select
     options:
       male
       female
+
