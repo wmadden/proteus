@@ -39,8 +39,6 @@ class Form < Component
         end
       end
     end
-    
-    puts "Controls: #{@controls}"
   end
 
   def render_children
