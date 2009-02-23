@@ -1,0 +1,14 @@
+---
+!ruby/object:Form
+  -!ruby/object:FormControl
+    name: name
+  
+  -!ruby/object:FormControl
+    name: age
+    
+  -!ruby/object:FormControl
+    name: gender
+    type: select
+    options:
+      male
+      female
