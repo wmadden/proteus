@@ -21,7 +21,6 @@ module HTMLBuilder
   # Parses a YAML tree and returns a list of components.
   #
   def HTMLBuilder.parse(yaml)
-    puts yaml.class
     case 
       # If given a string
       when yaml.is_a?(String):
@@ -104,9 +103,8 @@ end
 # Entry point
 
 for arg in ARGV do
-  puts "Parsing #{arg}: " + YAML::load_file(arg).inspect
+  puts "Parsing #{arg}: #{arg}"
   components = HTMLBuilder::parse( YAML::load_file(arg) )
-  puts components.inspect
   for component in components
     puts component.render :xhtml
   end

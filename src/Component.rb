@@ -23,8 +23,6 @@ class Component
     @kind = kind
     @params = params
     
-    puts "Initializing #{kind}, #{params.inspect}"
-    
     init(params)
   end
   

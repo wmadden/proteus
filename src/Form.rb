@@ -23,7 +23,6 @@ class Form < Component
   end
 
   def init( params )
-    puts "INIT"
     @controls = []
     
     if( params.is_a? Hash )
