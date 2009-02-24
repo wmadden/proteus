@@ -9,16 +9,16 @@
 ################################################################################
 
 require 'erb'
-require 'ComponentDefinition'
 
 class Component
 
-  attr_accessor :kind, :params, :children, :template, :decorators, :definition
+  attr_accessor :kind, :children, :template, :decorators, :definition
+  attr_reader :params
 
   #
   # Constructor.
   #
-  def initialize( definition = ComponentDefinition.Default,
+  def initialize( definition,
                   params = {},
                   children = [],
                   template = "",
@@ -45,14 +45,20 @@ class Component
     for decorator in decorators
       decorator.decorate(output, format)
     end
+    
+    return output
   end
   
   #
   # Renders this component alone.
   #
   def render_self( format = :xhtml )
-    e = ERB.new(@template)
-    e.result( binding() )
+    begin
+      e = ERB.new(@template)
+      e.result( binding() )
+    rescue Exception
+      throw "Error rendering template: #{$!.message}\n#{$!.backtrace}"
+    end
   end
 
   #
@@ -60,28 +66,21 @@ class Component
   # string.
   #  
   def render_children( format = :xhtml )
+    output = ""
+    
     @children.each do |child|
-      output += child.render(format)
+      output += child.render(format).to_s
     end
     
     return output
   end
   
-  #
-  # Loads a component given its kind and YAML node value.
-  #
-  def load(kind, value)
-    definition = ComponentDefinition.load(yaml)
-    
-    case
-      when value.is_a?(Hash):
-        definition.instantiate(value)
-
-      when value.is_a?(Array):
-        definition.instantiate({}, value)
-
-      when value.nil?:
-        definition.instantiate()
+  def missing_method(m, args)
+    puts "Checking for #{m} in params... #{@params[m].nil? ? "N" : "Y"}"
+    if not @params[m].nil?
+      return @params[m]
+    else
+      super.missing_method(m, args)
     end
   end
 end

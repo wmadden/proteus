@@ -62,11 +62,6 @@ class ComponentDefinition
     else
       concrete_class = get_class(kind)
       
-      if !concrete_class.is_a?(Component)
-        throw "Class #{concrete_class} does not inherit from Component."
-      end
-      
-      
       definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
     end
 
@@ -128,10 +123,6 @@ class ComponentDefinition
       else
         concrete_class = load(parent).concrete_class
       end
-    end
-    
-    if ancestors.last != "Component"
-      throw "Component definition does not inherit from Component!"
     end
     
     component = ComponentDefinition.new(kind, defaults, ancestors, concrete_class)

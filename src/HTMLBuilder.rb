@@ -24,7 +24,7 @@ module HTMLBuilder
       # If given a string
       when yaml.is_a?(String):
         # If it's a component, load it
-        if yaml.is_component?
+        if is_component?(yaml)
           return load_component(yaml)
         # Otherwise, return the string
         else
@@ -50,7 +50,7 @@ module HTMLBuilder
         # initialize and return the component
         if yaml.length == 1
           yaml.each do |name, params|
-            if( name.is_component? )
+            if( is_component?(name) )
               return load_component(name, parse(params))
             end
           end
@@ -60,7 +60,7 @@ module HTMLBuilder
         yaml.each do |name, params|
           # If it's a component, load it and store it in the hash as the key,
           # with its name as its value
-          if name.is_component?
+          if is_component?(name)
             component = load_component(name, parse(params))
             results[component] = name
             
@@ -109,13 +109,14 @@ module HTMLBuilder
     end
   end
   
-end
-
-class String
-  def is_component?
-    self =~ /^[A-Z]/
+  #
+  # Returns true if argument is a component string.
+  #
+  def HTMLBuilder.is_component?(str)
+    str =~ /^[A-Z]/
   end
 end
+
 
 # Entry point
 
@@ -125,7 +126,7 @@ for arg in ARGV do
   components = HTMLBuilder::parse( YAML::load_file(arg) )
   
   for component in components
-    puts component.render(:xhtml)
+    puts component.render(:xhtml).to_s
   end
 end
 
