@@ -1,0 +1,11 @@
+SelectInput:
+  template: |
+    <select name="<%= params[:name] %>">
+      <% params[:options].each do |value, name| %>
+        <option value="<%= value %>"><%= name %></option>
+      <% end %>
+    </select>
+    
+  parameters:
+    :options: {}
+    :name: 

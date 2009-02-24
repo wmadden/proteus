@@ -1,0 +1,18 @@
+Control:
+  template: |
+    <div class="control">
+      <% if @children.length == 2 %>
+        <%= render_children %>
+      <% else %>
+        <div class="label">
+          <label for="<%= params["name"] %>"><%= params["name"] %></label>
+        </div>
+        <div class="input">
+          <input name="<%= params["name"] %>" type="<%= params["type"] %>" />
+        </div>
+      <% end %>
+    </div>
+
+  parameters:
+    name:
+    type: text

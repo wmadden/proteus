@@ -6,8 +6,11 @@
       name: age
     
   - Control:
-      name: gender
-      type: select
-      options:
-        - male
-        - female
+      - Label:
+          for: gender
+      - SelectInput:
+          :name: gender
+          :type: select
+          :options:
+            male: male
+            female: female
