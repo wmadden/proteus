@@ -25,7 +25,7 @@ module HTMLBuilder
       when yaml.is_a?(String):
         # If it's a component, load it
         if yaml.is_component?
-          return Component.load(yaml)
+          return load_component(yaml)
         # Otherwise, return the string
         else
           return yaml
@@ -51,7 +51,7 @@ module HTMLBuilder
         if yaml.length == 1
           yaml.each do |name, params|
             if( name.is_component? )
-              return Component.load(name, parse(params))
+              return load_component(name, parse(params))
             end
           end
         end
@@ -61,7 +61,7 @@ module HTMLBuilder
           # If it's a component, load it and store it in the hash as the key,
           # with its name as its value
           if name.is_component?
-            component = Component.load(name, parse(params))
+            component = load_component(name, parse(params))
             results[component] = name
             
           # Otherwise, parse the value and store it in the hash with the same
@@ -76,6 +76,24 @@ module HTMLBuilder
       when yaml.is_a?(Object):
         # When given anything else, just return the value
         return yaml
+    end
+  end
+  
+  #
+  # Loads a component given its kind and YAML node value.
+  #
+  def HTMLBuilder.load_component(kind, value)
+    definition = ComponentDefinition.load(kind)
+    
+    case
+      when value.is_a?(Hash):
+        definition.instantiate(value)
+
+      when value.is_a?(Array):
+        definition.instantiate({}, value)
+
+      when value.nil?:
+        definition.instantiate()
     end
   end
   
