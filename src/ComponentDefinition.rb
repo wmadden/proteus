@@ -58,7 +58,7 @@ class ComponentDefinition
     
     if File.exist?(file)
       yaml = YAML::load_file(file)
-      parse(kind, yaml)
+      definition = parse(kind, yaml)
     else
       concrete_class = get_class(kind)
       
@@ -66,10 +66,14 @@ class ComponentDefinition
         throw "Class #{concrete_class} does not inherit from Component."
       end
       
-      # Instantiate the new definition and store it in the hash
+      
       definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
-      @@definitions[kind] = definition
     end
+
+    # TODO: combine defaults with parent's defaults    
+    
+    # Store it in the hash  
+    @@definitions[kind] = definition
   end
   
   #
@@ -130,9 +134,7 @@ class ComponentDefinition
       throw "Component definition does not inherit from Component!"
     end
     
-    # Instantiate the new definition and store it in the hash
     component = ComponentDefinition.new(kind, defaults, ancestors, concrete_class)
-    @@definitions[type] = component
   end
   
   #
