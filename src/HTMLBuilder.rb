@@ -12,8 +12,7 @@
 
 require 'yaml'
 require 'Component'
-require 'Form'
-require 'Control'
+require 'ComponentDefinition'
 
 module HTMLBuilder
   
