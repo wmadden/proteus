@@ -13,17 +13,23 @@ require 'ComponentDefinition'
 
 class Component
 
-  attr_accessor :kind, :params, :children, :template, :decorators
+  attr_accessor :kind, :params, :children, :template, :decorators, :definition
 
   #
   # Constructor.
   #
-  def initialize( kind = "Component", params = {}, children = [], template = "", decorators = [])
-    @kind = kind
-    @params = params
+  def initialize( definition = ComponentDefinition.Default,
+                  params = {},
+                  children = [],
+                  template = "",
+                  decorators = [] )
+
+    @kind = definition.kind
     @children = children
     @template = template
     @decorators = decorators
+    @params = params
+    @definition = definition
   end
   
   #
@@ -68,13 +74,13 @@ class Component
     definition = ComponentDefinition.load(yaml)
     
     case
-      value.is_a? Hash:
+      when value.is_a?(Hash):
         definition.instantiate(value)
 
-      value.is_a? Array:
+      when value.is_a?(Array):
         definition.instantiate({}, value)
 
-      value.nil?:
+      when value.nil?:
         definition.instantiate()
     end
   end
