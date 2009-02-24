@@ -1,14 +1,14 @@
 - Form:
   - Control:
-      name: name
+      :name: name
   
   - Control:
-      name: age
+      :name: age
     
   - Control:
-      - Label:
-          for: gender
-      - SelectInput:
+      :name: gender
+      :input:
+        SelectInput:
           :name: gender
           :type: select
           :options:

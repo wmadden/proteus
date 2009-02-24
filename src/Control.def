@@ -1,18 +1,24 @@
 Control:
   template: |
     <div class="control">
-      <% if @children.length == 2 %>
-        <%= render_children %>
-      <% else %>
-        <div class="label">
-          <label for="<%= params["name"] %>"><%= params["name"] %></label>
-        </div>
-        <div class="input">
-          <input name="<%= params["name"] %>" type="<%= params["type"] %>" />
-        </div>
-      <% end %>
+      <div class="label">
+        <% if not params[:label].nil? %>
+          <%= params[:label].render %>
+        <% else %>
+          <label for="<%= params[:name] %>"><%= params[:name] %></label>
+        <% end %>
+      </div>
+      <div class="input">
+        <% if not params[:input].nil? %>
+          <%= params[:input].render %>
+        <% else %>
+          <input name="<%= params[:name] %>" type="<%= params[:type] %>" />
+        <% end %>
+      </div>
     </div>
 
   parameters:
-    name:
-    type: text
+    :name:
+    :type: text
+    :label: ~
+    :input: ~
