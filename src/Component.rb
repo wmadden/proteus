@@ -9,6 +9,7 @@
 ################################################################################
 
 require 'erb'
+require 'ComponentDefinition'
 
 class Component
 
@@ -58,6 +59,24 @@ class Component
     end
     
     return output
+  end
+  
+  #
+  # Loads a component given its kind and YAML node value.
+  #
+  def load(kind, value)
+    definition = ComponentDefinition.load(yaml)
+    
+    case
+      value.is_a? Hash:
+        definition.instantiate(value)
+
+      value.is_a? Array:
+        definition.instantiate({}, value)
+
+      value.nil?:
+        definition.instantiate()
+    end
   end
 end
 
