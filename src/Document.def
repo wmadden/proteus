@@ -1,0 +1,17 @@
+Document:
+  template: |
+    <div id="doc">
+      <div id="hd">
+        <%= params[:header].render %>
+      </div>
+      <div id="bd">
+        <%= params[:body].render %>
+      </div>
+      <div id="ft">
+        <%= params[:footer].render %>
+      </div>
+    </div>
+    
+    <div id="copyright">
+      <%= params[:copyright] %>
+    </div>
