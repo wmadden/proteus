@@ -44,11 +44,16 @@ module Bob
       # If given a hash
       when yaml.is_a?(Hash):
         # TODO: come up with better syntax for this
-        if yaml.length == 1 and component_name?(yaml.to_a[0][0])
-          return load_component(yaml.to_a[0][0], yaml.to_a[0][1])
-        else
-          return yaml.inject({}) { |acc, elem| acc[elem[0]] = parse(elem[1]) }
+         # TODO: come up with better syntax for this
+        if yaml.length == 1
+          yaml.each do |key, value|
+            if component_name?(key)
+               return load_component(key, parse(value))
+            end
+          end
         end
+        
+        return yaml.inject({}) { |acc, elem| acc[elem[0]] = parse(elem[1]) }
     end
   end
   
