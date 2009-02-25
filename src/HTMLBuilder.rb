@@ -22,72 +22,54 @@ module HTMLBuilder
   def HTMLBuilder.parse(yaml)
     case 
       # If given a string
-      when yaml.is_a?(String):
-        # If it's a component, load it
-        if is_component?(yaml)
-          return load_component(yaml, nil)
-        # Otherwise, return the string
-        else
-          return yaml
-        end
+      when is_scalar?(yaml):
+        load_component(yaml)
       
       # If given a list
       when yaml.is_a?(Array):
-        # Go through it, parsing its elements
-        results = []
+        # Map list to a list of components
+        yaml.map { |elem| load_component(elem) }
         
-        yaml.each do |elem|
-          results.push parse(elem)
-        end
-        
-        return results
-      
       # If given a hash
       when yaml.is_a?(Hash):
-        results = {}
-
-        # If there's only one entry in the hash, and it's a component,
-        # initialize and return the component
-        if yaml.length == 1
-          yaml.each do |name, params|
-            if( is_component?(name) )
-              return load_component(name, parse(params))
-            end
-          end
+        # TODO: come up with better syntax for this
+        if yaml.length == 1 and component_string?(yaml.to_a[0][0])
+          load_component(yaml.to_a[0][0], yaml.to_a[0][1])
+        else
+          yaml.inject({}) { |acc, elem| acc[elem[0]] = parse(elem[1]) }
         end
-        
-        # Otherwise, go through each pair in the hash and parse them
-        yaml.each do |name, params|
-          # If it's a component, load it and store it in the hash as the key,
-          # with its name as its value
-          if is_component?(name)
-            component = load_component(name, parse(params))
-            results[component] = name
-            
-          # Otherwise, parse the value and store it in the hash with the same
-          # key
-          else
-            results[name] = parse(params)
-          end
-        end
-        
-        return results
-        
-      when yaml.is_a?(Object):
-        # When given anything else, just return the value
-        return yaml
     end
+  end
+  
+  #
+  # Returns if the given string is a valid component name.
+  #
+  def HTMLBuilder.component_name?(string)
+    # Valid if starts with uppercase and only contains alpha characters and _
+    string =~ /[A-Z][a-zA-Z_]*/
+  end
+  
+  protected
+  
+  #
+  # Returns true if the value is a scalar.
+  #
+  def HTMLBuilder.is_scalar?(value)
+    not (value.is_a?(Array) || value.is_a?(Hash))
   end
   
   #
   # Loads a component given its kind and YAML node value.
   #
-  def HTMLBuilder.load_component(kind, value)
-    definition = ComponentDefinition.load(kind)
-    
-    # If there's no definition, return the value
-    if definition.nil?
-      return value
+  def HTMLBuilder.load_component(kind, value = nil)
+    # If the kind is not a valid component name or we can't find the definition
+    if not (component_name?(kind) and definition = ComponentDefinition.load(kind))
+      if value
+        # If we're given a value, fail, we don't know what to do
+        throw "Malformed input"
+      else
+        return kind
+      end
     end
     
     # Otherwise, interpret its children and instantiate the component
@@ -101,25 +83,6 @@ module HTMLBuilder
       when value.nil?:
         definition.instantiate()
     end
-  end
-  
-  #
-  # Parses and renders the given source.
-  #
-  def HTMLBuilder.render(format, source)
-    output = ""
-    components = parse(source)
-    
-    for component in components
-      output += component.render(format)
-    end
-  end
-  
-  #
-  # Returns true if argument is a component string.
-  #
-  def HTMLBuilder.is_component?(str)
-    str =~ /^[A-Z]/
   end
 end
 
@@ -135,18 +98,6 @@ class Array
   end
 end
 
-class Hash
-  def render(format = :xhtml)
-    inject("") do |output, name, value|
-      if name.is_a? Component
-        output += name.render
-      else
-        output += value.render
-      end
-    end
-  end
-end
-
 # Entry point
 
 for arg in ARGV do
@@ -156,5 +107,4 @@ for arg in ARGV do
   
   puts components.render(:xhtml)
 end
-
 
