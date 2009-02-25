@@ -1,16 +1,21 @@
-- Form:
-  - Control:
-      :name: name
-  
-  - Control:
-      :name: age
-    
-  - Control:
-      :name: gender
-      :input:
-        SelectInput:
-          :name: gender
-          :type: select
-          :options:
-            male: male
-            female: female
+- XHTMLStrictDoctype
+
+- Document:
+    :body:
+      Form:
+        - Control:
+            :name: name
+
+        - Control:
+            :name: age
+
+        - Control:
+            :name: gender
+            :input:
+              SelectInput:
+                :options:
+                  male: male
+                  female: female
+
+    :copyright:
+      xCopyright Silverpond 2008
