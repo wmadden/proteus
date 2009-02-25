@@ -12,23 +12,25 @@ require 'erb'
 
 class Component
 
-  attr_accessor :kind, :children, :template, :decorators
-  attr_reader :params
-
+  attr_accessor :kind, :children, :template, :decorators, :params
+  
+  NameRegexp = /[A-Z][a-z_]*/
+  
   #
   # Constructor.
   #
-  def initialize( kind,
+  def initialize( kind = "Component",
                   params = {},
                   children = [],
                   template = "",
                   decorators = [] )
 
-    @kind = kind
-    @children = children
-    @template = template
-    @decorators = decorators
-    @params = params
+    # Ensure that these default to acceptable types
+    @kind = kind || "Component"
+    @children = children || []
+    @template = template || ""
+    @decorators = decorators || []
+    @params = params || {}
   end
   
   #
@@ -74,12 +76,18 @@ class Component
     return output
   end
   
-  def missing_method(m, args)
-    puts "Checking for #{m} in params... #{@params[m].nil? ? "N" : "Y"}"
-    if not @params[m].nil?
-      return @params[m]
+  #
+  # If we try to access a non-existant method within the scope of the Component,
+  # (e.g. while rendering the template), try and provide the matching parameter
+  # value
+  #
+  def method_missing(m, *args)
+    if @params.has_key?(m)
+      @params[m]
+    elsif @params.has_key?(m.to_s)
+      @params[m.to_s]
     else
-      super.missing_method(m, args)
+      super.method_missing(m, args)
     end
   end
 end
