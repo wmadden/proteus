@@ -1,0 +1,11 @@
+# The application layout
+
+- Document
+    :hd:
+        ApplicationMenu
+    
+    :bd:
+        <%= yield %>
+    
+    :copyright:
+        (c) Silverpond 2008

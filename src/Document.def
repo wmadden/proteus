@@ -1,17 +1,90 @@
+# Document
+#
+# Represents a typical document.
+# In XHTML, that is a doctype, html, head and body tags, and following my
+# conventions (which I adopted from YUI), #doc, #hd, #bd, #ft and #copyright
+# tags.
 Document:
-  template: |
-    <div id="doc">
-      <div id="hd">
-        <%= params[:header].render %>
-      </div>
-      <div id="bd">
-        <%= params[:body].render %>
-      </div>
-      <div id="ft">
-        <%= params[:footer].render %>
-      </div>
-    </div>
+  parameters:
+      
     
-    <div id="copyright">
-      <%= params[:copyright] %>
-    </div>
+    
+  
+  template: |
+    <%= @params[:doctype].render %>
+    
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+        
+    <head>
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+      <title>
+        <%= @params[:title].render %>
+      </title>
+
+      <!-- Use separate stylesheet includes for debugging, single include for
+        production. -->
+      <!--
+        <link rel="stylesheet" type="text/css" href="stylesheets/compile.css" />
+      -->
+
+      <!-- YUI -->
+      <!--<%= stylesheet_link_tag 'yui-2.5.2/reset-fonts-grids' %>-->
+      <link rel="stylesheet" type="text/css" href="stylesheets/yui-2.6.0/reset-fonts-grids.css" media="screen" />  
+
+      <!-- base -->
+      <!--<%= stylesheet_link_tag 'base' %>
+      <%= stylesheet_link_tag 'formatting' %>-->
+      <link rel="stylesheet" type="text/css" href="stylesheets/base.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/formatting.css" media="screen" />
+
+      <!-- modules -->
+      <!--<%= stylesheet_link_tag 'form' %>
+      <%= stylesheet_link_tag 'text-replace' %>
+      <%= stylesheet_link_tag 'tabs' %>
+      <%= stylesheet_link_tag 'button' %>
+      <%= stylesheet_link_tag 'nav' %>
+      <%= stylesheet_link_tag 'magic' %>
+      <%= stylesheet_link_tag 'flash' %>-->
+      <link rel="stylesheet" type="text/css" href="stylesheets/form.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/text-replace.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/tabs.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/button.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/nav.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/magic.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="stylesheets/flash.css" media="screen" />
+
+      <!-- print -->
+      <!--<%= stylesheet_link_tag 'print' %>-->
+      <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+      <!-- custom -->
+      <!--<%= stylesheet_link_tag 'custom' %>-->
+      <!--<link rel="stylesheet" type="text/css" href="stylesheets/custom.css" media="screen" />-->
+
+      <!-- Javascript -->
+      <!--<%= javascript_include_tag "jquery-1.2.6.min" %>
+      <%= javascript_include_tag "application" %>-->
+      <script type="text/javascript" src="javascripts/jquery-1.2.6.min.js"></script>
+      <script type="text/javascript" src="javascripts/application.js"></script>
+    </head>
+
+    <body>
+      <div id="doc">
+        <div id="hd">
+          <%= params[:hd].render %>
+        </div>
+        <div id="bd">
+          <%= params[:bd].render %>
+        </div>
+        <div id="ft">
+          <%= params[:ft].render %>
+        </div>
+      </div>
+
+      <div id="copyright">
+        <%= params[:copyright] %>
+      </div>
+    </body>
+
+    </html>
+    
