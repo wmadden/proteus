@@ -25,7 +25,7 @@ module HTMLBuilder
       when yaml.is_a?(String):
         # If it's a component, load it
         if is_component?(yaml)
-          return load_component(yaml)
+          return load_component(yaml, nil)
         # Otherwise, return the string
         else
           return yaml
@@ -85,6 +85,12 @@ module HTMLBuilder
   def HTMLBuilder.load_component(kind, value)
     definition = ComponentDefinition.load(kind)
     
+    # If there's no definition, return the value
+    if definition.nil?
+      return value
+    end
+    
+    # Otherwise, interpret its children and instantiate the component
     case
       when value.is_a?(Hash):
         definition.instantiate(value)
@@ -117,6 +123,29 @@ module HTMLBuilder
   end
 end
 
+class Object
+  def render(format = :xhtml)
+    to_s
+  end
+end
+
+class Array
+  def render(format = :xhtml)
+    inject("") {|output, elem| output += elem.render}
+  end
+end
+
+class Hash
+  def render(format = :xhtml)
+    inject("") do |output, name, value|
+      if name.is_a? Component
+        output += name.render
+      else
+        output += value.render
+      end
+    end
+  end
+end
 
 # Entry point
 
@@ -125,9 +154,7 @@ for arg in ARGV do
   
   components = HTMLBuilder::parse( YAML::load_file(arg) )
   
-  for component in components
-    puts component.render(:xhtml).to_s
-  end
+  puts components.render(:xhtml)
 end
 
 

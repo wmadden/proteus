@@ -12,24 +12,23 @@ require 'erb'
 
 class Component
 
-  attr_accessor :kind, :children, :template, :decorators, :definition
+  attr_accessor :kind, :children, :template, :decorators
   attr_reader :params
 
   #
   # Constructor.
   #
-  def initialize( definition,
+  def initialize( kind,
                   params = {},
                   children = [],
                   template = "",
                   decorators = [] )
 
-    @kind = definition.kind
+    @kind = kind
     @children = children
     @template = template
     @decorators = decorators
     @params = params
-    @definition = definition
   end
   
   #

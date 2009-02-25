@@ -56,13 +56,16 @@ class ComponentDefinition
     # Look for a file with the same name
     file = "#{kind}.def"
     
+    # If the file exists, load the definition
     if File.exist?(file)
       yaml = YAML::load_file(file)
       definition = parse(kind, yaml)
-    else
-      concrete_class = get_class(kind)
-      
+    # Otherwise, if we can find a class which matches the name, use that
+    elsif concrete_class = get_class(kind)
       definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
+    # If we can't, return nil
+    else
+      return nil
     end
 
     # TODO: combine defaults with parent's defaults    
@@ -84,7 +87,7 @@ class ComponentDefinition
       require "#{name}.rb"
       concrete_class = const_get(name)
     rescue LoadError, NameError
-      return Component
+      return nil
     end
     
     return concrete_class
@@ -116,12 +119,21 @@ class ComponentDefinition
     # Attempt to use a known type, if there is one
     concrete_class = get_class(parent)
     
+    # If we can't find a concrete class, use the parent's
     if concrete_class.nil?
-      # If not, ensure that it's not its own parent
+      # Ensure that it's not its own parent
       if parent == kind
         throw "Recursive component definition."
       else
-        concrete_class = load(parent).concrete_class
+        # Get the parent definition
+        parent = load(parent)
+        
+        # If we can't, or it's blank, use Component
+        if parent.nil?
+          concrete_class = Component
+        else
+          concrete_class = parent.concrete_class
+        end
       end
     end
     
@@ -149,7 +161,7 @@ class ComponentDefinition
   #
   def instantiate( parameters = {}, children = nil, template = nil, decorators = nil )
     # Instantiate the class
-    @concrete_class.new( self,
+    @concrete_class.new( @kind,
                          @parameters.merge(parameters),
                          children.nil? ? @children : children,
                          template.nil? ? @template : template,
