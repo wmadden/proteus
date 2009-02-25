@@ -1,7 +1,5 @@
-- XHTMLStrictDoctype
-
 - Document:
-    :body:
+    bd:
       Form:
         - Control:
             :name: name
@@ -17,5 +15,5 @@
                   male: male
                   female: female
 
-    :copyright:
-      xCopyright Silverpond 2008
+    copyright:
+      Copyright Silverpond 2008

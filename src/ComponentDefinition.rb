@@ -12,12 +12,32 @@ require 'Component.rb'
 require 'yaml'
 
 #
+# Returns the class given by name, or nil if it can't be found.
+#
+def get_class(name)
+  klass = nil
+  
+  begin
+    require "#{name}.rb"
+    klass = const_get(name)
+  rescue LoadError, NameError
+    return nil
+  end
+  
+  # Check that it's actually a class
+  if not klass.is_a?(Class)
+    return nil
+  end
+  
+  return klass
+end
+
+#
 # Represents the definition of a component.
 #
 class ComponentDefinition
 
-  attr_accessor :kind, :defaults
-  attr_accessor :parent, :concrete_class, :concrete, :ancestors
+  attr_accessor :kind, :defaults, :parent, :concrete_class
 
   #
   # Constructor.
@@ -27,24 +47,19 @@ class ComponentDefinition
     @parent = ancestors[1]
     @concrete_class = concrete_class
     
-    @parameters = defaults["parameters"]
-    @parameters = {} if @parameters.nil?
-    
-    @children = defaults["children"]
-    @children = [] if @children.nil?
-    
-    @template = defaults["template"]
-    @template = "" if @template.nil?
-    
-    @decorators = defaults["decorators"]
-    @decorators = [] if @decorators.nil?
+    @parameters = defaults[:parameters] || {}
+    @children = defaults[:children] || []
+    @template = defaults[:template] || ""
+    @decorators = defaults[:decorators] || []
   end
 
   # The default definition
-  @@Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
+  Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
   # The hash of all loaded definitions
-  @@definitions = {"Component" => @@Default}
-
+  @@definitions = {"Component" => Default}
+  # The default path to search for definition files
+  DEFAULT_PATH = "."
+  
   #
   # Loads and returns the named component definition.
   #
@@ -52,45 +67,37 @@ class ComponentDefinition
     # If it's already loaded, return the instance
     return @@definitions[kind] if @@definitions[kind]
     
-    # TODO: proper file searching
-    # Look for a file with the same name
-    file = "#{kind}.def"
+    # Otherwise look for a file, and if it exists, load the definition
+    file = find_file(kind)
     
-    # If the file exists, load the definition
-    if File.exist?(file)
+    if file
       yaml = YAML::load_file(file)
       definition = parse(kind, yaml)
-    # Otherwise, if we can find a class which matches the name, use that
-    elsif concrete_class = get_class(kind)
+    end
+    
+    # Otherwise look for a concrete class with the same name
+    if concrete_class = get_class(kind)
       definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
-    # If we can't, return nil
-    else
-      return nil
     end
-
-    # TODO: combine defaults with parent's defaults    
     
-    # Store it in the hash  
     @@definitions[kind] = definition
+    return definition
   end
-  
+
   #
-  # Returns the class given by name, or @@Default if it can't be found.
+  # Find a definition file for the given type.
   #
-  #
-  # Description.
-  #
-  def self.get_class(name)
-    concrete_class = nil
+  def self.find_file(kind, path = DEFAULT_PATH)
+    target = "#{kind}.def"
+    result = nil
     
-    begin
-      require "#{name}.rb"
-      concrete_class = const_get(name)
-    rescue LoadError, NameError
-      return nil
+    for filepath in path.split(":")
+      for file in Dir.new(filepath)
+        result = "#{filepath}/#{file}" if file == target
+      end
     end
     
-    return concrete_class
+    return result
   end
   
   #
@@ -101,48 +108,63 @@ class ComponentDefinition
       when yaml.is_a?(Hash):
         # Get the type name
         type = yaml.to_a[0][0]
-        defaults = yaml.to_a[0][1]
+        defaults = yaml.to_a[0][1] || {}
       
+      when is_scalar?(yaml):
+        type = yaml
+        defaults = {}
+      
+      # Otherwise
       when true:
-        throw "Component definition malformed - fix it!"
+        throw "Malformed component definition"
     end
+    
+    # Get the parent, if specified
+    parent = parse_name(type)
     
     # Get ancestors
-    parent = type[/<(.*)/, 1]
-    
-    if parent.nil?
-      ancestors = [kind, "Component"]
-    else
+    if parent
       ancestors = get_ancestors(parent, [kind])
+    else
+      ancestors = [kind, "Component"]
     end
     
-    # Attempt to use a known type, if there is one
-    concrete_class = get_class(parent)
+    # Get the parent definition
+    parent = load(parent) || Default
     
-    # If we can't find a concrete class, use the parent's
-    if concrete_class.nil?
-      # Ensure that it's not its own parent
-      if parent == kind
-        throw "Recursive component definition."
-      else
-        # Get the parent definition
-        parent = load(parent)
-        
-        # If we can't, or it's blank, use Component
-        if parent.nil?
-          concrete_class = Component
-        else
-          concrete_class = parent.concrete_class
-        end
-      end
+    # Merge defaults with the parent
+    defaults = parent.merge_defaults(defaults)
+    
+    ComponentDefinition.new(kind, defaults, ancestors, parent.concrete_class)
+  end
+  
+  #
+  # Merges this definition's defaults with a child definition's. Returns the
+  # result (as a hash).
+  #
+  def merge_defaults( defaults )
+    { :parameters => @parameters.merge( defaults["parameters"] || {} ),
+      :children => defaults["children"] || @children,
+      :template => defaults["template"] || "",
+      :decorators => defaults["decorators"] || [] }
+  end
+  
+  #
+  # Parses a component name and returns the parent, if any. If the name can't be
+  # parsed, throws an exception.
+  #
+  def self.parse_name(name)
+    regex = Regexp.new("#{Component::NameRegexp.source}([\s]*<[\s]*(#{Component::NameRegexp.source}))?")
+    if not matchdata = regex.match(name)
+      throw "Can't understand component name '#{name}'"
     end
     
-    component = ComponentDefinition.new(kind, defaults, ancestors, concrete_class)
+    return matchdata[2]
   end
   
   #
   # Returns the list of ancestors for the named component definition.
-  #  
+  #
   def get_ancestors(parent, ancestors)
     # Check that parent is not in ancestors
     if ancestors.include?(parent)
@@ -152,7 +174,6 @@ class ComponentDefinition
     # Get parent definition
     definition = load(parent)
     
-    # Recurse
     return get_ancestors(definition.parent, ancestors.push(parent))
   end
   
