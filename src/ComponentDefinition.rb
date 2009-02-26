@@ -68,16 +68,17 @@ class ComponentDefinition
     return @@definitions[kind] if @@definitions[kind]
     
     # Otherwise look for a file, and if it exists, load the definition
-    file = find_file(kind)
+    file = find_file(kind, path)
     
     if file
-      yaml = YAML::load_file(file, path)
+      yaml = YAML::load_file(file)
       definition = parse(kind, yaml)
-    end
-    
     # Otherwise look for a concrete class with the same name
-    if concrete_class = get_class(kind)
+    elsif concrete_class = get_class(kind)
       definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
+    # Otherwise return nil
+    else
+      return nil
     end
     
     @@definitions[kind] = definition
