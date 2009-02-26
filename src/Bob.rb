@@ -18,6 +18,17 @@ module Bob
   
   @@path = ComponentDefinition::DEFAULT_PATH
   
+  # Define exception type
+  class UnknownComponent < StandardError; end
+  
+  def Bob.path=(value)
+    @@path = value
+  end
+  
+  def Bob.path
+    @@path
+  end
+  
   #
   # Loads a file, given its name, and parses the contents.
   #
@@ -42,13 +53,12 @@ module Bob
           
           begin
             return load_component(yaml.keys.first, value)
-          rescue Exception
+          rescue UnknownComponent
             return {yaml.keys.first => value}
           end
         else
           return yaml.inject({}) do |acc, pair|
               acc[pair[0]] = parse(pair[1])
-              # Explicit return; acc[pair[0]] = parse(pair[1]) returns parse(pair[1])
               acc
           end
         end
@@ -58,7 +68,7 @@ module Bob
         if yaml.component_name?
           begin
             load_component(yaml)
-          rescue Exception
+          rescue UnknownComponent
             return yaml
           end
         else
@@ -76,7 +86,7 @@ module Bob
     # If the kind is not a valid component name or we can't find the definition
     definition = ComponentDefinition.load(kind, @@path)
     if definition.nil?
-      throw "No definition available for component '#{kind}'"
+      throw UnknownComponent.new("No definition available for component '#{kind}'")
     end
     
     # Otherwise, interpret its value and instantiate the component
@@ -128,7 +138,7 @@ end
 # Entry point
 
 for arg in ARGV do
-  #puts "Parsing #{arg}: #{arg}"
+  Bob::path = "#{Bob::path}:/home/willmadden/Projects/Personal/Bob/lib"
   
   components = Bob::parse( YAML::load_file(arg) )
   
