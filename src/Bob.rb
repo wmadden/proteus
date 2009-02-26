@@ -86,6 +86,9 @@ module Bob
 
       when value.is_a?(Array):
         children = value
+      
+      when is_scalar?(value):
+        children = [parse(value)]
     end
     
     definition.instantiate(parameters, value)
