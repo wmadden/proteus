@@ -134,18 +134,3 @@ class Array
     inject("") {|output, elem| output += elem.render}
   end
 end
-
-
-# Entry point
-Bob::path =
-"#{Bob::path}:/Users/willmadden/Projects/Personal/Bob/lib:/Users/willmadden/Projects/Common/SilverLib/components"
-
-if ARGV.length == 0
-  puts Bob.parse( YAML::load($stdin) )
-else
-  for arg in ARGV do
-    components = Bob::parse( YAML::load_file(arg) )
-  
-    puts components
-  end
-end
