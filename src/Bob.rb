@@ -28,41 +28,41 @@ module Bob
   #
   def Bob.parse(yaml)
     case 
-      # If given a string
-      when is_scalar?(yaml):
-        if component_name?(yaml)
-          load_component(yaml)
-        else
-          yaml
-        end
-      
       # If given a list
       when yaml.is_a?(Array):
         # Map list to a list of components
-        yaml.map { |elem| parse(elem) }
+        return yaml.map { |elem| parse(elem) }
         
       # If given a hash
       when yaml.is_a?(Hash):
-        # TODO: come up with better syntax for this
-         # TODO: come up with better syntax for this
-        if yaml.length == 1
-          yaml.each do |key, value|
-            if component_name?(key)
-               return load_component(key, parse(value))
-            end
+        if yaml.length == 1 and yaml.keys.first.component_name?
+          value = parse(yaml.values.first)
+          
+          begin
+            return load_component(yaml.keys.first, value)
+          rescue Exception
+            return {yaml.keys.first => value}
+          end
+        else
+          return yaml.inject({}) do |acc, pair|
+              acc[pair[0]] = parse(pair[1])
+              # Explicit return; acc[pair[0]] = parse(pair[1]) returns parse(pair[1])
+              acc
           end
         end
-        
-        return yaml.inject({}) { |acc, elem| acc[elem[0]] = parse(elem[1]) }
+      
+      # If given a string
+      when is_scalar?(yaml):
+        if yaml.component_name?
+          begin
+            load_component(yaml)
+          rescue Exception
+            return yaml
+          end
+        else
+          return yaml
+        end
     end
-  end
-  
-  #
-  # Returns if the given string is a valid component name.
-  #
-  def Bob.component_name?(string)
-    # Valid if matches the component name regex
-    string =~ Component::NameRegexp
   end
   
   protected
@@ -77,17 +77,18 @@ module Bob
       throw "No definition available for component '#{kind}'"
     end
     
-    # Otherwise, interpret its children and instantiate the component
+    # Otherwise, interpret its value and instantiate the component
+    children = []
+    parameters = {}
     case
       when value.is_a?(Hash):
-        definition.instantiate(value)
+        parameters = value
 
       when value.is_a?(Array):
-        definition.instantiate({}, value)
-
-      when value.nil?:
-        definition.instantiate()
+        children = value
     end
+    
+    definition.instantiate(parameters, value)
   end
 end
 
@@ -95,12 +96,20 @@ end
 # Returns true if the value is a scalar.
 #
 def is_scalar?(value)
-  not (value.is_a?(Array) || value.is_a?(Hash))
+  not [ Hash, Array, Component ].include?(value.class)
 end
 
 class Object
   def render(format = :xhtml)
     to_s
+  end
+  
+  #
+  # Returns if the given string is a valid component name.
+  #
+  def component_name?
+    # Valid if matches the component name regex
+    self.to_s =~ Component::NameRegexp
   end
 end
 
@@ -109,6 +118,7 @@ class Array
     inject("") {|output, elem| output += elem.render}
   end
 end
+
 
 # Entry point
 

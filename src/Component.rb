@@ -28,6 +28,7 @@ class Component
     # Ensure that these default to acceptable types
     @kind = kind || "Component"
     @children = children || []
+    @last_child_index = 0
     @template = template || ""
     @decorators = decorators || []
     @params = params || {}
@@ -76,19 +77,26 @@ class Component
     return output
   end
   
+  def child(index)
+    @children[index]
+  end
+  
+  def next_child
+    @last_child_index += 1
+    return child(@last_child_index - 1)
+  end
+  
+  def to_s
+    render
+  end
+  
   #
   # If we try to access a non-existant method within the scope of the Component,
   # (e.g. while rendering the template), try and provide the matching parameter
   # value
   #
   def method_missing(m, *args)
-    if @params.has_key?(m)
-      @params[m]
-    elsif @params.has_key?(m.to_s)
-      @params[m.to_s]
-    else
-      super.method_missing(m, args)
-    end
+    @params[m.to_s]
   end
 end
 
