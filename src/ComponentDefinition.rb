@@ -63,7 +63,7 @@ class ComponentDefinition
   #
   # Loads and returns the named component definition.
   #
-  def self.load(kind)
+  def self.load(kind, path = DEFAULT_PATH)
     # If it's already loaded, return the instance
     return @@definitions[kind] if @@definitions[kind]
     
@@ -71,7 +71,7 @@ class ComponentDefinition
     file = find_file(kind)
     
     if file
-      yaml = YAML::load_file(file)
+      yaml = YAML::load_file(file, path)
       definition = parse(kind, yaml)
     end
     

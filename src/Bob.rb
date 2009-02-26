@@ -16,6 +16,8 @@ require 'ComponentDefinition'
 
 module Bob
   
+  @@path = ComponentDefinition::DEFAULT_PATH
+  
   #
   # Loads a file, given its name, and parses the contents.
   #
@@ -72,7 +74,7 @@ module Bob
   #
   def Bob.load_component(kind, value = nil)
     # If the kind is not a valid component name or we can't find the definition
-    definition = ComponentDefinition.load(kind)
+    definition = ComponentDefinition.load(kind, @@path)
     if definition.nil?
       throw "No definition available for component '#{kind}'"
     end
