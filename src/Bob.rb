@@ -10,9 +10,9 @@
 # w.a.madden@gmail.com
 ################################################################################
 
-require 'yaml'
-require 'Component'
-require 'ComponentDefinition'
+require 'yaml.rb'
+require File.join(File.dirname(__FILE__), 'Component.rb')
+require File.join(File.dirname(__FILE__), 'ComponentDefinition.rb')
 
 module Bob
   
@@ -139,7 +139,7 @@ end
 # Entry point
 
 for arg in ARGV do
-  Bob::path = "#{Bob::path}:/home/willmadden/Projects/Personal/Bob/lib"
+  Bob::path = "#{Bob::path}:/Users/willmadden/Projects/Personal/Bob/lib"
   
   components = Bob::parse( YAML::load_file(arg) )
   
