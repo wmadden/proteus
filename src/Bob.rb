@@ -19,27 +19,28 @@ module Bob
   @@path = ComponentDefinition::DEFAULT_PATH
   
   # Define exception type
-  class UnknownComponent < StandardError; end
+  class UnknownComponent < Exception
+  end
   
-  def Bob.path=(value)
+  def self.path=(value)
     @@path = value
   end
   
-  def Bob.path
+  def self.path
     @@path
   end
   
   #
   # Loads a file, given its name, and parses the contents.
   #
-  def Bob.load(file)
+  def self.load(file)
     parse(YAML.load_file(file))
   end
   
   #
   # Parses a YAML tree and returns a list of components.
   #
-  def Bob.parse(yaml)
+  def self.parse(yaml)
     case 
       # If given a list
       when yaml.is_a?(Array):
@@ -53,7 +54,7 @@ module Bob
           
           begin
             return load_component(yaml.keys.first, value)
-          rescue UnknownComponent
+          rescue Bob::UnknownComponent
             return {yaml.keys.first => value}
           end
         else
@@ -68,7 +69,7 @@ module Bob
         if yaml.component_name?
           begin
             load_component(yaml)
-          rescue UnknownComponent
+          rescue Bob::UnknownComponent
             return yaml
           end
         else
@@ -82,11 +83,11 @@ module Bob
   #
   # Loads a component given its kind and YAML node value.
   #
-  def Bob.load_component(kind, value = nil)
+  def self.load_component(kind, value = nil)
     # If the kind is not a valid component name or we can't find the definition
     definition = ComponentDefinition.load(kind, @@path)
     if definition.nil?
-      throw UnknownComponent.new("No definition available for component '#{kind}'")
+      raise UnknownComponent, "No definition available for component '#{kind}'"
     end
     
     # Otherwise, interpret its value and instantiate the component
@@ -105,13 +106,13 @@ module Bob
     
     definition.instantiate(parameters, value)
   end
-end
-
-#
-# Returns true if the value is a scalar.
-#
-def is_scalar?(value)
-  not [ Hash, Array, Component ].include?(value.class)
+  
+  #
+  # Returns true if the value is a scalar.
+  #
+  def self.is_scalar?(value)
+    not [ Hash, Array, Component ].include?(value.class)
+  end
 end
 
 class Object
