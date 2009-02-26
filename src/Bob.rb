@@ -138,11 +138,15 @@ end
 
 # Entry point
 
-for arg in ARGV do
-  Bob::path = "#{Bob::path}:/Users/willmadden/Projects/Personal/Bob/lib"
+if ARGV.length == 0
+  puts Bob::parse( YAML::load($stdin.read))
+else
+  for arg in ARGV do
+    Bob::path =
+    "#{Bob::path}:/Users/willmadden/Projects/Personal/Bob/lib:/Users/willmadden/Projects/Common/SilverLib/components"
   
-  components = Bob::parse( YAML::load_file(arg) )
+    components = Bob::parse( YAML::load_file(arg) )
   
-  puts components.render(:xhtml)
+    puts components.render(:xhtml)
+  end
 end
-
