@@ -1,0 +1,49 @@
+README
+
+27/02/09
+William Madden
+w.a.madden@gmail.com
+===============================================================================
+
+Welcome to Bob.
+
+Bob is an abstraction of general document definition and display markup whereby
+simple patterns of structured content can be created, mixed and reused.
+
+Project Goals:
+  1. Content-orientation: we should be describing content, not the structure used
+     to display it
+  2. Human-readability: it should be easy for a human to write documents, and
+     hence easy to maintain them
+  3. Implementation independence: since we're content-oriented, it should be
+     possible to output HAML, or XML, or plain-text instead of hardwired XHTML
+  4. Extensibility: it should be possible to easily extend the solution to
+     handle new behaviour, as it is required
+
+For Users:
+  Bob works by interpreting document definitions in YAML, for example
+
+    Form:
+        - Control:
+            name: name
+        - Control:
+            name: age
+        - Control:
+            name: gender
+            type: select
+            options:
+              - male
+              - female
+
+Each camelcase node indicates a "component" - an abstract part of the document,
+usually with a specific purpose, and which displays in a unique way. In the
+above example, the "Form" and "Control" nodes indicate components, the rest of
+the information describes those components.
+
+More information is available on the Bob website (or will be soon),
+    
+    rubyforge.org/projects/bob
+
+For Developers:
+  Documentation is coming, but for now the comments in the source should be
+enough.
