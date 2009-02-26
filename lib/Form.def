@@ -1,5 +1,0 @@
-Form:
-  template: |
-    <div class="form">
-      <%= render_children %>
-    </div>
