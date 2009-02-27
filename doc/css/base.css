@@ -13,6 +13,7 @@ html {
       background-color: #FFFFFF;
       height: 100%;
       border-right: 10px solid #3a6e91;
-      border-left: 10px solid #3a6e91; }
+      border-left: 10px solid #3a6e91;
+      overflow: auto; }
       html body #doc #hd {
         text-align: center; }
