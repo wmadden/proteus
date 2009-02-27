@@ -14,7 +14,7 @@ class Component
 
   attr_accessor :kind, :children, :template, :decorators, :params
   
-  NameRegexp = /[A-Z][a-z_]*/
+  NameRegexp = /[A-Z][a-z_1234567890]*/
   
   #
   # Constructor.
