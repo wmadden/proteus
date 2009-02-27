@@ -1,0 +1,48 @@
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #4f8db8;
+  color: #0d2b41; }
+  html body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative; }
+    html body #doc {
+      background-color: #FFFFFF;
+      height: 100%;
+      border-right: 10px solid #3a6e91;
+      border-left: 10px solid #3a6e91; }
+      html body #doc #hd {
+        text-align: center; }
+
+body {
+  font-family: "MS Trebuchet", "Bitstream Vera Sans", Helvetica, Verdana, Arial; }
+
+.content {
+  padding: 1.0em 2.0em; }
+  .content h1, .content h2, .content h3, .content h4, .content h5, .content h6, .content p, .content blockquote, .content code, .content ul, .content dl, .content ol, .content li, .content dd {
+    margin-bottom: 1.0em;
+    line-height: 1.5em; }
+  .content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    font-family: Georgia, "Bitstream Vera Serif", "Times New Roman", Times, Serif;
+    margin-top: 1.0em;
+    line-height: 1.5em;
+    color: #3a6e91; }
+  .content h1 {
+    font-size: 2.0em; }
+  .content h2 {
+    font-size: 1.5em; }
+  .content h3 {
+    font-weight: bold; }
+  .content ul, .content dl, .content ol {
+    padding-left: 2.5em; }
+  .content ol li {
+    list-style: decimal; }
+  .content a {
+    color: #4f8db8;
+    font-weight: bold;
+    text-decoration: none; }
+    .content a:hover {
+      text-decoration: underline; }

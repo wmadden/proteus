@@ -1,0 +1,59 @@
+////////////////////////////////////////////////////////////////////////////////
+// formatting.sass
+//
+// Purpose:
+//   Defines styles for content formatting.
+//  
+// Pattern:
+//   .content
+// 
+// Usage:
+//   Use a containing block with class "content".
+//  
+// 21/10/2008
+// William Madden
+// w.a.madden@gmail.com
+////////////////////////////////////////////////////////////////////////////////
+
+body
+  font-family: "MS Trebuchet", "Bitstream Vera Sans", Helvetica, Verdana, Arial
+
+.content
+  padding: 1.0em 2.0em
+
+  // All block elements have a bottom margin
+  h1, h2, h3, h4, h5, h6, p, blockquote, code, ul, dl, ol, li, dd
+    margin-bottom: 1.0em
+    line-height: 1.5em
+
+  // Headers
+  h1, h2, h3, h4, h5, h6
+    font-family: Georgia, "Bitstream Vera Serif", "Times New Roman", Times, Serif
+    margin-top: 1.0em
+    line-height: 1.5em
+    color: #3a6e91
+
+  h1
+    font-size: 2.0em
+
+  h2
+    font-size: 1.5em
+
+  h3
+    font-weight: bold
+
+  // Text Blocks
+  ul, dl, ol
+    padding-left: 2.5em
+
+  ol li
+    list-style: decimal
+  
+  // Inline Blocks
+  a
+    color: #4f8db8
+    font-weight: bold
+    text-decoration: none
+    
+    &:hover
+      text-decoration: underline

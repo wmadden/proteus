@@ -1,0 +1,37 @@
+Document:
+  title: Bob Homepage
+  head:
+    - Stylesheets:
+      - yui-2.6.0/reset-fonts-grids
+      - base
+      - formatting
+  
+  hd:
+    - H1: Welcome to the Bob Homepage
+  
+  bd:
+    - H2: What is Bob?
+      
+    - Text:
+        - Bob is an abstraction layer above document markup (aimed at HTML/CSS, but
+          implementation independent).
+        - For example, <a href="index.bob">this code</a> produced this document.
+    
+    - H2: Bob's Goals
+    
+    - NumberedList:
+        - > Content-orientation: we should be describing content, not the 
+            structure used to display it
+          
+        - > Human-readability: it should be easy for a human to write documents, 
+            and hence easy to maintain them
+          
+        - > Implementation independence: since we're content-oriented, it should 
+            be possible to output HAML, or XML, or plain-text instead of hardwired XHTML
+          
+        - > Extensibility: it should be possible to easily extend the solution to 
+            handle new behaviour, as it is required
+    
+    - H2: How can I find out more?
+    
+    - Text: Visit <a href="http://rubyforge.org/projects/bob">RubyForge</a>
