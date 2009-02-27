@@ -12,7 +12,7 @@
 # w.a.madden@gmail.com
 ################################################################################
 
-require 'Bob'
+require File.join(File.dirname(__FILE__), 'lib/Bob.rb')
 
 # Specify library directory here
 libdir = '/usr/lib/bob'
