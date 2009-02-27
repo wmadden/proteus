@@ -1,0 +1,7 @@
+P:
+  template: |
+    <% for child in @children do %>
+      <p>
+        <%= child %>
+      </p>
+    <% end %>

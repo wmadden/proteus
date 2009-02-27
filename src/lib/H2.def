@@ -1,0 +1,3 @@
+H2:
+  template:
+    <h2><%= render_children %></h2>

@@ -1,0 +1,5 @@
+Code:
+  template: |
+    <pre class="code">
+      <%= render_children %>
+    </pre>

@@ -1,0 +1,5 @@
+Content:
+  template: |
+    <div class="content">
+      <%= next_child %>
+    </div>

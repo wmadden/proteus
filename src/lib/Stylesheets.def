@@ -1,0 +1,8 @@
+Stylesheets:
+  template: |
+    <% @children.each do |child| %>
+      <link rel="stylesheet" type="text/css" href="<%= css_path %><%= child %>.css" media="screen" />
+    <% end %>
+  
+  parameters:
+    css_path: css/
