@@ -15,9 +15,16 @@
 require File.join(File.dirname(__FILE__), 'lib/Bob.rb')
 
 # Specify library directory here
-libdir = '/usr/lib/bob'
+libdir = '/usr/lib/bob/rails:/usr/lib/bob'
 
-Bob::path = "#{Bob::path}:#{libdir}"
+envpath = ENV['BOB_PATH']
+if envpath and Bob::path
+  envpath += ":"
+end
+
+Bob::path = "#{envpath.to_s}#{Bob::path}:#{libdir}"
+
+$stderr.print "Using path #{Bob::path}\n"
 
 if ARGV.length == 0
   puts Bob.parse( YAML::load($stdin) )
