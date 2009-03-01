@@ -1,7 +1,0 @@
-NumberedText:
-  template: |
-    <ol>
-      <% for child in @children %>
-        <li><%= child %></li>
-      <% end %>
-    </ol>
