@@ -89,15 +89,14 @@ class ComponentDefinition
   #
   def self.find_file(kind, path = DEFAULT_PATH)
     target = "#{kind}.def"
-    result = nil
     
     for filepath in path.split(":")
       for file in Dir.new(filepath)
-        result = "#{filepath}/#{file}" if file == target
+        return "#{filepath}/#{file}" if file == target
       end
     end
     
-    return result
+    return nil
   end
   
   #
