@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
 ################################################################################
-# ComponentParser.rb
+# ParserHelper.rb
 #
-# Defines the ComponentParser, used to parse Component YAML.
+# Provides useful functions for the parsers.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -21,45 +21,38 @@
 # Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'Component'
-require 'DefinitionParser'
-require 'ParserHelper'
-require 'Exceptions'
-
 module Bob
 
-  #
-  # Parses components.
-  #
-  class ComponentParser
+  class ParserHelper
+
+    #
+    # Returns the class given by name, or nil if it can't be found.
+    #
+    def self.get_class(name)
+      klass = nil
+      
+      begin
+        require "#{name}.rb"
+        klass = const_get(name)
+      rescue LoadError, NameError
+        return nil
+      end
+      
+      # Check that it's actually a class
+      if not klass.is_a?(Class)
+        return nil
+      end
+      
+      return klass
+    end
     
     #
-    # Parses YAML, returning a Component instance.
+    # Returns true if the value is a scalar.
     #
-    def self.parse(kind, yaml = nil)
-      # If the kind is not a valid component name or we can't find the definition
-      definition = DefinitionParser.load(kind)
-      if definition.nil?
-        throw UnknownComponent, "No definition available for component '#{kind}'"
-      end
-      
-      # Otherwise, interpret its value and instantiate the component
-      children = []
-      parameters = {}
-      case
-        when yaml.is_a?(Hash):
-          children = value.delete('children')
-          parameters = value
-
-        when yaml.is_a?(Array):
-          children = value
-        
-        when is_scalar?(yaml):
-          children = [parse(value)]
-      end
-      
-      definition.instantiate(parameters, children)
+    def self.is_scalar?(value)
+      not [ Hash, Array, Component ].include?(value.class)
     end
     
   end
+
 end

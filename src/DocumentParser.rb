@@ -22,18 +22,18 @@
 # Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'yaml.rb'
-require File.join(File.dirname(__FILE__), 'Component.rb')
-require File.join(File.dirname(__FILE__), 'ComponentDefinition.rb')
+require 'yaml'
+require File.join(File.dirname(__FILE__), 'Exceptions.rb')
+require File.join(File.dirname(__FILE__), 'ComponentParser.rb')
+require File.join(File.dirname(__FILE__), 'DefinitionParser.rb')
 
 module Bob
   
+  #
+  # Used to load and parse documents.
+  #
   class DocumentParser
-    @@path = ComponentDefinition::DEFAULT_PATH
-    
-    # Define exception type
-    class UnknownComponent < Exception
-    end
+    @@path = DefinitionParser.path
     
     def self.path=(value)
       @@path = value
@@ -46,16 +46,23 @@ module Bob
     #
     # Loads a file, given its name, and parses the contents.
     #
-    def self.load(file)
-      parse(File.read(file))
+    def self.load_file(file)
+      parse( YAML::load(File.read(file)) )
+    end
+    
+    #
+    # Loads a string and parses the contents.
+    #
+    def self.load(data)
+      parse( YAML::load(data) )
     end
     
     #
     # Parses a YAML tree and returns a list of components.
     #
+    # Expects the yaml in a string.
+    #
     def self.parse(yaml)
-      yaml = YAML::load(yaml)
-      
       case 
         # If given a list
         when yaml.is_a?(Array):
@@ -68,8 +75,8 @@ module Bob
             value = parse(yaml.values.first)
             
             begin
-              return load_component(yaml.keys.first, value)
-            rescue Bob::UnknownComponent
+              return ComponentParser.parse(yaml.keys.first, value)
+            catch Bob::UnknownComponent
               return {yaml.keys.first => value}
             end
           else
@@ -80,11 +87,11 @@ module Bob
           end
         
         # If given a string
-        when is_scalar?(yaml):
+        when ParserHelper.is_scalar?(yaml):
           if yaml.component_name?
             begin
-              load_component(yaml)
-            rescue Bob::UnknownComponent
+              ComponentParser.parse(yaml)
+            catch Bob::UnknownComponent
               return yaml
             end
           else
@@ -93,42 +100,6 @@ module Bob
       end
     end
     
-    protected
-    
-    #
-    # Loads a component given its kind and YAML node value.
-    #
-    def self.load_component(kind, value = nil)
-      # If the kind is not a valid component name or we can't find the definition
-      definition = ComponentDefinition.load(kind, @@path)
-      if definition.nil?
-        raise UnknownComponent, "No definition available for component '#{kind}'"
-      end
-      
-      # Otherwise, interpret its value and instantiate the component
-      children = []
-      parameters = {}
-      case
-        when value.is_a?(Hash):
-          children = value.delete('children')
-          parameters = value
-
-        when value.is_a?(Array):
-          children = value
-        
-        when is_scalar?(value):
-          children = [parse(value)]
-      end
-      
-      definition.instantiate(parameters, children)
-    end
-    
-    #
-    # Returns true if the value is a scalar.
-    #
-    def self.is_scalar?(value)
-      not [ Hash, Array, Component ].include?(value.class)
-    end
   end
 end
 
@@ -142,7 +113,7 @@ class Object
   #
   def component_name?
     # Valid if matches the component name regex
-    self.to_s =~ Component::NameRegexp
+    Component::NameRegexp === self.to_s
   end
 end
 
