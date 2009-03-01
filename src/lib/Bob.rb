@@ -107,6 +107,7 @@ module Bob
     parameters = {}
     case
       when value.is_a?(Hash):
+        children = value.delete('children')
         parameters = value
 
       when value.is_a?(Array):
@@ -116,7 +117,7 @@ module Bob
         children = [parse(value)]
     end
     
-    definition.instantiate(parameters, value)
+    definition.instantiate(parameters, children)
   end
   
   #
