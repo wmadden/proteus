@@ -3,13 +3,23 @@
 # bob.rb
 # 
 # The executable version of Bob. Takes as its arguments the files to parse,
-# otherwise reads from standard input.
+# otherwise reads from standard input. Outputs the rendered XHTML.
+# -----------------------------------------------------------------------------
+# (C) Copyright 2009 William Madden
+# 
+# This file is part of Bob.
+# 
+# Bob is free software: you can redistribute it and/or modify it under the terms
+# of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
 #
-# Outputs the rendered XHTML.
-#
-# 26/02/09
-# William Madden
-# w.a.madden@gmail.com
+# Bob is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along with
+# Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
 require File.join(File.dirname(__FILE__), 'lib/Bob.rb')

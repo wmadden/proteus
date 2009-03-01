@@ -1,18 +1,11 @@
-README
-
-27/02/09
-William Madden
-w.a.madden@gmail.com
-===============================================================================
-
 Welcome to Bob.
 
 Bob is an abstraction of general document definition and display markup whereby
 simple patterns of structured content can be created, mixed and reused.
 
 Project Goals:
-  1. Content-orientation: we should be describing content, not the structure used
-     to display it
+  1. Content-orientation: we should be describing content, not the structure
+     used to display it
   2. Human-readability: it should be easy for a human to write documents, and
      hence easy to maintain them
   3. Implementation independence: since we're content-oriented, it should be
@@ -21,7 +14,7 @@ Project Goals:
      handle new behaviour, as it is required
 
 For Users:
-  Bob works by interpreting document definitions in YAML, for example
+  Bob works by interpreting document definitions in YAML, for example:
 
     Form:
         - Control:
@@ -45,5 +38,19 @@ More information is available on the Bob website (or will be soon),
     rubyforge.org/projects/bob
 
 For Developers:
-  Documentation is coming, but for now the comments in the source should be
-enough.
+  Reference documentation and further information is (or will be) available at
+bob.rubyforge.org.
+
+Licensing:
+  Bob is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+Bob is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
