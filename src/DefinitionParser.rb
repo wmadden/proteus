@@ -64,14 +64,14 @@ module Bob
     # nothing matches returns nil.
     #
     def self.load(kind, path = @@path)
-      # If it's already loaded, return the instance
-      if @@definitions[kind]
-        return @@definitions[kind]
-      end
-      
       # If it's a restricted definition, throw an exception
       if @@restricted_definitions.include?(kind)
         throw "Recursive definition detected: attempted to load restricted definition '#{kind}'."
+      end
+      
+      # If it's already loaded, return the instance
+      if @@definitions[kind]
+        return @@definitions[kind]
       end
       
       # Otherwise look for a file, and if it exists, load the definition
@@ -170,8 +170,8 @@ module Bob
         # definition
         type = yaml.keys[0]
         @@restricted_definitions.push(kind)
+        
         defaults = parse_defaults(yaml.values[0])
-        @@restricted_definitions = []
       elsif ParserHelper.is_scalar?(yaml)
         type = yaml
         defaults = {}
@@ -195,6 +195,9 @@ module Bob
       
       # Merge the defaults
       defaults = ComponentDefinition.merge_defaults(defaults, parent.defaults)
+      
+      # Reset the blacklist
+      @@restricted_definitions = []
       
       return ComponentDefinition.new( kind, defaults, ancestors, parent.concrete_class )
     end

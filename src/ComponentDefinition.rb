@@ -75,9 +75,9 @@ module Bob
       # Instantiate the class
       @concrete_class.new( @kind,
                            @parameters.merge(parameters),
-                           children.nil? ? @children : children,
-                           template.nil? ? @template : template,
-                           decorators.nil? ? @decorators : decorators )
+                           children || @children,
+                           template || @template,
+                           decorators || @decorators )
     end
 
   end

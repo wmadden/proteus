@@ -45,21 +45,22 @@ module Bob
       end
       
       # Otherwise, interpret its value and instantiate the component
-      children = []
-      parameters = {}
       case
         when yaml.is_a?(Hash):
           children = yaml.delete('children')
           parameters = yaml
+          definition.instantiate(parameters, children)
 
         when yaml.is_a?(Array):
           children = yaml
+          definition.instantiate({}, children)
         
         when ParserHelper.is_scalar?(yaml):
           children = [parse(yaml)]
+          definition.instantiate({}, children)
       end
       
-      definition.instantiate(parameters, children)
+      definition.instantiate()
     end
     
   end
