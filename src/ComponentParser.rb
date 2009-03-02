@@ -55,7 +55,7 @@ module Bob
         when yaml.is_a?(Array):
           children = yaml
         
-        when is_scalar?(yaml):
+        when ParserHelper.is_scalar?(yaml):
           children = [parse(yaml)]
       end
       

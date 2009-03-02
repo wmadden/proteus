@@ -6,4 +6,6 @@ module Bob
   class EmptyDefinition < Exception
   end
   
+  class DefinitionMalformed < Exception
+  end
 end

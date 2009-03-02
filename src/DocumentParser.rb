@@ -69,7 +69,7 @@ module Bob
         # If given a list
         when yaml.is_a?(Array):
           # Map list to a list of components
-          return yaml.map { |elem| parse(elem) }
+          return parse_list(yaml)
           
         # If given a hash
         when yaml.is_a?(Hash):
@@ -82,10 +82,7 @@ module Bob
               return {yaml.keys.first => value}
             end
           else
-            return yaml.inject({}) do |acc, pair|
-                acc[pair[0]] = parse(pair[1])
-                acc
-            end
+            return parse_hash(yaml)
           end
         
         # If given a scalar
@@ -100,6 +97,23 @@ module Bob
             return yaml
           end
       end
+    end
+  
+    #
+    # Parses a hash.
+    #
+    def self.parse_hash(yaml)
+      return yaml.inject({}) do |acc, pair|
+          acc[pair[0]] = parse(pair[1])
+          acc
+      end
+    end
+    
+    #
+    # Parses a list
+    #
+    def self.parse_list(yaml)
+      return yaml.map { |elem| parse(elem) }
     end
     
   end
