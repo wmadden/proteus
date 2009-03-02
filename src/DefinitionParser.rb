@@ -33,29 +33,6 @@ module Bob
   #
   class DefinitionParser
 
-    # A list of definitions which cannot be loaded. This is used during parsing
-    # to prevent recursive definitions.
-    @@restricted_definitions = []
-    # The path variable (follows standard UNIX convention). Paths in this array
-    # will be searched (non-recursively) for definition files.
-    @@path = ['.']
-    # The default definition
-    Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
-    # The hash of all loaded definitions
-    @@definitions = {"Component" => Default}
-    # The regex used to parse definition names.
-    NameRegex = Regexp.new("#{Component::NameRegexp.source}([\s]*<[\s]*(#{Component::NameRegexp.source}))?")
-
-    # Accessor for @@path.
-    def self.path=(value)
-      @@path = value
-    end
-
-    # Accessor for @@path.
-    def self.path
-      @@path
-    end
-
     #
     # Loads and returns the named component definition.
     #
@@ -89,8 +66,6 @@ module Bob
       return definition
     end
 
-    protected
-    
     #
     # Find a definition file for the given type.
     #
@@ -232,6 +207,34 @@ module Bob
       raise EmptyDefinition if template.nil? and children.nil? and parameters.nil?
       
       return { :template => template, :parameters => parameters, :children => children }
+    end
+   
+    
+    # A list of definitions which cannot be loaded. This is used during parsing
+    # to prevent recursive definitions.
+    @@restricted_definitions = []
+    
+    # The path variable (follows standard UNIX convention). Paths in this array
+    # will be searched (non-recursively) for definition files.
+    @@path = ['.']
+    
+    # The default definition
+    Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
+    
+    # The hash of all loaded definitions
+    @@definitions = {"Component" => Default}
+    
+    # The regex used to parse definition names.
+    NameRegex = Regexp.new("#{Component::NameRegexp.source}([\s]*<[\s]*(#{Component::NameRegexp.source}))?")
+    
+    # Accessor for @@path.
+    def self.path=(value)
+      @@path = value
+    end
+
+    # Accessor for @@path.
+    def self.path
+      @@path
     end
     
   end
