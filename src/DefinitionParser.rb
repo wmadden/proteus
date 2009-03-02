@@ -57,13 +57,17 @@ module Bob
       end
       
       # If it's already loaded, return the instance
-      return @@definitions[kind] if @@definitions[kind]
+      if @@definitions[kind]
+        $stderr.puts "Already loaded, returning #{@@definitions[kind].inspect}" 
+        return @@definitions[kind]
+      end
       
       # Otherwise look for a file, and if it exists, load the definition
       file = find_file(kind, path)
       
       if file
         yaml = YAML::load_file(file)
+        $stderr.puts "Found file '#{file}', parsing definition"
         definition = parse(kind, yaml)
       # Otherwise look for a concrete class with the same name
       elsif concrete_class = ParserHelper.get_class(kind)
@@ -143,6 +147,7 @@ module Bob
     #   the hash, and return it.
     #
     def self.parse(kind, yaml)
+      $stderr.puts "Parsing #{kind}"
       type = nil
       defaults = nil
       
