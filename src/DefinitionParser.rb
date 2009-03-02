@@ -155,10 +155,23 @@ module Bob
       
       # Parse the type name
       parent = parse_name(type)
+      
       # If there's no parent, assume Component
       if parent.nil?
         parent = Default
         ancestors = [kind, 'Component']
+      
+      # If parent is the same,
+      elsif parent == kind
+        # only permit the parent to be the same if it's a concrete component
+        concrete_class = ParserHelper.get_class(kind)
+        if concrete_class and ParserHelper.is_component?(concrete_class)
+          ancestors = [kind]
+          parent = ComponentDefinition.new( kind, {}, ancestors, concrete_class )
+        else
+          throw "Recursive definition detected: #{kind} is its own parent."
+        end
+      
       else
         # Check that the parent does not inherit from the current definition at
         # any point - i.e. definition is not recursive

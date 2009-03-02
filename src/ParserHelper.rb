@@ -32,8 +32,13 @@ module Bob
       
       begin
         require "#{name}.rb"
+      rescue LoadError
+        # Do nothing
+      end
+      
+      begin
         klass = const_get(name)
-      rescue LoadError, NameError
+      rescue NameError
         return nil
       end
       
@@ -52,6 +57,13 @@ module Bob
       not [ Hash, Array, Component, NilClass ].include?(value.class)
     end
     
+    #
+    # Returns true if the class inherits from Component.
+    #
+    def self.is_component?(klass)
+      # TODO
+      false
+    end
   end
 
 end
