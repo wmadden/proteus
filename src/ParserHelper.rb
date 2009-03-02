@@ -50,7 +50,7 @@ module Bob
     # Returns true if the value is a scalar.
     #
     def self.is_scalar?(value)
-      not [ Hash, Array, Component ].include?(value.class)
+      not [ Hash, Array, Component, NilClass ].include?(value.class)
     end
     
   end
