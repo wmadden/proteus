@@ -38,6 +38,7 @@ module Bob
       @parent = ancestors[1]
       @concrete_class = concrete_class
       
+      @defaults = defaults
       @parameters = defaults[:parameters] || {}
       @children = defaults[:children] || []
       @template = defaults[:template] || ""
@@ -45,14 +46,26 @@ module Bob
     end
     
     #
-    # Merges this definition's defaults with a child definition's. Returns the
-    # result (as a hash).
+    # Merges two sets of defaults, parent and child's.
+    # Note: doesn't handle decorators yet
     #
-    def merge_defaults( defaults )
-      { :parameters => @parameters.merge( defaults["parameters"] || {} ),
-        :children => defaults["children"] || @children,
-        :template => defaults["template"] || "",
-        :decorators => defaults["decorators"] || [] }
+    def self.merge_defaults( child_defs, parent_defs )
+      # If the parent has parameters, merge them with the child's
+      if parent_defs[:parameters].nil?
+        parameters = child_defs[:parameters]
+      else
+        parameters = parent_defs[:parameters].merge( child_defs[:parameters] || {} )
+      end
+      
+      # If the child has a template, that overrides the parent's
+      template = child_defs[:template] || parent_defs[:template]
+    
+      # If the child has children, they override the parent's
+      children = child_defs[:children] || parent_defs[:children]
+      
+      return { :parameters => parameters,
+               :children => children,
+               :template => template }
     end
     
     #

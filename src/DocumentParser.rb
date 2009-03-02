@@ -37,6 +37,7 @@ module Bob
     
     def self.path=(value)
       @@path = value
+      DefinitionParser.path = @@path
     end
     
     def self.path
@@ -47,7 +48,8 @@ module Bob
     # Loads a file, given its name, and parses the contents.
     #
     def self.load_file(file)
-      parse( YAML::load(File.read(file)) )
+      # Explicit self in case load is defined
+      self.load(File.read(file))
     end
     
     #
@@ -87,7 +89,7 @@ module Bob
             end
           end
         
-        # If given a string
+        # If given a scalar
         when ParserHelper.is_scalar?(yaml):
           if yaml.component_name?
             begin
