@@ -44,8 +44,6 @@ module Bob
     # Loads and returns the named component definition.
     #
     def self.load(kind, path = @@path)
-      $stderr.puts "Loading '#{kind.inspect}' definition"
-      
       # If not given a kind to load, fail
       if kind.nil? or kind == ''
         throw "Can't load '#{kind}', not a valid definition name."
@@ -58,7 +56,6 @@ module Bob
       
       # If it's already loaded, return the instance
       if @@definitions[kind]
-        $stderr.puts "Already loaded, returning #{@@definitions[kind].inspect}" 
         return @@definitions[kind]
       end
       
@@ -67,7 +64,6 @@ module Bob
       
       if file
         yaml = YAML::load_file(file)
-        $stderr.puts "Found file '#{file}', parsing definition"
         definition = parse(kind, yaml)
       # Otherwise look for a concrete class with the same name
       elsif concrete_class = ParserHelper.get_class(kind)
@@ -118,10 +114,8 @@ module Bob
       target = "#{kind}.def"
       
       for filepath in path
-        $stderr.print "Searching #{filepath}\n"
         for file in Dir.new(filepath)
           if file == target
-            $stderr.puts "Found #{filepath}/#{file}"
             return "#{filepath}/#{file}" 
           end
         end
@@ -147,7 +141,6 @@ module Bob
     #   the hash, and return it.
     #
     def self.parse(kind, yaml)
-      $stderr.puts "Parsing #{kind}"
       type = nil
       defaults = nil
       
@@ -174,8 +167,6 @@ module Bob
       if parent.nil? or parent == ''
         parent = 'Component'
       end
-      
-      $stderr.puts "Parent is '#{parent}'"
       
       # Check that the parent does not inherit from the current definition at
       # any point - i.e. definition is not recursive
@@ -302,6 +293,11 @@ module Bob
     # Throws an exception in the even of a recursive definition.
     #
     def self.get_ancestors(parent, ancestors)
+      # If we've reached component, return
+      if parent == 'Component'
+        return ancestors.push(parent)
+      end
+      
       # Check that parent is not in ancestors
       if ancestors.include?(parent)
         throw "Recursive component definition #{ancestors[0]}"

@@ -79,7 +79,6 @@ module Bob
             begin
               return ComponentParser.parse(yaml.keys.first, value)
             rescue UnknownComponent
-              $stderr.print "Could not find definition for component #{yaml.keys.first}\n"
               return {yaml.keys.first => value}
             end
           else
@@ -95,7 +94,6 @@ module Bob
             begin
               ComponentParser.parse(yaml)
             rescue UnknownComponent
-              $stderr.print "Could not find definition for component #{yaml}\n"
               return yaml
             end
           else
