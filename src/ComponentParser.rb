@@ -40,7 +40,8 @@ module Bob
       # If the kind is not a valid component name or we can't find the definition
       definition = DefinitionParser.load(kind)
       if definition.nil?
-        throw UnknownComponent, "No definition available for component '#{kind}'"
+        raise UnknownComponent, "No definition available for component '#{kind}'"
+        return
       end
       
       # Otherwise, interpret its value and instantiate the component
@@ -48,14 +49,14 @@ module Bob
       parameters = {}
       case
         when yaml.is_a?(Hash):
-          children = value.delete('children')
-          parameters = value
+          children = yaml.delete('children')
+          parameters = yaml
 
         when yaml.is_a?(Array):
-          children = value
+          children = yaml
         
         when is_scalar?(yaml):
-          children = [parse(value)]
+          children = [parse(yaml)]
       end
       
       definition.instantiate(parameters, children)

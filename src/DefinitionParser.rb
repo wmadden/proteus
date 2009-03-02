@@ -96,8 +96,12 @@ module Bob
       target = "#{kind}.def"
       
       for filepath in path
+        $stderr.print "Searching #{filepath}\n"
         for file in Dir.new(filepath)
-          return "#{filepath}/#{file}" if file == target
+          if file == target
+            $stderr.puts "Found #{filepath}/#{file}"
+            return "#{filepath}/#{file}" 
+          end
         end
       end
       
