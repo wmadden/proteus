@@ -22,26 +22,27 @@
 # Foobar.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.join(File.dirname(__FILE__), 'lib/Parser.rb')
+require File.join(File.dirname(__FILE__), 'src/DocumentParser.rb')
+
+include Bob
 
 # Specify library directory here
 libdir = '/usr/lib/bob/rails:/usr/lib/bob'
 
 envpath = ENV['BOB_PATH']
-if envpath and Bob::path
+if envpath and DocumentParser.path
   envpath += ":"
 end
 
-Bob::path = "#{envpath.to_s}#{Bob::path}:#{libdir}"
+Bob::path = "#{envpath.to_s}#{DocumentParser.path}:#{libdir}"
 
-$stderr.print "Using path #{Bob::path}\n"
+$stderr.print "Using path #{DocumentParser.path}\n"
 
 if ARGV.length == 0
   puts Bob.parse( YAML::load($stdin) )
 else
-  for arg in ARGV do
-    components = Bob::parse( YAML::load_file(arg) )
-  
+  ARGV.each do |arg|
+    components = DocumentParser.load_file(arg)
     puts components
   end
 end
