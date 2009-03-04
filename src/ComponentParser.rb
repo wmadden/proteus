@@ -54,7 +54,7 @@ module Bob
           definition.instantiate({}, children)
         
         when ParserHelper.is_scalar?(yaml):
-          children = [parse(yaml)]
+          children = [yaml]
           definition.instantiate({}, children)
       end
       

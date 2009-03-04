@@ -38,7 +38,7 @@ module Bob
     #
     # Find a file.
     #
-    def self.find_file(file, path = @@path)
+    def self.find_file(target, path = @@path)
       for filepath in path
         for file in Dir.new(filepath)
           return "#{filepath}/#{file}" if file == target
