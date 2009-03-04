@@ -20,9 +20,9 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'ComponentDefinition'
-require 'ParserHelper'
-require 'FileFinder'
+require File.join(File.dirname(__FILE__), 'ComponentDefinition.rb')
+require File.join(File.dirname(__FILE__), 'ParserHelper.rb')
+require File.join(File.dirname(__FILE__), 'FileFinder.rb')
 
 module Bob
 
@@ -40,7 +40,7 @@ module Bob
     # Searches for a file matching the component name, then a class and if
     # nothing matches returns nil.
     #
-    def self.load(kind, path = @@path)
+    def self.load(kind)
       # If it's a restricted definition, throw an exception
       if @@restricted_definitions.include?(kind)
         throw "Recursive definition detected: attempted to load restricted definition '#{kind}'."
@@ -52,7 +52,7 @@ module Bob
       end
       
       # Otherwise look for a file, and if it exists, load the definition
-      file = FileFinder.find_file("#{kind}.def", path)
+      file = FileFinder.find_file("#{kind}.def")
       
       if file
         yaml = YAML::load_file(file)

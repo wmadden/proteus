@@ -93,10 +93,6 @@ module Bob
       return output
     end
     
-    def child(index)
-      @children[index]
-    end
-    
     def next_child
       @last_child_index += 1
       return child(@last_child_index - 1)

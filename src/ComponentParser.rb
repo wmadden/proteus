@@ -20,10 +20,10 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'Component'
-require 'DefinitionParser'
-require 'ParserHelper'
-require 'Exceptions'
+require File.join(File.dirname(__FILE__), 'Component.rb')
+require File.join(File.dirname(__FILE__), 'DefinitionParser.rb')
+require File.join(File.dirname(__FILE__), 'ParserHelper.rb')
+require File.join(File.dirname(__FILE__), 'Exceptions.rb')
 
 module Bob
 
@@ -31,7 +31,6 @@ module Bob
   # Parses components.
   #
   class ComponentParser
-    
     #
     # Parses YAML, returning a Component instance.
     #
@@ -61,6 +60,6 @@ module Bob
       
       definition.instantiate()
     end
-    
   end
+  
 end
