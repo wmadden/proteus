@@ -22,6 +22,7 @@
 
 require 'ComponentDefinition'
 require 'ParserHelper'
+require 'FileFinder'
 
 module Bob
 
@@ -51,7 +52,7 @@ module Bob
       end
       
       # Otherwise look for a file, and if it exists, load the definition
-      file = find_file(kind, path)
+      file = FileFinder.find_file("#{kind}.def", path)
       
       if file
         yaml = YAML::load_file(file)
@@ -64,21 +65,6 @@ module Bob
       
       @@definitions[kind] = definition
       return definition
-    end
-
-    #
-    # Find a definition file for the given type.
-    #
-    def self.find_file(kind, path = DEFAULT_PATH)
-      target = "#{kind}.def"
-      
-      for filepath in path
-        for file in Dir.new(filepath)
-          return "#{filepath}/#{file}" if file == target
-        end
-      end
-      
-      return nil
     end
 
     #
@@ -227,10 +213,6 @@ module Bob
     # to prevent recursive definitions.
     @@restricted_definitions = []
     
-    # The path variable (follows standard UNIX convention). Paths in this array
-    # will be searched (non-recursively) for definition files.
-    @@path = ['.']
-    
     # The default definition
     Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
     
@@ -239,16 +221,6 @@ module Bob
     
     # The regex used to parse definition names.
     NameRegex = Regexp.new("#{Component::NameRegexp.source}([\s]*<[\s]*(#{Component::NameRegexp.source}))?")
-    
-    # Accessor for @@path.
-    def self.path=(value)
-      @@path = value
-    end
-
-    # Accessor for @@path.
-    def self.path
-      @@path
-    end
     
   end
 end

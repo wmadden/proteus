@@ -32,17 +32,6 @@ module Bob
   # Used to load and parse documents.
   #
   class DocumentParser
-    @@path = DefinitionParser.path
-    
-    def self.path=(value)
-      @@path = value
-      DefinitionParser.path = @@path
-    end
-    
-    def self.path
-      @@path
-    end
-    
     #
     # Loads a file, given its name, and parses the contents.
     #
