@@ -5,7 +5,9 @@
             :name: name
 
         - Control:
-            :name: age
+            children:
+              - label
+              - input
 
         - Control:
             :name: gender
