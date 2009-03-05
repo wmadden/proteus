@@ -8,10 +8,12 @@ describe ComponentParser do
   #   * a list as the children
   #   * a hash as parameters
   
-  @scalar = "flat scalar"
-  @list = [@scalar, @scalar, @scalar]
-  @hash = [:a => @scalar, :b => @scalar, :c => @scalar]
-  @hash = [:a => @scalar, :b => @scalar, :c => @scalar, 'children' => @list]
+  before(:all) do
+    @scalar = "flat scalar"
+    @list = [@scalar, @scalar, @scalar]
+    @hash = {:a => @scalar, :b => @scalar, :c => @scalar}
+    @hash_children = {:a => @scalar, :b => @scalar, :c => @scalar, 'children' => @list}
+  end
   
   it "should create a blank component from nil" do
     component = ComponentParser.parse('Component', nil)
