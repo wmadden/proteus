@@ -34,7 +34,7 @@ module Bob
     #
     # Parses YAML, returning a Component instance.
     #
-    def self.parse(kind, yaml = nil)
+    def self.parse(kind, yaml)
       # If the kind is not a valid component name or we can't find the definition
       definition = DefinitionParser.load(kind)
       if definition.nil?
@@ -48,7 +48,7 @@ module Bob
           children = yaml.delete('children')
           parameters = yaml
           definition.instantiate(parameters, children)
-
+        
         when yaml.is_a?(Array):
           children = yaml
           definition.instantiate({}, children)
@@ -56,9 +56,10 @@ module Bob
         when ParserHelper.is_scalar?(yaml):
           children = [yaml]
           definition.instantiate({}, children)
+        
+        when yaml.nil?:
+          definition.instantiate()
       end
-      
-      definition.instantiate()
     end
   end
   
