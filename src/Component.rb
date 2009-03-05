@@ -95,7 +95,7 @@ module Bob
     
     def next_child
       @last_child_index += 1
-      return child(@last_child_index - 1)
+      return @children[@last_child_index - 1]
     end
     
     def to_s
