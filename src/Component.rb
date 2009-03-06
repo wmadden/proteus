@@ -48,7 +48,7 @@ module Bob
     #
     # The regex used to identify component names.
     #
-    NameRegexp = /[A-Z][a-z_1234567890]*/
+    NameRegexp = /^[A-Z][a-zA-Z_0-9]*$/
     
     #
     # Renders the component.
