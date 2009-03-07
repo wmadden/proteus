@@ -28,13 +28,15 @@ module Bob
   #
   class ComponentDefinition
 
-    attr_accessor :kind, :defaults, :parent, :concrete_class
+    attr_reader :kind, :defaults, :parent, :ancestors, :concrete_class
+    attr_reader :parameters, :children, :template, :decorators
 
     #
     # Constructor.
     #
     def initialize( kind, defaults, ancestors, concrete_class )
       @kind = kind
+      @ancestors = ancestors
       @parent = ancestors[1]
       @concrete_class = concrete_class
       

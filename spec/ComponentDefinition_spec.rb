@@ -48,7 +48,7 @@ describe ComponentDefinition do
   it "should be correctly initialized from a defaults hash" do
     kind = 'SomeComponent'
     parent = 'Component'
-    ancestors = [parent]
+    ancestors = [kind, parent]
     concrete_class = 'Component'
     
     definition = ComponentDefinition.new(kind, @sample_defaults, ancestors, concrete_class)
