@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require '../src/DecoratorParser.rb'
+require 'src/DecoratorParser.rb'
 
 include Bob
 

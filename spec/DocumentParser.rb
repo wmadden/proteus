@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require '../src/DocumentParser.rb'
+require 'src/DocumentParser.rb'
 
 include Bob
 
@@ -28,5 +28,4 @@ describe DocumentParser do
   it "should be able to parse a hash"
   it "should be able to parse a list"
   it "should be able to parse a scalar"
-  it "should 
 end

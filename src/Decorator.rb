@@ -1,7 +1,7 @@
 ################################################################################
-# FileFinder.rb
+# Decorator.rb
 #
-# Unit tests for FileFinder.
+# Provides the Decorator class.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -20,11 +20,9 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/FileFinder.rb'
+module Bob
 
-include Bob
+  class Decorator
+  end
 
-describe FileFinder do
-  it "should be able to find files on the path"
-  it "should be able to change the path"
 end
