@@ -31,7 +31,37 @@ include Bob
 #   * instantiate
 #
 describe ComponentDefinition do
-  it "should be correctly initialized from a defaults hash"
+  before(:all) do
+    @sample_params = {:a => :b, :b => :c, :c => :d}
+    @sample_children = [:child1, :child2, :child3]
+    @sample_template = "sample template"
+    @sample_decorators = [:dec1, :dec2, :dec3]
+    
+    @sample_defaults = {
+      :children => @sample_children,
+      :parameters => @sample_params,
+      :template => @sample_template,
+      :decorators => @sample_decorators
+    }
+  end
+
+  it "should be correctly initialized from a defaults hash" do
+    kind = 'SomeComponent'
+    parent = 'Component'
+    ancestors = [parent]
+    concrete_class = 'Component'
+    
+    definition = ComponentDefinition.new(kind, @sample_defaults, ancestors, concrete_class)
+
+    definition.kind.should == kind
+    definition.ancestors.should == ancestors
+    definition.parent.should == parent
+    definition.defaults.should == @sample_defaults
+    definition.parameters.should == @sample_params
+    definition.children.should == @sample_children
+    definition.decorators.should == @sample_decorators
+    definition.template.should == @sample_template
+  end
   
   it "should merge defaults intelligently"
   
