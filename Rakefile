@@ -1,7 +1,7 @@
 
 
 task :spec do
-  sh "spec spec/*.rb"
+  sh "spec spec/"
 end
 
 task :default => [:spec]
