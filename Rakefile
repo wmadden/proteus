@@ -23,7 +23,7 @@ end
 Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "--format pretty"
   t.rcov = true
-  t.rcov_opts += ['-o coverage/cucumber/']
+  t.rcov_opts << %[-o "features/cucumber"]
 end
 
 task :default => [:spec, :features, :verify_rcov]
