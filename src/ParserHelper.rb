@@ -27,29 +27,36 @@ module Bob
     ComponentRegex = /^[A-Z][a-zA-Z_0-9]*$/
     DefinitionRegex = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
 
+    def self.do_nothing
+    end
+
     #
     # Returns the class given by name, or nil if it can't be found.
     #
     def self.get_class(name)
       klass = nil
       
-      begin
-        require "#{name}.rb"
-      rescue LoadError
-        # Do nothing
-      end
-      
+      # See if it's a known class
       begin
         klass = const_get(name)
       rescue NameError
+        do_nothing
+      end
+      
+      # Otherwise try and require it.rb
+      begin
+        require "#{name}.rb"
+        klass = const_get(name)
+      rescue LoadError, NameError
+        do_nothing
+      end
+      
+      # If found something, check that it's actually a class
+      if (not klass.nil?) and (not klass.is_a?(Class))
         return nil
       end
       
-      # Check that it's actually a class
-      if not klass.is_a?(Class)
-        return nil
-      end
-      
+      # Otherwise return what we got
       return klass
     end
     
