@@ -125,12 +125,14 @@ module Bob
     #   the hash, and return it.
     #
     def self.parse(kind, yaml)
+      # Push this kind on to the blacklist
+      @@restricted_definitions.push(kind)
+      
       # Parse based on yaml form
       if yaml.is_a?(Hash) and yaml.length == 1
         # Parse the defaults, restricting the current type to avoid recursive
         # definition
         type = yaml.keys[0]
-        @@restricted_definitions.push(kind)
         
         defaults = parse_defaults(yaml.values[0])
       elsif ParserHelper.is_scalar?(yaml)
