@@ -25,6 +25,16 @@ require 'src/FileFinder.rb'
 include Bob
 
 describe FileFinder do
+  before(:all) do
+    @sample_path = ['.', 'defs', 'decs']
+  end
+  
   it "should be able to find files on the path"
-  it "should be able to change the path"
+    # TODO: create a file in the local directory, and one in another directory.
+    # Test the order it finds them in.
+  
+  it "should be able to change the path" do
+    FileFinder.path = @sample_path
+    FileFinder.path.should == @sample_path
+  end
 end

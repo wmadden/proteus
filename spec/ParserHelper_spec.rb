@@ -29,9 +29,28 @@ include Bob
 #   * get_class
 #   * is_scalar?
 #   * is_component?
+class SubComponent < Component
+end
+
+class NotComponent
+end
+
 describe ParserHelper do
   it "should be able to get known classes"
   it "should be able to get classes on the path"
-  it "should be able to test if something's a scalar"
-  it "should be able to tell if something's a component"
+  
+  it "should be able to test if something's a scalar" do
+    ParserHelper.is_scalar?(Hash.new).should == false
+    ParserHelper.is_scalar?(Array.new).should == false
+    
+    ParserHelper.is_scalar?('string').should == true
+    ParserHelper.is_scalar?(1337).should == true
+    ParserHelper.is_scalar?(nil).should == true
+  end
+  
+  it "should be able to tell if something's a component" do
+    ParserHelper.is_component?(Component).should == true
+    ParserHelper.is_component?(SubComponent).should == true
+    ParserHelper.is_component?(NotComponent).should == false
+  end
 end
