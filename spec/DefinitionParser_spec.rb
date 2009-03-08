@@ -20,10 +20,10 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+require File.expand_path( 'src/FileFinder.rb' )
 require File.expand_path( 'src/DefinitionParser.rb' )
 
 include Bob
-
 
 #
 # Imporant functions:
@@ -35,6 +35,10 @@ include Bob
 #
 describe DefinitionParser do
   before(:all) do
+    # Set up paths
+    @default_file_path = FileFinder.path
+    FileFinder.path += ['spec/defs']
+        
     @parameters = { 'a' => 'b', 'b' => 'c', 'c' => 'd' }
     @children = [ 'a', 'b', 'c' ]
     @decorators = [ 'dec1', 'dec2', 'dec3' ]
@@ -45,6 +49,21 @@ describe DefinitionParser do
       'decorators' => @decorators,
       'template' => @template,
     }}
+    
+    @default_children = @children
+    @default_parameters = @parameters
+    @default_decorators = [] # NYI
+    @default_template = @template
+  end
+
+  def clear_def_hash
+    # Empty the loaded definitions hash (HACKY)
+    DefinitionParser.class_eval("@@definitions = {}")
+  end
+
+  after(:all) do
+    FileFinder.path = @default_file_path
+    clear_def_hash
   end
 
   it "should be able to get the parent from the name" do
@@ -70,13 +89,11 @@ describe DefinitionParser do
     result.children.should == @children
   end
   
-  it "should be able to parse default decorators" do
-    input = {'Component' => {'decorators' => @decorators}}
-    
-    result = DefinitionParser.parse('Component', input)
-    
-    result.decorators.should == @decorators
-  end
+  it "should be able to parse default decorators"# do
+#    input = {'Component' => {'decorators' => @decorators}}
+#    result = DefinitionParser.parse('Component', input)
+#    result.decorators.should == @decorators
+#  end
   
   it "should be able to parse component template" do
     input = {'Component' => {'template' => @template}}
@@ -91,8 +108,56 @@ describe DefinitionParser do
     
     result.parameters.should == @parameters
     result.children.should == @children
-    result.decorators.should == @decorators
+#    result.decorators.should == @decorators
     result.template.should == @template
+  end
+  
+  it "should load the default definition from file" do
+    clear_def_hash
+    # Load the default definition
+    default_def = DefinitionParser.load('Component')
+    
+    default_def.children.should == @default_children
+    default_def.parameters.should == @default_parameters
+    default_def.decorators.should == @default_decorators
+    default_def.template.should == @default_template
+  end
+  
+  it "should not permit a definition to be its own parent" do
+    success = true
+    begin
+      DefinitionParser.parse('SomeDef', 'SomeDef < SomeDef')
+      success = false
+    rescue RecursiveDefinition
+    end
+    
+    success.should == true
+  end
+  
+  it "should assume a component inherits from Component if undefined" do
+    result = DefinitionParser.parse('SomeComponent', 'SomeComponent')
+    result.parent.should == 'Component'
+  end
+  
+  it "should calculate ancestors correctly" do
+    # A < Component
+    a = DefinitionParser.load('A')
+    # B < A
+    b = DefinitionParser.parse('B', 'B < A')
+    # B.ancestors == ['B', 'A', 'Component']?
+    b.ancestors.should == ['B', 'A', 'Component']
+  end
+  
+  it "should not permit recursive components" do
+    # C < B
+    # B < C
+    success = true
+    begin
+      b = DefinitionParser.load('B')
+      success = false
+    rescue RecursiveDefinition
+    end
+    success.should == true
   end
   
   it "should be able to parse children which are components"

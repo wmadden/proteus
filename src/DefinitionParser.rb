@@ -23,6 +23,7 @@
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentDefinition.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileFinder.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DocumentParser.rb') )
 
 module Bob
 
@@ -60,7 +61,7 @@ module Bob
       elsif concrete_class = ParserHelper.get_class(kind)
         definition = ComponentDefinition.new(kind, {}, [kind], concrete_class)
       else
-        return nil
+        raise UnknownDefinition, "Could not find definition for #{kind}, nor is it a loaded class"
       end
       
       @@definitions[kind] = definition
@@ -208,20 +209,6 @@ module Bob
       return { :template => template, :parameters => parameters, :children => children }
     end
     
-    #
-    # Loads the default component definition.
-    #
-    def self.load_default()
-      default = load('Component')
-      
-      if default.nil?
-        @@definitions['Component'] = ComponentDefinition.new('Component', {}, ['Component'], Component)
-        default = ComponentDefinition.new('Component', {}, ['Component'], Component)
-      end
-      
-      return default
-    end
-    
     # A list of definitions which cannot be loaded. This is used during parsing
     # to prevent recursive definitions.
     @@restricted_definitions = []
@@ -230,6 +217,6 @@ module Bob
     @@definitions = {}
     
     # The default definition
-    Default = load_default()
+    Default = load('Component')
   end
 end

@@ -35,4 +35,8 @@ module Bob
   
   class RecursiveDefinition < Exception
   end
+  
+  class UnknownDefinition < Exception
+  end
+  
 end
