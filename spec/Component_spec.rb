@@ -34,13 +34,6 @@ describe Component do
     }
   end
   
-  it "should recognize component names" do
-    Component::NameRegexp.should =~ 'Component'
-    Component::NameRegexp.should =~ 'CamelcaseComponent'
-    Component::NameRegexp.should_not =~ 'notcomponent'
-    Component::NameRegexp.should_not =~ 'Not A Component'
-  end
-  
   it "should iterate through children using next_child()" do
     component = Component.new('Component', {}, @sample_children)
     component.next_child.should == 'child1'

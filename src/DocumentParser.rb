@@ -117,7 +117,7 @@ class Object
   #
   def component_name?
     # Valid if matches the component name regex
-    Component::NameRegexp === self.to_s
+    ParserHelper::ComponentRegex === self.to_s
   end
 end
 

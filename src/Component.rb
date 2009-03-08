@@ -46,11 +46,6 @@ module Bob
     end
     
     #
-    # The regex used to identify component names.
-    #
-    NameRegexp = /^[A-Z][a-zA-Z_0-9]*$/
-    
-    #
     # Renders the component.
     #
     # Takes as parameter the format to render in.

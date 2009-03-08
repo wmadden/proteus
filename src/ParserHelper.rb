@@ -24,6 +24,9 @@ module Bob
 
   class ParserHelper
 
+    ComponentRegex = /^[A-Z][a-zA-Z_0-9]*$/
+    DefinitionRegex = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
+
     #
     # Returns the class given by name, or nil if it can't be found.
     #
@@ -61,8 +64,7 @@ module Bob
     # Returns true if the class inherits from Component.
     #
     def self.is_component?(klass)
-      # TODO
-      false
+      return klass.ancestors.include?(Component)
     end
   end
 

@@ -39,13 +39,20 @@ describe ParserHelper do
   it "should be able to get known classes"
   it "should be able to get classes on the path"
   
+  it "should recognize component names" do
+    ParserHelper::ComponentRegex.should =~ 'Component'
+    ParserHelper::ComponentRegex.should =~ 'CamelcaseComponent'
+    ParserHelper::ComponentRegex.should_not =~ 'notcomponent'
+    ParserHelper::ComponentRegex.should_not =~ 'Not A Component'
+  end
+  
   it "should be able to test if something's a scalar" do
     ParserHelper.is_scalar?(Hash.new).should == false
     ParserHelper.is_scalar?(Array.new).should == false
+    ParserHelper.is_scalar?(nil).should == false
     
     ParserHelper.is_scalar?('string').should == true
     ParserHelper.is_scalar?(1337).should == true
-    ParserHelper.is_scalar?(nil).should == true
   end
   
   it "should be able to tell if something's a component" do

@@ -44,14 +44,12 @@ describe DefinitionParser do
   it "should be able to get the parent from the name" do
     DefinitionParser.parse_name('SomeComponent < SomeParent').should == 'SomeParent'
     DefinitionParser.parse_name('SomeComponent').should == nil
-    DefinitionParser.parse_name('SomeComponent < SomeParent < SomeOtherParent').should == nil
-    DefinitionParser.parse_name('abc').should == nil
   end
   
   it "should be able to get ancestors when there are some"
   
   it "should be able to parse default parameters" do
-    input = {'Component' => ['parameters' => @params]}
+    input = {'Component' => {'parameters' => @params}}
     
     result = DefinitionParser.parse('Component', input)
     
@@ -59,7 +57,7 @@ describe DefinitionParser do
   end
   
   it "should be able to parse default children" do
-    input = {'Component' => ['parameters' => @params]}
+    input = {'Component' => {'parameters' => @params}}
     
     result = DefinitionParser.parse('Component', input)
     
@@ -67,7 +65,7 @@ describe DefinitionParser do
   end
   
   it "should be able to parse default decorators" do
-    input = {'Component' => ['decorators' => @decorators]}
+    input = {'Component' => {'decorators' => @decorators}}
     
     result = DefinitionParser.parse('Component', input)
     
@@ -75,7 +73,7 @@ describe DefinitionParser do
   end
   
   it "should be able to parse component template" do
-    input = {'Component' => ['template' => @template]}
+    input = {'Component' => {'template' => @template}}
     
     result = DefinitionParser.parse('Component', input)
     

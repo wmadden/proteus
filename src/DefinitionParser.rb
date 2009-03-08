@@ -77,11 +77,11 @@ module Bob
     # variables.
     #
     def self.parse_name(name)
-      if not matchdata = NameRegex.match(name)
+      if not matchdata = ParserHelper::DefinitionRegex.match(name)
         throw "Can't understand component name '#{name}'"
       end
       
-      return matchdata[2]
+      return matchdata[3]
     end
 
     #
@@ -218,9 +218,5 @@ module Bob
     
     # The hash of all loaded definitions
     @@definitions = {"Component" => Default}
-    
-    # The regex used to parse definition names.
-    NameRegex = Regexp.new("#{Component::NameRegexp.source}([\s]*<[\s]*(#{Component::NameRegexp.source}))?")
-    
   end
 end

@@ -28,4 +28,5 @@ describe DocumentParser do
   it "should be able to parse a hash"
   it "should be able to parse a list"
   it "should be able to parse a scalar"
+  it "should be able to load a file"
 end
