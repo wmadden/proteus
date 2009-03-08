@@ -35,3 +35,4 @@ Document:
     - H2: How can I find out more?
     
     - Text: Visit <a href="http://rubyforge.org/projects/bob">RubyForge</a>
+    - Text: or visit <a href="http://projects.willmadden.com/projects/show/bob">Bob's Redmine</a>
