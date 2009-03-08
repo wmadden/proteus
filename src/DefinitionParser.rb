@@ -207,16 +207,29 @@ module Bob
       
       return { :template => template, :parameters => parameters, :children => children }
     end
-   
+    
+    #
+    # Loads the default component definition.
+    #
+    def self.load_default()
+      default = load('Component')
+      
+      if default.nil?
+        @@definitions['Component'] = ComponentDefinition.new('Component', {}, ['Component'], Component)
+        default = ComponentDefinition.new('Component', {}, ['Component'], Component)
+      end
+      
+      return default
+    end
     
     # A list of definitions which cannot be loaded. This is used during parsing
     # to prevent recursive definitions.
     @@restricted_definitions = []
     
-    # The default definition
-    Default = ComponentDefinition.new("Component", {}, ["Component"], Component)
-    
     # The hash of all loaded definitions
-    @@definitions = {"Component" => Default}
+    @@definitions = {}
+    
+    # The default definition
+    Default = load_default()
   end
 end

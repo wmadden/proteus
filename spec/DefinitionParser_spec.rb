@@ -100,4 +100,6 @@ describe DefinitionParser do
   it "should be able to parse parameters which are components"
   
   it "should be able to load definitions"
+  
+  it "should be able to load default definition from Component.def"
 end
