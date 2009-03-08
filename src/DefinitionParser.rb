@@ -180,7 +180,7 @@ module Bob
     #
     def self.parse_defaults(yaml)
       if not yaml.is_a?(Hash)
-        raise DefinitionMalformed "Definition malformed - defaults not a hash."
+        raise DefinitionMalformed, "Definition malformed - defaults not a hash."
       end
       
       template = yaml['template']

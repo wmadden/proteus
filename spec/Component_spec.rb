@@ -32,6 +32,9 @@ describe Component do
       'param2' => 'param2val',
       'param3' => 'param3val',
     }
+    @sample_decorators = ["dec1", "dec2", "dec3"]
+    @sample_template = "<% 5.times do%>some template<% end %>"
+    @faulty_template = "<%= 1 / 0 %>"
   end
   
   it "should iterate through children using next_child()" do
@@ -52,5 +55,20 @@ describe Component do
     component.param1.should == 'param1val'
     component.param2.should == 'param2val'
     component.param3.should == 'param3val'
+  end
+  
+  it "should be able to render itself using ERB" do
+    component = Component.new('Component', {}, [], @sample_template)
+    component.render.should == 'some templatesome templatesome templatesome templatesome template'
+  end
+  
+  it "should be able to render its children using ERB" do
+    component = Component.new('Component', {}, @sample_children)
+    component.render_children.should == 'child1child2child3'
+  end
+  
+  it "should render itself when to_s is invoked" do
+    component = Component.new('Component', {}, [], @sample_template)
+    component.to_s.should == 'some templatesome templatesome templatesome templatesome template'
   end
 end

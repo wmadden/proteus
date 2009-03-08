@@ -23,6 +23,13 @@
 module Bob
 
   class Decorator
+    def initialize(template)
+      @template = template
+    end
+    
+    def decorate( input )
+      
+    end
   end
 
 end
