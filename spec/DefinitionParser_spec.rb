@@ -39,6 +39,12 @@ describe DefinitionParser do
     @children = [ 'a', 'b', 'c' ]
     @decorators = [ 'dec1', 'dec2', 'dec3' ]
     @template = 'this is the template'
+    @sample_def = {'Component' => {
+      'parameters' => @params,
+      'children' => @children,
+      'decorators' => @decorators,
+      'template' => @template,
+    }}
   end
 
   it "should be able to get the parent from the name" do
@@ -57,11 +63,11 @@ describe DefinitionParser do
   end
   
   it "should be able to parse default children" do
-    input = {'Component' => {'parameters' => @params}}
+    input = {'Component' => {'children' => @children}}
     
     result = DefinitionParser.parse('Component', input)
     
-    result.parameters.should == @params
+    result.children.should == @children
   end
   
   it "should be able to parse default decorators" do
@@ -80,6 +86,18 @@ describe DefinitionParser do
     result.template.should == @template
   end
   
-  it "should be able to parse definitions"
+  it "should be able to parse definitions" do
+    result = DefinitionParser.parse('Component', @sample_def)
+    
+    result.parameters.should == @params
+    result.children.should == @children
+    result.decorators.should == @decorators
+    result.template.should == @template
+  end
+  
+  it "should be able to parse children which are components"
+  
+  it "should be able to parse parameters which are components"
+  
   it "should be able to load definitions"
 end
