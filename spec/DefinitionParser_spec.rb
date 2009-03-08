@@ -160,11 +160,14 @@ describe DefinitionParser do
     success.should == true
   end
   
-  it "should be able to parse children which are components"
+  it "should fail if it can't find the file or the class" do
+    success = true
+    begin
+      DefinitionParser.load('NotARealDefinition')
+      success = false
+    rescue UnknownDefinition
+    end
+    success.should == true
+  end
   
-  it "should be able to parse parameters which are components"
-  
-  it "should be able to load definitions"
-  
-  it "should be able to load default definition from Component.def"
 end
