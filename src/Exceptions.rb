@@ -32,4 +32,7 @@ module Bob
   
   class RenderError < Exception
   end
+  
+  class RecursiveDefinition < Exception
+  end
 end

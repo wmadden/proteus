@@ -41,9 +41,9 @@ module Bob
     # nothing matches returns nil.
     #
     def self.load(kind)
-      # If it's a restricted definition, throw an exception
+      # If it's a restricted definition, raise an exception
       if @@restricted_definitions.include?(kind)
-        throw "Recursive definition detected: attempted to load restricted definition '#{kind}'."
+        raise RecursiveDefinition, "Recursive definition detected: attempted to load restricted definition '#{kind}'."
       end
       
       # If it's already loaded, return the instance
@@ -69,7 +69,7 @@ module Bob
 
     #
     # Parses a type name and returns the parent, if any. If the name can't be
-    # parsed, throws an exception.
+    # parsed, raises an exception.
     #
     # Returns nil if there is no parent.
     #
@@ -78,7 +78,7 @@ module Bob
     #
     def self.parse_name(name)
       if not matchdata = ParserHelper::DefinitionRegex.match(name)
-        throw "Can't understand component name '#{name}'"
+        raise DefinitionMalformed, "Can't understand component name '#{name}'"
       end
       
       return matchdata[3]
@@ -98,7 +98,7 @@ module Bob
       
       # Do not permit recursive types
       if ancestors.include?(parent)
-        throw "Recursive definition detected: 'parent' inherits from itself."
+        raise RecursiveDefinition, "Recursive definition detected: 'parent' inherits from itself."
       end
       
       # Load parent definition
@@ -136,7 +136,7 @@ module Bob
         type = yaml
         defaults = {}
       else
-        throw "Definition of '#{kind}' malformed."
+        raise DefinitionMalformed, "Definition of '#{kind}' malformed."
       end
       
       # Parse the type name
@@ -155,7 +155,7 @@ module Bob
           ancestors = [kind]
           parent = ComponentDefinition.new( kind, {}, ancestors, concrete_class )
         else
-          throw "Recursive definition detected: #{kind} is its own parent."
+          raise RecursiveDefinition, "Recursive definition detected: #{kind} is its own parent."
         end
       
       else
@@ -180,7 +180,7 @@ module Bob
     #
     def self.parse_defaults(yaml)
       if not yaml.is_a?(Hash)
-        throw "Definition malformed - defaults not a hash."
+        raise DefinitionMalformed "Definition malformed - defaults not a hash."
       end
       
       template = yaml['template']
