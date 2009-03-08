@@ -29,4 +29,7 @@ module Bob
   
   class DefinitionMalformed < Exception
   end
+  
+  class RenderError < Exception
+  end
 end

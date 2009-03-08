@@ -70,7 +70,13 @@ module Bob
         e = ERB.new(@template)
         e.result( binding() )
       rescue Exception
-        throw "Error rendering template: #{$!.message}\n#{$!.backtrace}"
+        raise RenderError, """Error rendering #{@kind} with
+    children = #{@children.inspect}
+    parameters = #{@parameters.inspect}
+    decorators = #{@decorators.inspect}
+    template = #{@template.inspect}
+    
+    #{$!.message}"""
       end
     end
 
