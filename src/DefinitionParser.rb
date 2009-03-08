@@ -97,11 +97,6 @@ module Bob
         return ancestors
       end
       
-      # Do not permit recursive types
-      if ancestors.include?(parent)
-        raise RecursiveDefinition, "Recursive definition detected: 'parent' inherits from itself."
-      end
-      
       # Load parent definition
       parent_def = self.load(parent)
       
