@@ -27,7 +27,7 @@ include Bob
 describe Component do
   before(:all) do
     @sample_children = ["child1", "child2", "child3"]
-    @sample_params = {
+    @sample_parameters = {
       'param1' => 'param1val',
       'param2' => 'param2val',
       'param3' => 'param3val',
@@ -48,7 +48,7 @@ describe Component do
   end
   
   it "should give parameter values for missing methods where possible" do
-    component = Component.new('Component', @sample_params)
+    component = Component.new('Component', @sample_parameters)
     component.param1.should == 'param1val'
     component.param2.should == 'param2val'
     component.param3.should == 'param3val'

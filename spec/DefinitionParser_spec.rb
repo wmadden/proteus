@@ -35,12 +35,12 @@ include Bob
 #
 describe DefinitionParser do
   before(:all) do
-    @params = { 'a' => 'b', 'b' => 'c', 'c' => 'd' }
+    @parameters = { 'a' => 'b', 'b' => 'c', 'c' => 'd' }
     @children = [ 'a', 'b', 'c' ]
     @decorators = [ 'dec1', 'dec2', 'dec3' ]
     @template = 'this is the template'
     @sample_def = {'Component' => {
-      'parameters' => @params,
+      'parameters' => @parameters,
       'children' => @children,
       'decorators' => @decorators,
       'template' => @template,
@@ -55,11 +55,11 @@ describe DefinitionParser do
   it "should be able to get ancestors when there are some"
   
   it "should be able to parse default parameters" do
-    input = {'Component' => {'parameters' => @params}}
+    input = {'Component' => {'parameters' => @parameters}}
     
     result = DefinitionParser.parse('Component', input)
     
-    result.parameters.should == @params
+    result.parameters.should == @parameters
   end
   
   it "should be able to parse default children" do
@@ -89,7 +89,7 @@ describe DefinitionParser do
   it "should be able to parse definitions" do
     result = DefinitionParser.parse('Component', @sample_def)
     
-    result.parameters.should == @params
+    result.parameters.should == @parameters
     result.children.should == @children
     result.decorators.should == @decorators
     result.template.should == @template

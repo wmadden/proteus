@@ -33,19 +33,19 @@ include Bob
 #
 describe ComponentDefinition do
   before(:all) do
-    @sample_params = {:a => :b, :b => :c, :c => :d}
+    @sample_parameters = {:a => :b, :b => :c, :c => :d}
     @sample_children = [:child1, :child2, :child3]
     @sample_template = "sample template"
     @sample_decorators = [:dec1, :dec2, :dec3]
     
-    @new_params = {:d => :e, :e => :f, :f => :g}
+    @new_parameters = {:d => :e, :e => :f, :f => :g}
     @new_children = [:child4, :child5, :child6]
     @new_decorators = [:dec4, :dec5, :dec6]
     @new_template = "new template"
     
     @sample_defaults = {
       :children => @sample_children,
-      :parameters => @sample_params,
+      :parameters => @sample_parameters,
       :template => @sample_template,
       :decorators => @sample_decorators
     }
@@ -57,7 +57,7 @@ describe ComponentDefinition do
     
     @new_defaults = {
       :children => @new_children,
-      :parameters => @new_params,
+      :parameters => @new_parameters,
       :template => @new_template,
       :decorators => @new_decorators
     }
@@ -70,7 +70,7 @@ describe ComponentDefinition do
     definition.ancestors.should == @ancestors
     definition.parent.should == @parent
     definition.defaults.should == @sample_defaults
-    definition.parameters.should == @sample_params
+    definition.parameters.should == @sample_parameters
     definition.children.should == @sample_children
     definition.decorators.should == @sample_decorators
     definition.template.should == @sample_template
@@ -86,7 +86,7 @@ describe ComponentDefinition do
     
     result = ComponentDefinition.merge_defaults( child_defs, parent_defs )
     result[:children].should == @new_children
-    result[:parameters].should == @sample_params.merge(@new_params)
+    result[:parameters].should == @sample_parameters.merge(@new_parameters)
     result[:decorators].should == @new_decorators
     result[:template].should == @new_template
   end
@@ -99,18 +99,18 @@ describe ComponentDefinition do
     component.children.should == definition.children
     component.decorators.should == definition.decorators
     component.kind.should == definition.kind
-    component.params.should == definition.parameters
+    component.parameters.should == definition.parameters
   end
   
   it "should instantiate components with merged defaults" do
     definition = ComponentDefinition.new(@kind, @sample_defaults, @ancestors, @concrete_class)
-    component = definition.instantiate(@new_params, @new_children, @new_template, @new_decorators)
+    component = definition.instantiate(@new_parameters, @new_children, @new_template, @new_decorators)
     
     component.template.should == @new_template
     component.children.should == @new_children
     component.decorators.should == @new_decorators
     component.kind.should == definition.kind
-    component.params.should == @sample_params.merge(@new_params)
+    component.parameters.should == @sample_parameters.merge(@new_parameters)
   end
 end
 

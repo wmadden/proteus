@@ -25,13 +25,13 @@ require 'erb'
 module Bob
   class Component
 
-    attr_accessor :kind, :children, :template, :decorators, :params
+    attr_accessor :kind, :children, :template, :decorators, :parameters
     
     #
     # Constructor.
     #
     def initialize( kind = "Component",
-                    params = {},
+                    parameters = {},
                     children = [],
                     template = "",
                     decorators = [] )
@@ -42,7 +42,7 @@ module Bob
       @last_child_index = 0
       @template = template || ""
       @decorators = decorators || []
-      @params = params || {}
+      @parameters = parameters || {}
     end
     
     #
@@ -103,7 +103,7 @@ module Bob
     # value
     #
     def method_missing(m, *args)
-      @params[m.to_s]
+      @parameters[m.to_s]
     end
     
   end
