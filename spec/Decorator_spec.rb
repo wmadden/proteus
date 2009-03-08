@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/Decorator.rb'
+require File.expand_path( 'src/Decorator.rb' )
 
 include Bob
 

@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/FileFinder.rb'
+require File.expand_path( 'src/FileFinder.rb' )
 
 include Bob
 

@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/ComponentParser.rb'
+require File.expand_path( 'src/ComponentParser.rb' )
 
 include Bob
 

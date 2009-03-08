@@ -22,9 +22,9 @@
 ################################################################################
 
 require 'yaml'
-require File.join(File.dirname(__FILE__), 'Exceptions.rb')
-require File.join(File.dirname(__FILE__), 'ComponentParser.rb')
-require File.join(File.dirname(__FILE__), 'DefinitionParser.rb')
+require File.expand_path( File.join(File.dirname(__FILE__), 'Exceptions.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb') )
 
 module Bob
   

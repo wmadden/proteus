@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/DocumentParser.rb'
+require File.expand_path( 'src/DocumentParser.rb' )
 
 include Bob
 

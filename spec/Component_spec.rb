@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require 'src/Component.rb'
+require File.expand_path( 'src/Component.rb' )
 
 include Bob
 

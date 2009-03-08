@@ -20,9 +20,9 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.join(File.dirname(__FILE__), 'ComponentDefinition.rb')
-require File.join(File.dirname(__FILE__), 'ParserHelper.rb')
-require File.join(File.dirname(__FILE__), 'FileFinder.rb')
+require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentDefinition.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'FileFinder.rb') )
 
 module Bob
 
