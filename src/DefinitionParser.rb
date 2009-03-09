@@ -26,6 +26,8 @@ require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileFinder.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'DocumentParser.rb') )
 
+include Bob
+
 module Bob
 
   #
