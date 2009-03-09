@@ -20,6 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+require File.expand_path( File.join(File.dirname(__FILE__), 'Component.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentDefinition.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileFinder.rb') )
@@ -123,49 +124,53 @@ module Bob
       # Push this kind on to the blacklist
       @@restricted_definitions.push(kind)
       
-      # Parse based on yaml form
-      if yaml.is_a?(Hash) and yaml.length == 1
-        # Parse the defaults, restricting the current type to avoid recursive
-        # definition
-        type = yaml.keys[0]
-        
-        defaults = parse_defaults(yaml.values[0])
-      elsif ParserHelper.is_scalar?(yaml)
-        type = yaml
-        defaults = {}
-      else
-        raise DefinitionMalformed, "Definition of '#{kind}' malformed."
-      end
-      
-      # Parse the type name
-      parent = parse_name(type)
-      
-      # If there's no parent, assume Component
-      if parent.nil?
-        parent = Default
-        ancestors = [kind, 'Component']
-      
-      # If parent is the same,
-      elsif parent == kind
-        # only permit the parent to be the same if it's a concrete component
-        concrete_class = ParserHelper.get_class(kind)
-        if concrete_class and ParserHelper.is_component?(concrete_class)
-          ancestors = [kind]
-          parent = ComponentDefinition.new( kind, {}, ancestors, concrete_class )
+      begin
+        # Parse based on yaml form
+        if yaml.is_a?(Hash) and yaml.length == 1
+          # Parse the defaults
+          type = yaml.keys[0]
+          
+          defaults = parse_defaults(yaml.values[0])
+        elsif ParserHelper.is_scalar?(yaml)
+          type = yaml
+          defaults = {}
         else
-          raise RecursiveDefinition, "Recursive definition detected: #{kind} is its own parent."
+          raise DefinitionMalformed, "Definition of '#{kind}' malformed."
         end
-      
-      else
-        # Check that the parent does not inherit from the current definition at
-        # any point - i.e. definition is not recursive
-        ancestors = get_ancestors(parent, [kind])
-        # Get the parent definition
-        parent = load(parent)
+        
+        # Parse the type name
+        parent = parse_name(type)
+        
+        # If there's no parent, assume Component
+        if parent.nil?
+          parent = Default
+          ancestors = [kind, 'Component']
+        
+        # If parent is the same,
+        elsif parent == kind
+          # only permit the parent to be the same if it's a concrete component
+          concrete_class = ParserHelper.get_class(kind)
+          if concrete_class and ParserHelper.is_component?(concrete_class)
+            ancestors = [kind]
+            parent = ComponentDefinition.new( kind, {}, ancestors, concrete_class )
+          else
+            raise RecursiveDefinition, "Recursive definition detected: #{kind} is its own parent."
+          end
+        
+        else
+          # Check that the parent does not inherit from the current definition at
+          # any point - i.e. definition is not recursive
+          ancestors = get_ancestors(parent, [kind])
+          # Get the parent definition
+          parent = load(parent)
+        end
+        
+        # Merge the defaults
+        defaults = ComponentDefinition.merge_defaults(defaults, parent.defaults)
+      rescue Exception
+        @@restricted_definitions = []
+        raise
       end
-      
-      # Merge the defaults
-      defaults = ComponentDefinition.merge_defaults(defaults, parent.defaults)
       
       # Reset the blacklist
       @@restricted_definitions = []

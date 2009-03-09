@@ -26,6 +26,7 @@ include Bob
 
 describe FileFinder do
   before(:all) do
+    @original_path = FileFinder.path
     @sample_path = ['.', 'defs', 'decs']
   end
   
@@ -36,5 +37,9 @@ describe FileFinder do
   it "should be able to change the path" do
     FileFinder.path = @sample_path
     FileFinder.path.should == @sample_path
+  end
+  
+  after(:all) do
+    FileFinder.path = @original_path
   end
 end

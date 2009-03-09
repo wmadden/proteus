@@ -37,7 +37,7 @@ describe DefinitionParser do
   before(:all) do
     # Set up paths
     @default_file_path = FileFinder.path
-    FileFinder.path += ['spec/defs']
+    FileFinder.path += ['spec/defs/DefinitionParser']
         
     @parameters = { 'a' => 'b', 'b' => 'c', 'c' => 'd' }
     @children = [ 'a', 'b', 'c' ]
@@ -167,6 +167,64 @@ describe DefinitionParser do
       success = false
     rescue UnknownDefinition
     end
+    success.should == true
+  end
+  
+  it "should not accept malformed definitions" do
+    success = false
+    
+    # 1. Name is malformed
+    begin
+      DefinitionParser.parse('Component', 'Some Invalid Name')
+      success = false
+    rescue DefinitionMalformed
+      success = true
+    end
+    
+    success.should == true
+    success = false
+    
+    # 2. Definition is neither hash nor scalar
+    begin
+      DefinitionParser.parse('Component', ['some', 'list'])
+      success = false
+    rescue DefinitionMalformed
+      success = true
+    end
+
+    success.should == true
+    success = false
+    
+    # 3. Defaults are not a hash
+    begin
+      DefinitionParser.parse('Component', {'Component' => 'stuff'})
+      success = false
+    rescue DefinitionMalformed
+      success = true
+    end
+
+    success.should == true
+    success = false
+    
+    # 4. Parameters are not a hash or nil
+    begin
+      DefinitionParser.parse('Component', {'Component' => {'parameters' => []}})
+      success = false
+    rescue DefinitionMalformed
+      success = true
+    end
+    
+    success.should == true
+    success = false
+    
+    # 5. Children are not a list or nil
+    begin
+      DefinitionParser.parse('Component', {'Component' => {'children' => {}}})
+      success = false
+    rescue DefinitionMalformed
+      success = true
+    end
+    
     success.should == true
   end
   

@@ -34,12 +34,12 @@ module Bob
     #
     # Parses YAML, returning a Component instance.
     #
-    def self.parse(kind, yaml)
+    def self.parse(kind, yaml = nil)
       # If the kind is not a valid component name or we can't find the definition
-      definition = DefinitionParser.load(kind)
-      if definition.nil?
+      begin
+        definition = DefinitionParser.load(kind)
+      rescue UnknownDefinition
         raise UnknownComponent, "No definition available for component '#{kind}'"
-        return
       end
       
       # Otherwise, interpret its value and instantiate the component
