@@ -40,6 +40,7 @@ FalseKlass = false
 describe ParserHelper do
   it "should be able to get known classes"
   it "should be able to get classes on the path"
+  
   it "should handle non-existant classes gracefully" do
     ParserHelper.get_class('NonExistantClass').nil?.should == true
     ParserHelper.get_class('FalseKlass').nil?.should == true

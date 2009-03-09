@@ -228,4 +228,17 @@ describe DefinitionParser do
     success.should == true
   end
   
+  it "should handle the absence of Component.def" do
+    path = FileFinder.path
+    clear_def_hash
+    FileFinder.path = ["."]
+    
+    # Should succeed without exception
+    default = DefinitionParser.load('Component')
+    default.class.should == ComponentDefinition
+    default.kind.should == 'Component'
+    
+    FileFinder.path = path
+  end
+  
 end
