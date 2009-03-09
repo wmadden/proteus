@@ -1,0 +1,10 @@
+Component < Component:
+  template: this is the template
+  parameters:
+    a: b
+    b: c
+    c: d
+  children:
+    - a
+    - b
+    - c

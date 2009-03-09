@@ -25,8 +25,20 @@ require File.expand_path( 'src/DocumentParser.rb' )
 include Bob
 
 describe DocumentParser do
+  before(:all) do
+    # Set up paths
+    @default_file_path = FileFinder.path
+    FileFinder.path += ['spec/defs']
+  end
+
   it "should be able to parse a hash"
   it "should be able to parse a list"
   it "should be able to parse a scalar"
-  it "should be able to load a file"
+  it "should be able to load a file" do
+    
+  end
+  
+  after(:all) do
+    FileFinder.path = @default_file_path
+  end
 end
