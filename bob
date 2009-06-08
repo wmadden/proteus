@@ -3,7 +3,7 @@
 # bob
 # 
 # The executable version of Bob. Takes as its arguments the files to parse,
-# otherwise reads from standard input. Outputs the rendered XHTML.
+# otherwise reads from standard input. Outputs the rendered text.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
