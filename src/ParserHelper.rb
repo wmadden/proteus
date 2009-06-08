@@ -1,7 +1,7 @@
 ################################################################################
 # ParserHelper.rb
 #
-# Provides useful functions for the parsers.
+# A shared resource between parsers.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -23,10 +23,39 @@
 module Bob
 
   class ParserHelper
-
-    ComponentRegex = /^[A-Z][a-zA-Z_0-9]*$/
-    DefinitionRegex = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
-
+    
+    # The regex defining valid component class names
+    CLASS_RE = /^[A-Z][a-zA-Z_0-9]*$/
+    # The regex defining valid namespace names
+    NAMESPACE_RE = /^[a-zA-Z_0-9]+$/
+    
+    # The regex defining valid component identifiers (in documents/input)
+    COMPONENT_RE = /^([a-zA-Z_0-9]:)*([A-Z][a-zA-Z_0-9])$/
+    # The regex for valid definition names (in definition files)
+    DEFINITION_RE = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
+    
+    #
+    # Returns true if the given string is a valid component name.
+    #
+    def self.component_name?( value )
+      # Valid if the given value matches the component regex
+      COMPONENT_RE === value.to_s
+    end
+    
+    #
+    # Parses a component identifier. Returns a list containing namespaces and
+    # the component name or nil.
+    #
+    def self.parse_component_id( component_id )
+      result = COMPONENT_RE.match( component_id )
+      result = result.to_a
+      
+      # Remove the first element
+      result.shift
+      
+      return result
+    end
+    
     #
     # Returns the class given by name, or nil if it can't be found.
     #

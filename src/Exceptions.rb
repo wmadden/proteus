@@ -19,6 +19,7 @@
 # You should have received a copy of the GNU General Public License along with
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
+
 module Bob
  
   class UnknownComponent < Exception
@@ -36,7 +37,16 @@ module Bob
   class RecursiveDefinition < Exception
   end
   
-  class UnknownDefinition < Exception
+  #
+  # Raised when a component identifier can't be properly parsed.
+  #
+  class InvalidComponentIdentifier < Exception
+  end
+  
+  #
+  # Raised when the definition of a component can't be found.
+  #
+  class DefinitionUnavailable < Exception
   end
   
 end

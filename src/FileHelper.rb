@@ -1,8 +1,7 @@
 ################################################################################
-# FileFinder.rb
+# FileHelper.rb
 #
-# Defines the FileFinder static class, which provides the find_file function,
-# used to find files.
+# Provides functions for locating and handling files.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -22,23 +21,42 @@
 ################################################################################
 
 module Bob
+
   class FileFinder
+    
+    # The default path to search for definitions
+    DEFAULT_PATH = '/usr/lib/bob'
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Constructor
+    #  
+    #---------------------------------------------------------------------------
+    
+    def initialize( )
+      @path = ['.']
+    end
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Properties
+    #  
+    #---------------------------------------------------------------------------
+    
     # The path variable (follows standard UNIX convention). Paths in this array
     # will be searched (non-recursively) for definition files.
-    @@path = ['.']
+    attr_accessor :path
     
-    def self.path=(value)
-      @@path = value
-    end
-
-    def self.path
-      @@path
-    end
-
+    #---------------------------------------------------------------------------
+    #  
+    #  Methods
+    #  
+    #---------------------------------------------------------------------------
+    
     #
     # Find a file.
     #
-    def self.find_file(target, path = @@path)
+    def find_file(target, path = @@path)
       for filepath in path
         for file in Dir.new(filepath)
           return File.join(filepath, file) if file == target
@@ -47,5 +65,7 @@ module Bob
       
       return nil
     end
+    
   end
 end
+

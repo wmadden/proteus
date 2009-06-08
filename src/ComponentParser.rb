@@ -1,7 +1,7 @@
 ################################################################################
 # ComponentParser.rb
 #
-# Defines the ComponentParser, used to parse Component YAML.
+# Parses component instances.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -20,47 +20,62 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'Component.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'Exceptions.rb') )
-
 module Bob
-
-  #
-  # Parses components.
-  #
+ 
   class ComponentParser
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Constructor
+    #  
+    #---------------------------------------------------------------------------
+    
+    def initialize(  )
+      :path = FileHelper::DEFAULT_PATH
+    end
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Properties
+    #  
+    #---------------------------------------------------------------------------
+    
+    # The path variable
+    attr_accessor :path
+    
+    # The current namespace
+    attr_accessor :current_ns
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Methods
+    #  
+    #---------------------------------------------------------------------------
+    
     #
-    # Parses YAML, returning a Component instance.
+    # Parses yaml and returns the loaded component instance.
     #
-    def self.parse(kind, yaml = nil)
-      # If the kind is not a valid component name or we can't find the definition
-      begin
-        definition = DefinitionParser.load(kind)
-      rescue UnknownDefinition
-        raise UnknownComponent, "No definition available for component '#{kind}'"
+    def parse_yaml( type, yaml )
+      result = ComponentInstance.new( type )
+      
+      case
+        when yaml.is_a?( Array ):
+          result.children = yaml
+          
+        when yaml.is_a?( Hash ):
+          result.set_properties( yaml )
+          
+        when yaml.nil?:
+          # Do nothing
+          
+        else:
+          result.children = [yaml]
+        
       end
       
-      # Otherwise, interpret its value and instantiate the component
-      case
-        when yaml.is_a?(Hash):
-          children = yaml.delete('children')
-          parameters = yaml
-          definition.instantiate(parameters, children)
-        
-        when yaml.is_a?(Array):
-          children = yaml
-          definition.instantiate({}, children)
-        
-        when ParserHelper.is_scalar?(yaml):
-          children = [yaml]
-          definition.instantiate({}, children)
-        
-        when yaml.nil?:
-          definition.instantiate()
-      end
+      return result
     end
+    
   end
   
 end

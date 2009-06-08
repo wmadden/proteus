@@ -1,7 +1,7 @@
 ################################################################################
-# Decorator.rb
+# ComponentInstance.rb
 #
-# Provides the Decorator class.
+# Represents an instance of a component.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -21,15 +21,17 @@
 ################################################################################
 
 module Bob
-
-  class Decorator
-    def initialize(template)
-      @template = template
+  
+  class ComponentInstance
+    
+    attr_accessor :type, :properties, :children
+    
+    def initialize( )
+      @properties = {}
+      @children = []
     end
     
-    def decorate( input )
-      
-    end
   end
-
+  
 end
+
