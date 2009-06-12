@@ -100,6 +100,7 @@ module Bob
       
     end
     
+  private
     
     #------------------------------
     #  parse_yaml_seq
