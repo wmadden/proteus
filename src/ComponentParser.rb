@@ -30,8 +30,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize(  )
-      :path = FileHelper::DEFAULT_PATH
+    def initialize( )
     end
     
     #---------------------------------------------------------------------------
@@ -40,12 +39,6 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    # The path variable
-    attr_accessor :path
-    
-    # The current namespace
-    attr_accessor :current_ns
-    
     #---------------------------------------------------------------------------
     #  
     #  Methods
@@ -53,7 +46,7 @@ module Bob
     #---------------------------------------------------------------------------
     
     #
-    # Parses yaml and returns the loaded component instance.
+    # Interprets pre-parsed yaml and returns the loaded component instance.
     #
     def parse_yaml( type, yaml )
       result = ComponentInstance.new( type )
@@ -68,7 +61,7 @@ module Bob
         when yaml.nil?:
           # Do nothing
           
-        else:
+        else
           result.children = [yaml]
         
       end

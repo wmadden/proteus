@@ -31,6 +31,13 @@ module Bob
       @children = []
     end
     
+    #
+    # A convenience function for setting a bunch of properties at once.
+    #
+    def set_properties( array )
+      @properties.concat( array )
+    end
+    
   end
   
 end

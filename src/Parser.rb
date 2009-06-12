@@ -20,13 +20,13 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentClass.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb') )
 
 module Bob
   
-  #
+  # 
   # Provides functions for parsing definitions.
   # 
   class Parser
@@ -40,10 +40,10 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = nil, current_ns = [] )
+    def initialize( path = nil, current_ns = nil )
       @path = path || DEFAULT_PATH
-      @current_ns = current_ns
-      @instance_parser = ComponentParser.new( @path, @current_ns )
+      @current_ns = current_ns || []
+      @instance_parser = ComponentParser.new()
       @class_parser = DefinitionParser.new( @path, @current_ns )
       @loaded_classes = {}
     end
@@ -79,7 +79,7 @@ module Bob
     # Parses a definition file and returns the loaded component class.
     #
     def parse_file( file )
-      yaml = YAML.parse_file(file)
+      yaml = YAML.load_file(file)
       
       return parse_yaml( yaml )
     end
@@ -100,7 +100,7 @@ module Bob
         when yaml.nil?:
           return parse_yaml_nil()
           
-        else:
+        else
           return parse_yaml_scalar( yaml )
       end
       
@@ -110,7 +110,7 @@ module Bob
     # Parses a YAML sequence (Array) returning the resultant array.
     #
     def parse_yaml_seq( yaml )
-      yaml.map { |elem| parse(elem) }
+      yaml.map { |elem| parse_yaml(elem) }
     end
     
     #
@@ -121,7 +121,7 @@ module Bob
       # parse it as a component
       if yaml.length == 1 and ParserHelper.component_name?( yaml.keys.first )
         # Parse the value mapped to the key
-        value = parse( yaml.values.first )
+        value = parse_yaml( yaml.values.first )
         
         # Parse the component
         return parse_component( yaml.keys.first, value )
@@ -129,7 +129,7 @@ module Bob
       # Otherwise, return the hash parsing each value
       else
         return yaml.inject({}) do |acc, pair|
-            acc[pair[0]] = parse(pair[1])
+            acc[pair[0]] = parse_yaml(pair[1])
             acc
         end
       end
@@ -162,8 +162,19 @@ module Bob
       comp_path = ParserHelper.parse_component_id( component_id )
       comp_path = get_fqn( comp_path )
       
+      # Get the class (loading it if required)
+      cclass = get_class( comp_path )
+      
+      # 3. Invoke the instance parser
+      @instance_parser.parse_yaml( cclass, value )
+    end
+    
+    #
+    # Returns the named component class.
+    #
+    def get_class( comp_path )
       # Get the class from the map of loaded classes
-      cclass = @loaded_classes[comp_path]
+      cclass = get_loaded_class( comp_path )
       
       # If it hasn't been loaded, load it
       if cclass.nil?
@@ -173,8 +184,31 @@ module Bob
       # Add it to the map
       @loaded_classes[comp_path] = cclass
       
-      # 3. Invoke the instance parser
-      @instance_parser.parse( cclass, value )
+      # Parse the properties hash values
+      for pair in cclass.properties
+        cclass.properties[ pair[0] ] = @parser.parse_yaml( pair[1] )
+      end
+      
+      if cclass.parent.nil?
+        # Set the parent class to the default
+        # TODO
+      else
+        # Load the parent class
+        parent_class = get_loaded_class( get_fqn(cclass.parent) )
+        
+        if parent_class.nil?
+          parent_class = @class_parser.load( parent_class )
+        end
+        
+        cclass.parent = parent_class
+      end
+    end
+    
+    #
+    # Returns the named class from the map of classes, if loaded, or nil.
+    #
+    def get_loaded_class( comp_path )
+      @loaded_classes[comp_path]
     end
     
     #

@@ -41,8 +41,9 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( )
-      :path = DEFAULT_PATH
+    def initialize( path = nil, current_ns = nil )
+      @path = path || DEFAULT_PATH
+      @current_ns = current_ns || []
     end
     
     #---------------------------------------------------------------------------
@@ -67,20 +68,13 @@ module Bob
     # Searches for and loads the required component class.
     # 
     def load_component( component_id )
-      
-      # TODO
-      #   1. Search for the definition file
-      #   2. If not found, fail
-      #   3. If found, parse it and return the result
-      
-      
-      
       file = FileHelper.find_definition( comp_path )
       
       if file.nil?
         raise DefinitionUnavailable
       end
       
+      return parse_file( file )
     end
     
     #
@@ -98,7 +92,30 @@ module Bob
     def parse_yaml( yaml )
       result = ComponentClass.new
       
-      # TODO
+      # Must be a hash of length one containing a hash
+      if not ( yaml.is_a?(Hash) and yaml.length == 1 and
+        yaml.values[0].is_a?(Hash) ) then
+        
+        raise DefinitionMalformed
+        
+      end
+      
+      # Parse the class name
+      name = yaml.keys[0]
+      match = ParserHelper::DEFINITION_RE.match( name )
+      
+      # If there's no match, the definition is malformed
+      if match.nil?
+        raise DefinitionMalformed
+      end
+      
+      class_name = match[1]
+      parent_name = match[2]
+      
+      properties = yaml.values[0]
+      
+      # Set the properties of the class to the given hash
+      result.properties = properties
       
       return result
     end
