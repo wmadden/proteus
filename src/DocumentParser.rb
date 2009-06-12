@@ -1,7 +1,7 @@
 ################################################################################
-# Parser.rb
+# DocumentParser.rb
 #
-# Parses input and returns the document tree.
+# Parses document YAML and returns the instance tree.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -20,16 +20,20 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentParser.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ClassParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceParser.rb') )
 
 module Bob
   
   # 
   # Provides functions for parsing definitions.
   # 
-  class Parser
+  class DocumentParser
+    
+    # A regex defining valid component identifiers
+    COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
     
     #---------------------------------------------------------------------------
     #  
@@ -40,9 +44,10 @@ module Bob
     def initialize( path = nil, current_ns = nil )
       @path = path
       @current_ns = current_ns || []
-      @instance_parser = ComponentParser.new()
-      @class_parser = DefinitionParser.new( @path, @current_ns )
-      @loaded_classes = {}
+      @instance_parser = InstanceParser.new()
+      @class_parser = ClassParser.new( @definition_helper )
+      @definition_helper = DefinitionHelper.new( path, current_ns )
+      @definition_helper.class_parser = @class_parser
     end
     
     #---------------------------------------------------------------------------
@@ -51,20 +56,13 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    # The path variable
-    attr_accessor :path
+  public
     
-    # The current namespace
-    attr_accessor :current_ns
+    attr_accessor :path, :current_ns, :instance_parser
     
-    # The component instance parser
-    attr_accessor :instance_parser
+  private
     
-    # The class definition parser
-    attr_accessor :class_parser
-    
-    # The map of loaded classes
-    attr_accessor :loaded_classes
+    attr_accessor :definition_helper
     
     #---------------------------------------------------------------------------
     #  
@@ -72,18 +70,15 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    #
-    # Parses a definition file and returns the loaded component class.
-    #
-    def parse_file( file )
-      yaml = YAML.load_file(file)
-      
-      return parse_yaml( yaml )
-    end
+  public
     
-    #
+    #------------------------------
+    #  parse_yaml
+    #------------------------------
+    
+    # 
     # Parses yaml and returns the document tree.
-    #
+    # 
     def parse_yaml( yaml )
       
       case
@@ -103,123 +98,124 @@ module Bob
       
     end
     
-    #
+  private
+    
+    #------------------------------
+    #  parse_yaml_seq
+    #------------------------------
+    
+    # 
     # Parses a YAML sequence (Array) returning the resultant array.
-    #
+    # 
     def parse_yaml_seq( yaml )
-      yaml.map { |elem| parse_yaml(elem) }
+      
+      return yaml.map { |elem| parse_yaml(elem) }
+      
     end
     
-    #
+    #------------------------------
+    #  parse_yaml_map
+    #------------------------------
+    
+    # 
     # Parses a YAML map (Hash) returning a component or a hash.
-    #
+    # 
     def parse_yaml_map( yaml )
+      
       # If the hash has only one element and it's a valid component name,
-      # parse it as a component
-      if yaml.length == 1 and ParserHelper.component_name?( yaml.keys.first )
+      # parse it as a component.
+      
+      if yaml.length == 1 and COMPONENT_RE === yaml.keys.first
+        
         # Parse the value mapped to the key
         value = parse_yaml( yaml.values.first )
         
         # Parse the component
         return parse_component( yaml.keys.first, value )
         
-      # Otherwise, return the hash parsing each value
       else
+      
+        # Otherwise return the hash, parsing each value.
         return yaml.inject({}) do |acc, pair|
             acc[pair[0]] = parse_yaml(pair[1])
             acc
         end
+        
       end
+      
     end
     
-    #
+    #------------------------------
+    #  parse_yaml_scalar
+    #------------------------------
+    
+    # 
     # Parses a YAML scalar.
-    #
+    # 
     def parse_yaml_scalar( yaml )
-      if ParserHelper.component_name?( yaml ) then
+      
+      if COMPONENT_RE === yaml then
         return parse_component( yaml )
       end
       
       return yaml
-    end
-    
-    #
-    # Parses a nil value.
-    #
-    def parse_yaml_nil()
-      return nil
-    end
-    
-    #
-    # Parses a component.
-    #
-    def parse_component( type, value )
       
+    end
+    
+    #------------------------------
+    #  parse_yaml_nil
+    #------------------------------
+    
+    # 
+    # Parses a nil value.
+    # 
+    def parse_yaml_nil()
+      
+      return nil
+      
+    end
+    
+    #------------------------------
+    #  parse_component
+    #------------------------------
+    
+    # 
+    # Parses a component.
+    # 
+    # component_id: a component identifier (e.g. HTML:div)
+    # yaml: the YAML describing the instance
+    # 
+    def parse_component( component_id, yaml )
+    
       # Parse the id for namespaces and type
-      comp_path = ParserHelper.parse_component_id( type )
-      comp_path = get_fqn( comp_path )
+      class_path = parse_component_id( component_id )
       
       # Get the class (loading it if required)
-      cclass = get_class( comp_path )
+      class_instance = @definition_helper.get_class( class_path )
       
-      # 3. Invoke the instance parser
-      @instance_parser.parse_yaml( cclass, value )
+      # Parse the YAML into the instance
+      return @instance_parser.parse_yaml( class_instance, yaml )
+      
     end
     
-    #
-    # Returns the named component class.
-    #
-    def get_class( comp_path )
-      # Get the class from the map of loaded classes
-      cclass = get_loaded_class( comp_path )
-      
-      # If it hasn't been loaded, load it
-      if cclass.nil?
-        cclass = @class_parser.load_component( comp_path )
-      end
-      
-      # Add it to the map
-      @loaded_classes[comp_path] = cclass
-      
-      # Parse the properties hash values
-      for pair in cclass.properties
-        cclass.properties[ pair[0] ] = @parser.parse_yaml( pair[1] )
-      end
-      
-      if cclass.parent.nil?
-        # Set the parent class to the default
-        # TODO
-      else
-        # Load the parent class
-        parent_class = get_loaded_class( get_fqn(cclass.parent) )
-        
-        if parent_class.nil?
-          parent_class = @class_parser.load( parent_class )
-        end
-        
-        cclass.parent = parent_class
-      end
-    end
+    #------------------------------
+    #  parse_component_id
+    #------------------------------
     
-    #
-    # Returns the named class from the map of classes, if loaded, or nil.
-    #
-    def get_loaded_class( comp_path )
-      @loaded_classes[comp_path]
-    end
-    
-    #
-    # Returns the fully qualified name of the component.
-    #
-    def get_fqn( comp_path )
-      # If the component path does not include a namespace, use the current
-      # namespace.
-      if comp_path.length <= 1 then
-        return @current_namespace + comp_path
-      end
+    # 
+    # Parses a component identifier for the class path.
+    # 
+    def parse_component_id( component_id )
       
-      return comp_path
+      result = COMPONENT_RE.match( component_id ).to_a
+      
+      # Remove the first element
+      result.shift
+      
+      return result
+      
     end
     
   end
+  
 end

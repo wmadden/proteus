@@ -29,9 +29,6 @@ module Bob
     # The regex defining valid namespace names
     NAMESPACE_RE = /^[a-zA-Z_0-9]+$/
     
-    # The regex defining valid component identifiers (in documents/input)
-    COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
-    
     #
     # Returns true if the given string is a valid component name.
     #

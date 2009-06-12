@@ -44,7 +44,11 @@ module Bob
       
       for filepath in path
         for file in Dir.new(filepath)
-          return File.join(filepath, file) if file == target
+          
+          if file == target
+            return File.join(filepath, file)
+          end
+          
         end
       end
       
@@ -59,11 +63,7 @@ module Bob
     def self.find_definition( class_path, path = nil )
       path = path || DEFAULT_PATH
       
-      if not current_ns.nil?
-        file_path = current_ns + '/'
-      end
-      
-      file_path += path_array.join('/')
+      file_path = class_path.join('/') + '.def'
       
       # Search the PATH for the file
       return self.find_file( file_path, path )

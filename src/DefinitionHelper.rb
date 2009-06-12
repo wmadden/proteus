@@ -33,11 +33,10 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( class_parser )
-      @class_parser = class_parser
+    def initialize( path = [], current_ns = [] )
       @loaded_classes = {}
       @current_ns = []
-      @path = nil
+      @path = path
     end
     
     #---------------------------------------------------------------------------
@@ -46,11 +45,11 @@ module Bob
     #  
     #---------------------------------------------------------------------------
   
-  public:
+  public
     
     attr_accessor :path, :current_ns, :class_parser
   
-  private:
+  private
   
     attr_accessor :loaded_classes
     
@@ -60,7 +59,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-  public:
+  public
     
     #
     # Returns the given class.
@@ -79,7 +78,7 @@ module Bob
       end
       
       # If it's already loaded, return it
-      if @loaded_classes.include( class_path )
+      if @loaded_classes.has_key?( class_path )
         return @loaded_classes[ class_path ]
       end
       
@@ -89,7 +88,7 @@ module Bob
     end
     
     
-  private:
+  private
     
     #
     # Loads the given class.
@@ -102,11 +101,11 @@ module Bob
       @loaded_classes[ class_path ] = new_class
       
       # load its definition,
-      file = FileHelper.find_definition( class_path )
+      file = FileHelper.find_definition( class_path, @path )
       
       # parse it,
       if file.nil?
-        raise DefinitionUnavailable
+        raise DefinitionUnavailable, "File not found for class path: '" + class_path.inspect + "'"
       end
       
       yaml = YAML.parse_file( file )

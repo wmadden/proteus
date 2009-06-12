@@ -26,16 +26,10 @@ module Bob
     
     attr_accessor :kind, :properties, :children
     
-    def initialize( )
+    def initialize( class_instance )
+      @kind = class_instance
       @properties = {}
       @children = []
-    end
-    
-    #
-    # A convenience function for setting a bunch of properties at once.
-    #
-    def set_properties( array )
-      @properties.concat( array )
     end
     
   end

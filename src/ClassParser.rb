@@ -51,7 +51,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-  private:
+  private
     
     attr_accessor :definition_helper
     
@@ -61,7 +61,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-  public:
+  public
     
     #
     # Parses YAML and returns the resultant component class.

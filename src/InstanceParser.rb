@@ -1,7 +1,7 @@
 ################################################################################
-# ComponentParser.rb
+# InstanceParser.rb
 #
-# Parses component instances.
+# Responsible for interpreting YAML for component instances.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -22,22 +22,7 @@
 
 module Bob
  
-  class ComponentParser
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Constructor
-    #  
-    #---------------------------------------------------------------------------
-    
-    def initialize( )
-    end
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Properties
-    #  
-    #---------------------------------------------------------------------------
+  class InstanceParser
     
     #---------------------------------------------------------------------------
     #  
@@ -45,28 +30,28 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
+  public
+    
     #
     # Interprets pre-parsed yaml and returns the loaded component instance.
     #
-    def parse_yaml( type, yaml )
-      result = ComponentInstance.new( type )
+    def parse_yaml( class_instance, yaml )
+      result = ComponentInstance.new( class_instance )
       
       case
         when yaml.is_a?( Array ):
           result.children = yaml
           
         when yaml.is_a?( Hash ):
-          result.set_properties( yaml )
+          result.properties.merge!( yaml )
           
         when yaml.nil?:
-          # Do nothing
+          return result
           
         else
           result.children = [yaml]
         
       end
-      
-      return result
     end
     
   end
