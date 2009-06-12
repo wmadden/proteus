@@ -1,7 +1,7 @@
 ################################################################################
-# DefinitionParser.rb
+# ClassParser.rb
 #
-# Parses component definition files.
+# Responsible for interpreting YAML for component classes.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -20,9 +20,9 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentClass.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'ParserHelper.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
 
 module Bob
   
@@ -30,10 +30,10 @@ module Bob
   # Provides functions for parsing component definitions (for component
   # classes).
   # 
-  class DefinitionParser
+  class ClassParser
     
-    # The default path to search for definitions
-    DEFAULT_PATH = '/usr/lib/bob'
+    # The regex for valid class names
+    CLASS_RE = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
     
     #---------------------------------------------------------------------------
     #  
@@ -41,9 +41,8 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = nil, current_ns = nil )
-      @path = path || DEFAULT_PATH
-      @current_ns = current_ns || []
+    def initialize( definition_helper )
+      @definition_helper = definition_helper
     end
     
     #---------------------------------------------------------------------------
@@ -52,11 +51,9 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    # The path variable
-    attr_accessor :path
+  private:
     
-    # The current namespace
-    attr_accessor :current_ns
+    attr_accessor :definition_helper
     
     #---------------------------------------------------------------------------
     #  
@@ -64,45 +61,27 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    # 
-    # Searches for and loads the required component class.
-    # 
-    def load_component( component_id )
-      file = FileHelper.find_definition( comp_path )
-      
-      if file.nil?
-        raise DefinitionUnavailable
-      end
-      
-      return parse_file( file )
-    end
+  public:
     
     #
-    # Parses a definition file and returns the loaded component class.
+    # Parses YAML and returns the resultant component class.
+    # 
+    # yaml: the YAML to parse
+    # new_class: the class instance to parse
     #
-    def parse_file( file )
-      yaml = YAML.parse_file(file)
-      
-      return parse_yaml( yaml )
-    end
-    
-    #
-    # Parses yaml and returns the loaded component class.
-    #
-    def parse_yaml( yaml )
-      result = ComponentClass.new
+    def parse_yaml( yaml, new_class = nil )
+      result = new_class || ComponentClass.new
       
       # Must be a hash of length one containing a hash
       if not ( yaml.is_a?(Hash) and yaml.length == 1 and
         yaml.values[0].is_a?(Hash) ) then
         
         raise DefinitionMalformed
-        
       end
       
       # Parse the class name
       name = yaml.keys[0]
-      match = ParserHelper::DEFINITION_RE.match( name )
+      match = DEFINITION_RE.match( name )
       
       # If there's no match, the definition is malformed
       if match.nil?
@@ -121,4 +100,5 @@ module Bob
     end
     
   end
+  
 end

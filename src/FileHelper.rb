@@ -22,30 +22,10 @@
 
 module Bob
 
-  class FileFinder
+  class FileHelper
     
     # The default path to search for definitions
     DEFAULT_PATH = '/usr/lib/bob'
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Constructor
-    #  
-    #---------------------------------------------------------------------------
-    
-    def initialize( )
-      @path = ['.']
-    end
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Properties
-    #  
-    #---------------------------------------------------------------------------
-    
-    # The path variable (follows standard UNIX convention). Paths in this array
-    # will be searched (non-recursively) for definition files.
-    attr_accessor :path
     
     #---------------------------------------------------------------------------
     #  
@@ -54,9 +34,14 @@ module Bob
     #---------------------------------------------------------------------------
     
     #
-    # Find a file.
+    # Find a file on the path.
+    # 
+    # target: the file to search for
+    # path: the path (standard UNIX path variable) to search
     #
-    def find_file(target, path = @@path)
+    def self.find_file( target, path = nil )
+      path = path || DEFAULT_PATH
+      
       for filepath in path
         for file in Dir.new(filepath)
           return File.join(filepath, file) if file == target
@@ -66,6 +51,25 @@ module Bob
       return nil
     end
     
+    #
+    # Find a definition file.
+    # 
+    # class_path: the full path of the class, including all namespaces
+    #
+    def self.find_definition( class_path, path = nil )
+      path = path || DEFAULT_PATH
+      
+      if not current_ns.nil?
+        file_path = current_ns + '/'
+      end
+      
+      file_path += path_array.join('/')
+      
+      # Search the PATH for the file
+      return self.find_file( file_path, path )
+    end
+    
   end
+  
 end
 

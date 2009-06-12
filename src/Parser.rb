@@ -31,9 +31,6 @@ module Bob
   # 
   class Parser
     
-    # The default path to search for definitions
-    DEFAULT_PATH = '/usr/lib/bob'
-    
     #---------------------------------------------------------------------------
     #  
     #  Constructor
@@ -41,7 +38,7 @@ module Bob
     #---------------------------------------------------------------------------
     
     def initialize( path = nil, current_ns = nil )
-      @path = path || DEFAULT_PATH
+      @path = path
       @current_ns = current_ns || []
       @instance_parser = ComponentParser.new()
       @class_parser = DefinitionParser.new( @path, @current_ns )
@@ -159,7 +156,7 @@ module Bob
     def parse_component( type, value )
       
       # Parse the id for namespaces and type
-      comp_path = ParserHelper.parse_component_id( component_id )
+      comp_path = ParserHelper.parse_component_id( type )
       comp_path = get_fqn( comp_path )
       
       # Get the class (loading it if required)
@@ -178,7 +175,7 @@ module Bob
       
       # If it hasn't been loaded, load it
       if cclass.nil?
-        cclass = @class_parser.load( comp_path )
+        cclass = @class_parser.load_component( comp_path )
       end
       
       # Add it to the map

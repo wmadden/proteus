@@ -24,7 +24,7 @@ module Bob
   
   class ComponentInstance
     
-    attr_accessor :type, :properties, :children
+    attr_accessor :kind, :properties, :children
     
     def initialize( )
       @properties = {}

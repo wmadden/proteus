@@ -30,9 +30,7 @@ module Bob
     NAMESPACE_RE = /^[a-zA-Z_0-9]+$/
     
     # The regex defining valid component identifiers (in documents/input)
-    COMPONENT_RE = /^([a-zA-Z_0-9]:)*([A-Z][a-zA-Z_0-9])$/
-    # The regex for valid definition names (in definition files)
-    DEFINITION_RE = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
+    COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
     
     #
     # Returns true if the given string is a valid component name.
