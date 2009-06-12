@@ -26,4 +26,8 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.rcov_opts << %[-o "features/cucumber"]
 end
 
+task :doc do |t|
+  `rdoc -d src/ -o doc/api -U`
+end
+
 task :default => [:spec, :features, :verify_rcov]
