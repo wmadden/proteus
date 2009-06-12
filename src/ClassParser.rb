@@ -81,7 +81,7 @@ module Bob
       
       # Parse the class name
       name = yaml.keys[0]
-      match = DEFINITION_RE.match( name )
+      match = CLASS_RE.match( name )
       
       # If there's no match, the definition is malformed
       if match.nil?

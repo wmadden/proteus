@@ -29,7 +29,7 @@ module Bob
   
   # 
   # Provides functions for parsing definitions.
-  # 
+  # require "DocumentParser.rb" and include Bob and p = DocumentParser.new and result = p.parse_yaml( YAML.load_file("../test/test.yml") )
   class DocumentParser
     
     # A regex defining valid component identifiers
@@ -45,8 +45,10 @@ module Bob
       @path = path
       @current_ns = current_ns || []
       @instance_parser = InstanceParser.new()
-      @class_parser = ClassParser.new( @definition_helper )
+      
       @definition_helper = DefinitionHelper.new( path, current_ns )
+      @class_parser = ClassParser.new( @definition_helper )
+      
       @definition_helper.class_parser = @class_parser
     end
     
@@ -98,7 +100,6 @@ module Bob
       
     end
     
-  private
     
     #------------------------------
     #  parse_yaml_seq
@@ -206,14 +207,7 @@ module Bob
     # Parses a component identifier for the class path.
     # 
     def parse_component_id( component_id )
-      
-      result = COMPONENT_RE.match( component_id ).to_a
-      
-      # Remove the first element
-      result.shift
-      
-      return result
-      
+      return component_id.split(':')
     end
     
   end

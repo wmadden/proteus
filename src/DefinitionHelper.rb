@@ -108,7 +108,7 @@ module Bob
         raise DefinitionUnavailable, "File not found for class path: '" + class_path.inspect + "'"
       end
       
-      yaml = YAML.parse_file( file )
+      yaml = YAML.load_file( file )
       
       @class_parser.parse_yaml( yaml, new_class )
       
