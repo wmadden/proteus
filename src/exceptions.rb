@@ -21,26 +21,30 @@
 ################################################################################
 
 module Bob
- 
-  class DefinitionMalformed < Exception
-  end
+
+  module Exceptions
   
-  class RenderError < Exception
-  end
-  
-  class RecursiveDefinition < Exception
-  end
-  
-  #
-  # Raised when a component identifier can't be properly parsed.
-  #
-  class InvalidComponentIdentifier < Exception
-  end
-  
-  #
-  # Raised when the definition of a component can't be found.
-  #
-  class DefinitionUnavailable < Exception
+    class DefinitionMalformed < Exception
+    end
+    
+    class RenderError < Exception
+    end
+    
+    class RecursiveDefinition < Exception
+    end
+    
+    #
+    # Raised when a component identifier can't be properly parsed.
+    #
+    class InvalidComponentIdentifier < Exception
+    end
+    
+    #
+    # Raised when the definition of a component can't be found.
+    #
+    class DefinitionUnavailable < Exception
+    end
+    
   end
   
 end

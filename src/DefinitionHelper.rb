@@ -22,6 +22,7 @@
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'ClassParser.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileHelper.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 
 module Bob
 
@@ -105,7 +106,7 @@ module Bob
       
       # parse it,
       if file.nil?
-        raise DefinitionUnavailable, "File not found for class path: '" + class_path.inspect + "'"
+        raise Exceptions::DefinitionUnavailable, "File not found for class path: '" + class_path.inspect + "'"
       end
       
       yaml = YAML.load_file( file )
