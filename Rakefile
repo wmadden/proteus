@@ -27,7 +27,7 @@ Cucumber::Rake::Task.new(:features) do |t|
 end
 
 task :doc do |t|
-  `rdoc -d src/ -o doc/api -U`
+  `rdoc -aUd src/ -o doc/api`
 end
 
 task :default => [:spec, :features, :verify_rcov]
