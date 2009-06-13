@@ -39,6 +39,8 @@ module Bob
     # target: the file to search for
     # path: the path (standard UNIX path variable) to search
     #
+    # @return Returns the path to the file.
+    #
     def self.find_file( target, path = nil )
       path = path || DEFAULT_PATH
       
