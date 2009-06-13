@@ -16,17 +16,101 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-describe ClassParser do
+require File.expand_path( 'src/ClassParser.rb' )
 
+include Bob
+
+
+describe ClassParser do
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Input Constants
+  #  
+  #-----------------------------------------------------------------------------
+  
+  DEF_1 = {
+    BAD_NAME_1 => {
+    }
+  }
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Set up, tear down
+  #  
+  #-----------------------------------------------------------------------------
+  
+  #------------------------------
+  #  before(:all)
+  #------------------------------
+  
   before(:all) do
   end
   
-  it "should only accept correctly formed documents"
-  
-  it "should interpret the 'children' property as children"
+  #------------------------------
+  #  after(:all)
+  #------------------------------
   
   after(:all) do
   end
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Tests
+  #  
+  #-----------------------------------------------------------------------------
+  
+  # Only accept correctly formed definitions.
+  #
+  # Do not accept:
+  #   nil
+  #   scalar
+  #   list
+  #   empty name
+  #   malformed name
+  #   empty parent name
+  #   malformed parent name
+  #   hash of scalar
+  #   hash of list
+  #   hash longer than one element
+  # 
+  # Accept:
+  #   hash of nothing
+  #   hash of hash
+  #
+  
+  it "should reject nil"
+  
+  it "should reject scalar"
+  
+  it "should reject list"
+  
+  it "should reject hash longer than one element"
+  
+  it "should reject missing name"
+  
+  it "should reject malformed name"
+  
+  it "should reject empty parent name"
+  
+  it "should reject malformed parent name"
+  
+  it "should reject hash of scalar"
+  
+  it "should reject hash of list"
+  
+  
+  it "should accept valid empty hash"
+  
+  it "should accept valid hash of properties"
+  
+  
+  it "should parse parent names in the form '> Parent'"
+  
+  it "should interpret the inner hash as properties"
+  
+  it "should interpret the 'children' property as children"
+  
   
 end
 
