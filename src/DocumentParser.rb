@@ -29,7 +29,7 @@ module Bob
   
   # 
   # Provides functions for parsing definitions.
-  # require "DocumentParser.rb" and include Bob and p = DocumentParser.new and result = p.parse_yaml( YAML.load_file("../test/test.yml") )
+  # 
   class DocumentParser
     
     # A regex defining valid component identifiers
