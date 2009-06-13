@@ -1,8 +1,4 @@
 ################################################################################
-# FileFinder.rb
-#
-# Unit tests for FileFinder.
-# -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
 # This file is part of Bob.
@@ -20,26 +16,33 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/FileFinder.rb' )
+require File.expand_path( 'src/FileHelper.rb' )
 
 include Bob
 
-describe FileFinder do
+
+describe FileHelper do
+
   before(:all) do
-    @original_path = FileFinder.path
-    @sample_path = ['.', 'defs', 'decs']
+    @path = "spec/test_lib_dir1:spec/test_lib_dir2"
   end
   
-  it "should be able to find files on the path"
-    # TODO: create a file in the local directory, and one in another directory.
-    # Test the order it finds them in.
+  # Search for "File1.def", it should be found in test_lib_dir1
+  it "should return the first matching file"
   
-  it "should be able to change the path" do
-    FileFinder.path = @sample_path
-    FileFinder.path.should == @sample_path
-  end
+  # Search for "File2.def", it should be found in test_lib_dir2
+  it "should search all directories"
+  
+  # Search for ["File3"]
+  it "should find definition files by classname"
+  
+  # Search for ["NS1", "File4"]
+  it "should find definition files with one namespace"
+  
+  # Search for ["NS1", "NS2", "File5"]
+  it "should find definition files with multiple namespaces"
   
   after(:all) do
-    FileFinder.path = @original_path
   end
+  
 end

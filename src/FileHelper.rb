@@ -42,6 +42,8 @@ module Bob
     def self.find_file( target, path = nil )
       path = path || DEFAULT_PATH
       
+      path = path.split(':')
+      
       for filepath in path
         for file in Dir.new(filepath)
           
