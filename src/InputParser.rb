@@ -1,7 +1,7 @@
 ################################################################################
-# DocumentParser.rb
+# InputParser.rb
 #
-# Parses document YAML and returns the instance tree.
+# Parses input YAML and returns instances.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
@@ -28,9 +28,9 @@ require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceParser.rb')
 module Bob
   
   # 
-  # Provides functions for parsing definitions.
+  # Parses input YAML.
   # 
-  class DocumentParser
+  class InputParser
     
     # A regex defining valid component identifiers
     COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
@@ -41,15 +41,21 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = nil, current_ns = nil )
+    def initialize( path = nil, current_ns = nil, instance_parser = nil,
+      class_parser = nil, definition_helper = nil )
+      
       @path = path
       @current_ns = current_ns || []
-      @instance_parser = InstanceParser.new()
+      @instance_parser = instance_parser || InstanceParser.new()
       
-      @definition_helper = DefinitionHelper.new( path, current_ns )
-      @class_parser = ClassParser.new( @definition_helper )
+      @definition_helper = definition_helper ||
+        DefinitionHelper.new( path, current_ns )
+      
+      @class_parser = class_parser ||
+        ClassParser.new( @definition_helper )
       
       @definition_helper.class_parser = @class_parser
+      
     end
     
     #---------------------------------------------------------------------------
@@ -60,11 +66,7 @@ module Bob
     
   public
     
-    attr_accessor :path, :current_ns, :instance_parser
-    
-  private
-    
-    attr_accessor :definition_helper
+    attr_accessor :path, :current_ns, :instance_parser, :definition_helper
     
     #---------------------------------------------------------------------------
     #  

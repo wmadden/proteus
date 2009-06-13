@@ -16,12 +16,12 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/DocumentParser.rb' )
+require File.expand_path( 'src/InputParser.rb' )
 
 include Bob
 
 
-describe DocumentParser do
+describe InputParser do
 
   before(:all) do
   end
