@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'ClassParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 
@@ -34,10 +34,11 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = [], current_ns = [] )
+    def initialize( path = [], current_ns = [], definition_parser = nil )
       @loaded_classes = {}
       @current_ns = []
       @path = path
+      @definition_parser = definition_parser
     end
     
     #---------------------------------------------------------------------------
@@ -48,7 +49,7 @@ module Bob
   
   public
     
-    attr_accessor :path, :current_ns, :class_parser
+    attr_accessor :path, :current_ns, :definition_parser
   
   private
   
@@ -97,24 +98,27 @@ module Bob
     # class_path: the full path of the class, including all namespaces
     #
     def load_class( class_path )
-      # Create a new class,
+      
+      # Create a new class, add it to the loaded_classes dictionary, load and
+      # parse its definition and return the result.
+      
       new_class = ComponentClass.new
+      
       @loaded_classes[ class_path ] = new_class
       
-      # load its definition,
       file = FileHelper.find_definition( class_path, @path )
       
-      # parse it,
       if file.nil?
-        raise Exceptions::DefinitionUnavailable, "File not found for class path: '" + class_path.inspect + "'"
+        raise Exceptions::DefinitionUnavailable,
+          "File not found for class path: '" + class_path.inspect + "'"
       end
       
       yaml = YAML.load_file( file )
       
-      @class_parser.parse_yaml( yaml, new_class )
+      @definition_parser.parse_yaml( yaml, new_class )
       
-      # and return the result.
       return new_class
+      
     end
     
   end
