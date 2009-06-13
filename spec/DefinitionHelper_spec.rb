@@ -15,3 +15,29 @@
 # You should have received a copy of the GNU General Public License along with
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
+
+
+require File.expand_path( 'src/DefinitionHelper.rb' )
+
+include Bob
+
+
+describe DefinitionHelper do
+
+  before(:all) do
+  end
+  
+  it "should load classes that haven't already been loaded"
+  
+  it "should return classes that have already been loaded"
+  
+  it "should not permit recursive classes"
+  
+  it "should use the given path to find definitions"
+  
+  it "should use the given namespace to identify classes"
+  
+  after(:all) do
+  end
+  
+end

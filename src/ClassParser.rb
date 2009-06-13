@@ -41,8 +41,9 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( definition_helper )
+    def initialize( document_parser, definition_helper )
       @definition_helper = definition_helper
+      @document_parser = document_parser
     end
     
     #---------------------------------------------------------------------------
@@ -54,6 +55,7 @@ module Bob
   private
     
     attr_accessor :definition_helper
+    attr_accessor :document_parser
     
     #---------------------------------------------------------------------------
     #  
@@ -76,7 +78,7 @@ module Bob
       if not ( yaml.is_a?(Hash) and yaml.length == 1 and
         yaml.values[0].is_a?(Hash) ) then
         
-        raise DefinitionMalformed
+        raise Exceptions::DefinitionMalformed
       end
       
       # Parse the class name
@@ -85,7 +87,7 @@ module Bob
       
       # If there's no match, the definition is malformed
       if match.nil?
-        raise DefinitionMalformed
+        raise Exceptions::DefinitionMalformed
       end
       
       class_name = match[1]

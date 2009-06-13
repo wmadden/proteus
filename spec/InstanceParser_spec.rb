@@ -15,3 +15,28 @@
 # You should have received a copy of the GNU General Public License along with
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
+
+require File.expand_path( 'src/InstanceParser.rb' )
+
+include Bob
+
+
+describe InstanceParser do
+
+  before(:all) do
+  end
+  
+  it "should interpret a hash as properties"
+  
+  it "should interpret a 'children' property as children"
+  
+  it "should interpret a list as children"
+  
+  it "should interpret a scalar as a single child"
+  
+  it "should interpret nil as a blank component"
+    
+  after(:all) do
+  end
+  
+end

@@ -41,7 +41,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    attr_accessor :name, :parent, :properties, :children
+    attr_accessor :name, :namespace, :parent, :properties, :children
     
   end
   

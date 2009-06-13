@@ -50,8 +50,9 @@ module Bob
           
         else
           result.children = [yaml]
-        
       end
+      
+      return result
     end
     
   end

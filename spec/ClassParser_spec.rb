@@ -15,3 +15,18 @@
 # You should have received a copy of the GNU General Public License along with
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
+
+describe ClassParser do
+
+  before(:all) do
+  end
+  
+  it "should only accept correctly formed documents"
+  
+  it "should interpret the 'children' property as children"
+  
+  after(:all) do
+  end
+  
+end
+
