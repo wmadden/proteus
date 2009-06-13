@@ -35,8 +35,8 @@ module Bob
     #
     # Interprets pre-parsed yaml and returns the loaded component instance.
     #
-    def parse_yaml( class_instance, yaml )
-      result = ComponentInstance.new( class_instance )
+    def parse_yaml( yaml, instance = nil )
+      result = instance || ComponentInstance.new
       
       case
         when yaml.is_a?( Array ):

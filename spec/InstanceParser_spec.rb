@@ -22,21 +22,111 @@ include Bob
 
 
 describe InstanceParser do
-
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Input Constants
+  #  
+  #-----------------------------------------------------------------------------
+  
+  HASH_1 = {
+    "property1" => "value1",
+    "property2" => "value2",
+    "property3" => "value3"
+  }
+  
+  CHILDREN_1 = [
+    "child 1",
+    "child 2",
+    "child 3"
+  ]
+  
+  HASH_2 = {
+    "property1" => "value1",
+    "property2" => "value2",
+    "property3" => "value3",
+    "children" => CHILDREN_1
+  }
+  
+  SCALAR_1 = "child 1"
+  
+  CHILDREN_2 = [ SCALAR_1 ]
+  
+  LIST_1 = CHILDREN_1
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Set up, tear down
+  #  
+  #-----------------------------------------------------------------------------
+  
+  #------------------------------
+  #  before(:all)
+  #------------------------------
+  
   before(:all) do
+    @instance_parser = InstanceParser.new
   end
   
-  it "should interpret a hash as properties"
+  #------------------------------
+  #  after(:all)
+  #------------------------------
   
-  it "should interpret a 'children' property as children"
-  
-  it "should interpret a list as children"
-  
-  it "should interpret a scalar as a single child"
-  
-  it "should interpret nil as a blank component"
-    
   after(:all) do
+  end
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Tests
+  #  
+  #-----------------------------------------------------------------------------
+  
+  
+  it "should interpret a hash as properties" do
+    
+    comp = @instance_parser.parse_yaml( HASH_1 )
+    comp.properties.should == HASH_1
+    
+  end
+  
+  
+  it "should interpret a 'children' property as children" do
+    
+    comp = @instance_parser.parse_yaml( HASH_2 )
+    
+    comp.properties.should == HASH_1
+    comp.children.should == CHILDREN_1
+    
+  end
+  
+  
+  it "should interpret a list as children" do
+    
+    comp = @instance_parser.parse_yaml( LIST_1 )
+    
+    comp.properties.should == {}
+    comp.children.should == CHILDREN_1
+    
+  end
+  
+  
+  it "should interpret a scalar as a single child" do
+    
+    comp = @instance_parser.parse_yaml( SCALAR_1 )
+    
+    comp.properties.should == {}
+    comp.children.should == CHILDREN_2
+    
+  end
+  
+  
+  it "should interpret nil as a blank component" do
+    
+    comp = @instance_parser.parse_yaml( nil )
+    
+    comp.properties.should == {}
+    comp.children.should == []
+    
   end
   
 end

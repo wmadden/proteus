@@ -23,6 +23,12 @@ include Bob
 
 describe FileHelper do
   
+  #-----------------------------------------------------------------------------
+  #  
+  #  Input Constants
+  #  
+  #-----------------------------------------------------------------------------
+  
   LIB_DIR_1 = "spec/test_lib_dir1"
   LIB_DIR_2 = "spec/test_lib_dir2"
   PATH = LIB_DIR_1 + ":" + LIB_DIR_2
@@ -33,6 +39,12 @@ describe FileHelper do
   FILE_3_PATH = LIB_DIR_1 + "/File3.def"
   FILE_4_PATH = LIB_DIR_1 + "/NS1/File4.def"
   FILE_5_PATH = LIB_DIR_1 + "/NS1/NS2/File5.def"
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Set up, tear down
+  #  
+  #-----------------------------------------------------------------------------
   
   #
   # Handle collisions - return first match.
@@ -46,6 +58,7 @@ describe FileHelper do
     
   end
   
+  
   #
   # Search all paths.
   #
@@ -57,6 +70,7 @@ describe FileHelper do
     file.should == FILE_2_PATH
     
   end
+  
   
   #
   # Search for definition with no namespaces.
@@ -70,6 +84,7 @@ describe FileHelper do
     
   end
   
+  
   #
   # Search for definition nested under one namespace.
   #
@@ -81,6 +96,7 @@ describe FileHelper do
     file.should == FILE_4_PATH
     
   end
+  
   
   #
   # Search for definition nested by more than one namespace.

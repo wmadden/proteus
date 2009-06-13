@@ -26,10 +26,10 @@ module Bob
     
     attr_accessor :kind, :properties, :children
     
-    def initialize( class_instance )
-      @kind = class_instance
-      @properties = {}
-      @children = []
+    def initialize( kind = nil, properties = {}, children = [] )
+      @kind = kind
+      @properties = properties
+      @children = children
     end
     
   end
