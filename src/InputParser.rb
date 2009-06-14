@@ -23,6 +23,7 @@
 require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 
 module Bob
   
@@ -126,18 +127,19 @@ module Bob
         value = parse_yaml( yaml.values.first )
         
         # Parse the component
-        return parse_component( yaml.keys.first, value )
-        
-      else
-      
-        # Otherwise return the hash, parsing each value.
-        return yaml.inject({}) do |acc, pair|
-            acc[pair[0]] = parse_yaml(pair[1])
-            acc
+        begin
+          return parse_component( yaml.keys.first, value )
+        rescue Exceptions::DefinitionUnavailable
         end
         
       end
       
+      # Otherwise return the hash, parsing each value.
+      return yaml.inject({}) do |acc, pair|
+          acc[pair[0]] = parse_yaml(pair[1])
+          acc
+      end
+        
     end
     
     #------------------------------
@@ -150,7 +152,10 @@ module Bob
     def parse_yaml_scalar( yaml )
       
       if @@COMPONENT_RE === yaml then
-        return parse_component( yaml )
+        begin
+          return parse_component( yaml )
+        rescue Exceptions::DefinitionUnavailable
+        end
       end
       
       return yaml
