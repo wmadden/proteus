@@ -33,7 +33,7 @@ module Bob
   class InputParser
     
     # A regex defining valid component identifiers
-    COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
+    @@COMPONENT_RE = /^([a-zA-Z_0-9]+:)*([A-Z][a-zA-Z_0-9]*)$/
     
     #---------------------------------------------------------------------------
     #  
@@ -41,20 +41,13 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = nil, current_ns = nil, instance_parser = nil,
-      class_parser = nil, definition_helper = nil )
+    def initialize( path = nil, current_ns = [], instance_parser = nil,
+      definition_helper = nil )
       
       @path = path
-      @current_ns = current_ns || []
-      @instance_parser = instance_parser || InstanceParser.new()
-      
-      @definition_helper = definition_helper ||
-        DefinitionHelper.new( path, current_ns )
-      
-      @class_parser = class_parser ||
-        ClassParser.new( @definition_helper )
-      
-      @definition_helper.class_parser = @class_parser
+      @current_ns = current_ns
+      @instance_parser = instance_parser
+      @definition_helper = definition_helper
       
     end
     
@@ -129,7 +122,7 @@ module Bob
       # If the hash has only one element and it's a valid component name,
       # parse it as a component.
       
-      if yaml.length == 1 and COMPONENT_RE === yaml.keys.first
+      if yaml.length == 1 and @@COMPONENT_RE === yaml.keys.first
         
         # Parse the value mapped to the key
         value = parse_yaml( yaml.values.first )
@@ -158,7 +151,7 @@ module Bob
     # 
     def parse_yaml_scalar( yaml )
       
-      if COMPONENT_RE === yaml then
+      if @@COMPONENT_RE === yaml then
         return parse_component( yaml )
       end
       
@@ -190,15 +183,29 @@ module Bob
     # yaml: the YAML describing the instance
     # 
     def parse_component( component_id, yaml )
-    
+      
+      result = ComponentInstance.new
+      
       # Parse the id for namespaces and type
       class_path = parse_component_id( component_id )
       
-      # Get the class (loading it if required)
-      class_instance = @definition_helper.get_class( class_path )
+      # Get the class of the component
+      result.kind = @definition_helper.get_class( class_path )
       
       # Parse the YAML into the instance
-      return @instance_parser.parse_yaml( class_instance, yaml )
+      @instance_parser.parse_yaml( yaml, result )
+      
+      # Parse its properties
+      for property in result.properties
+        result.properties[ property[0] ] = parse_yaml( property[1] )
+      end
+      
+      # Parse its children
+      result.children.length.times do |i|
+        result.children[i] = parse_yaml( result.children[i] )
+      end
+      
+      return result
       
     end
     

@@ -24,6 +24,8 @@ module Bob
  
   class InstanceParser
     
+    @@CHILDREN = "children"
+    
     #---------------------------------------------------------------------------
     #  
     #  Methods
@@ -44,6 +46,7 @@ module Bob
           
         when yaml.is_a?( Hash ):
           result.properties.merge!( yaml )
+          result.children = result.properties.delete(@@CHILDREN) || []
           
         when yaml.nil?:
           return result

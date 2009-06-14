@@ -72,9 +72,7 @@ describe InputParser do
   #  valid, known component name -> component instance
   #  valid but unknown component name -> scalar
   
-  it "invalid component name -> scalar" do
-    1.should == 2
-  end
+  it "invalid component name -> scalar"
   
   
   it "valid, known component name -> component instance"
