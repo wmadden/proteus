@@ -129,6 +129,13 @@ module Bob
       
       @definition_parser.parse_yaml( yaml, new_class )
       
+      if new_class.name != class_path[ class_path.length - 1 ]
+        raise Exceptions::DefinitionMalformed,
+          "Definition class name ('" + new_class.name +
+          "') does not match file name ('" +
+          class_path[ class_path.length - 1 ] + "')."
+      end
+      
       return new_class
       
     end

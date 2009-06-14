@@ -123,5 +123,14 @@ describe DefinitionHelper do
     
   end
   
+  it "should fail if the definition's class name doesn't match its filename" do
+    begin
+      result = @definition_helper.get_class( ["TestComponent11"] )
+    rescue Exceptions::DefinitionMalformed
+      success = true
+    end
+    
+    success.should == true
+  end
   
 end

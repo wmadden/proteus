@@ -366,8 +366,8 @@ describe InputParser do
     result[2].is_a?( Hash ).should == true
     
     check_hash_parsed( result[0] )
+    check_hash_parsed( result[1] )
     check_hash_parsed( result[2] )
-    check_hash_parsed( result[3] )
   end
   
   
