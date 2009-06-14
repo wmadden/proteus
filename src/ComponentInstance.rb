@@ -45,8 +45,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    attr_accessor :kind, :children
-    attr_writer :properties
+    attr_accessor :kind, :children, :properties
     
     #---------------------------------------------------------------------------
     #  
@@ -57,8 +56,15 @@ module Bob
     #
     # Merges the component's properties with the class's and returns the result.
     #
-    def properties
+    def final_properties
       return kind.properties.merge( @properties )
+    end
+    
+    #
+    # Merges the component's children with the class's and returns the result.
+    #
+    def final_children
+      return kind.children.merge( @children )
     end
     
   end
