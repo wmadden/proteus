@@ -24,6 +24,8 @@ module Bob
   
   class ComponentClass
     
+    DEFAULT_CLASS = ComponentClass.new()
+    
     #---------------------------------------------------------------------------
     #  
     #  Constructor

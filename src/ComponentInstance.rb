@@ -24,12 +24,41 @@ module Bob
   
   class ComponentInstance
     
-    attr_accessor :kind, :properties, :children
+    #---------------------------------------------------------------------------
+    #  
+    #  Constructor
+    #  
+    #---------------------------------------------------------------------------
     
-    def initialize( kind = nil, properties = {}, children = [] )
+    def initialize( kind = ComponentClass::DEFAULT_CLASS,
+      properties = {}, children = [] )
+      
       @kind = kind
       @properties = properties
       @children = children
+      
+    end
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Properties
+    #  
+    #---------------------------------------------------------------------------
+    
+    attr_accessor :kind, :children
+    attr_writer :properties
+    
+    #---------------------------------------------------------------------------
+    #  
+    #  Methods
+    #  
+    #---------------------------------------------------------------------------
+    
+    #
+    # Merges the component's properties with the class's and returns the result.
+    #
+    def properties
+      return kind.properties.merge( @properties )
     end
     
   end
