@@ -108,21 +108,19 @@ describe DefinitionHelper do
   end
   
   
-  it "should not permit recursive classes" do
-    begin
-      result = @definition_helper.get_class( ["TestComponent8"] )
-    rescue Exceptions::RecursiveDefinition
-      success1 = true
-    end
+  it "should be able to handle recursive classes" do
+    result = @definition_helper.get_class( ["TestComponent8"] )
+    result.is_a?( ComponentClass ).should == true
+    result.name.should == "TestComponent8"
+    result.parent.should == result
     
-    begin
-      result = @definition_helper.get_class( ["TestComponent9"] )
-    rescue Exceptions::RecursiveDefinition
-      success2 = true
-    end
+    result = @definition_helper.get_class( ["TestComponent9"] )
+    result.is_a?( ComponentClass ).should == true
+    result.name.should == "TestComponent9"
+    result.parent.is_a?( ComponentClass ).should == true
+    result.parent.name.should == "TestComponent10"
+    result.parent.parent.should == result
     
-    success1.should == true
-    success2.should == true
   end
   
   

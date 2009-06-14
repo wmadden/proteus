@@ -35,10 +35,12 @@ module Bob
     #---------------------------------------------------------------------------
     
     def initialize( definition_parser = nil, path = [], current_ns = [] )
-      @loaded_classes = {}
       @current_ns = []
       @path = path
       @definition_parser = definition_parser
+      
+      @loaded_classes = {}
+      @loading = []
     end
     
     #---------------------------------------------------------------------------
@@ -83,11 +85,23 @@ module Bob
         return @loaded_classes[ class_path ]
       end
       
-      # Otherwise load it,
-      new_class = load_class( class_path )
+      # Otherwise create it,
+      new_class = ComponentClass.new
       
       # add it to the dictionary,
       @loaded_classes[ class_path ] = new_class
+      
+      # load its definition,
+      begin
+        new_class = load_class( class_path, new_class )
+      rescue Exception => exception
+        # Load failed so delete it from the dictionary
+        # TODO: consider dropping entire dictionary, since linked classes might
+        # also be affected
+        @loaded_classes.delete( class_path )
+        
+        raise exception
+      end
       
       # and return it.
       return new_class
@@ -102,9 +116,7 @@ module Bob
     #
     # class_path: the full path of the class, including all namespaces
     #
-    def load_class( class_path )
-      
-      new_class = ComponentClass.new
+    def load_class( class_path, new_class )
       
       file = FileHelper.find_definition( class_path, @path )
       
