@@ -20,7 +20,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( File.join(File.dirname(__FILE__), 'ClassParser.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentClass.rb') )
 
 include Bob
 

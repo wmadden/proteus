@@ -29,7 +29,33 @@ describe InputParser do
   #  
   #-----------------------------------------------------------------------------
   
-  NIL = nil
+  @@NIL = nil
+  
+  @@INVALID_SCALAR_COMPONENT = "invalid component"
+  
+  @@KNOWN_SCALAR_COMPONENT = "TestComponent1"
+  @@KNOWN_SCALAR_COMPONENT2 = "TestComponent3"
+  
+  @@UNKNOWN_SCALAR_COMPONENT = "TestComponent2"
+  
+  @@KNOWN_COMPONENT_HASH = {
+    @@KNOWN_SCALAR_COMPONENT => {
+      "prop1" => "val1"
+    }
+  }
+  
+  @@EMPTY_ARRAY = []
+  @@NONC_SCALAR_ARRAY = [ @@INVALID_SCALAR_COMPONENT ]
+  @@MANY_NONC_SCALAR_ARRAY = [
+    "not a component",
+    "NotAComponent",
+    "Definitely Not Component"
+  ]
+  @@MANY_COMP_SCALAR_ARRAY = [
+    @@KNOWN_SCALAR_COMPONENT,
+    @@KNOWN_SCALAR_COMPONENT2
+  ]
+  
   
   #-----------------------------------------------------------------------------
   #  
@@ -42,14 +68,31 @@ describe InputParser do
   #------------------------------
   
   before(:all) do
+    
+    # Instance parser
+    @instance_parser = InstanceParser.new
+    
+    # Class parser
+    @class_parser = ClassParser.new
+    
+    # Definition parser
+    @definition_parser = DefinitionParser.new
+    @definition_parser.class_parser = @class_parser
+    
+    # Definition helper
+    @definition_helper = DefinitionHelper.new
+    @definition_helper.definition_parser = @definition_parser
+    @definition_helper.path = ["spec/lib"]
+    
+    @definition_parser.definition_helper = @definition_helper
+    
+    # Input parser
     @input_parser = InputParser.new
-  end
-  
-  #------------------------------
-  #  after(:all)
-  #------------------------------
-  
-  after(:all) do
+    @input_parser.instance_parser = @instance_parser
+    @input_parser.definition_helper = @definition_helper
+    
+    @definition_parser.input_parser = @input_parser
+    
   end
   
   #-----------------------------------------------------------------------------
@@ -62,8 +105,8 @@ describe InputParser do
   #  nil
   
   it "nil -> nil" do
-    result = @input_parser.parse_yaml( NIL )
-    result.should == NIL
+    result = @input_parser.parse_yaml( @@NIL )
+    result.should == @@NIL
   end
   
   
@@ -72,27 +115,46 @@ describe InputParser do
   #  valid, known component name -> component instance
   #  valid but unknown component name -> scalar
   
-  it "invalid component name -> scalar"
+  it "invalid component name -> scalar" do
+    result = @input_parser.parse_yaml( @@INVALID_SCALAR_COMPONENT )
+    result.should == @@INVALID_SCALAR_COMPONENT
+  end
+  
+  it "valid, known component name -> component instance" do
+    result = @input_parser.parse_yaml( @@KNOWN_SCALAR_COMPONENT )
+    result.is_a?( ComponentInstance ).should == true
+  end
   
   
-  it "valid, known component name -> component instance"
+  it "valid but unknown component name -> scalar" do
+    result = @input_parser.parse_yaml( @@UNKNOWN_SCALAR_COMPONENT )
+    result.should == @@UNKNOWN_SCALAR_COMPONENT
+  end
   
-  
-  it "valid but unknown component name -> scalar"
   
   # Parse hash:
-  #  length 1 with valid, know component name -> component instance
+  #  length 1 with valid, known component name -> component instance
   #  length 1 with valid, unknown component name -> hash of parsed values
   #  length 1 with invalid component name -> hash of parsed values
   #  length > 1 -> hash of parsed values
   
-  it "length 1 with valid, know component name -> component instance"
+  it "length 1 with valid, known component name -> component instance" do
+    result = @input_parser.parse_yaml( @@KNOWN_COMPONENT_HASH )
+    result.is_a?( ComponentInstance ).should == true
+  end
   
   
-  it "length 1 with valid, unknown component name -> hash of parsed values"
+  it "length 1 with valid, unknown component name -> hash of parsed values"# do
+#    result = @input_parser.parse_yaml( @@UNKNOWN_COMPONENT_HASH )
+#    result.should == @@UNKNOWN_COMPONENT_HASH
+#  end
   
   
-  it "length 1 with invalid component name -> hash of parsed values"
+  it "length 1 with invalid component name -> hash of parsed values" do
+    # TODO
+    result = @input_parser.parse_yaml( @@INVALID_COMPONENT_HASH )
+    result.should == @@INVALID_COMPONENT_HASH
+  end
   
   
   it "length > 1 -> hash of parsed values"
@@ -112,19 +174,34 @@ describe InputParser do
   #  array of mixed hashes -> array of parsed hashes
   #  array of mixed scalars and hashes -> array of parsed values
   
-  it "empty array -> empty array"
+  it "empty array -> empty array" do
+    result = @input_parser.parse_yaml( @@EMPTY_ARRAY )
+    result.should == @@EMPTY_ARRAY
+  end
   
   
-  it "array of single, non-component scalar -> array of parsed values"
+  it "array of single, non-component scalar -> array of parsed values" do
+    result = @input_parser.parse_yaml( @@NONC_SCALAR_ARRAY )
+    result.should == @@NONC_SCALAR_ARRAY
+  end
   
   
-  it "array of single, component scalar -> array of component instance"
+  it "array of single, component scalar -> array of component instance" do
+    result = @input_parser.parse_yaml( @@COMP_SCALAR_ARRAY )
+    result.is_a?( ComponentInstance ).should == true
+  end
   
   
-  it "array of many non-component scalars -> array of parsed values"
+  it "array of many non-component scalars -> array of parsed values" do
+    result = @input_parser.parse_yaml( @@MANY_NONC_SCALAR_ARRAY )
+    result.should == @@MANY_NONC_SCALAR_ARRAY
+  end
   
   
-  it "array of many component scalars -> array of component instances"
+  it "array of many component scalars -> array of component instances" do
+    result = @input_parser.parse_yaml( @@MANY_COMP_SCALAR_ARRAY )
+    result.should == @@MANY_COMP_SCALAR_ARRAY
+  end
   
   
   it "array of mixed scalars -> array of parsed values"

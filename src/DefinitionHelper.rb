@@ -34,7 +34,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = [], current_ns = [], definition_parser = nil )
+    def initialize( definition_parser = nil, path = [], current_ns = [] )
       @loaded_classes = {}
       @current_ns = []
       @path = path

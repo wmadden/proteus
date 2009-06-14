@@ -22,7 +22,6 @@
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'ClassParser.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceParser.rb') )
 
 module Bob
@@ -41,10 +40,9 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( path = nil, current_ns = [], instance_parser = nil,
-      definition_helper = nil )
+    def initialize( instance_parser = nil, definition_helper = nil,
+      current_ns = [] )
       
-      @path = path
       @current_ns = current_ns
       @instance_parser = instance_parser
       @definition_helper = definition_helper
@@ -59,7 +57,7 @@ module Bob
     
   public
     
-    attr_accessor :path, :current_ns, :instance_parser, :definition_helper
+    attr_accessor :current_ns, :instance_parser, :definition_helper
     
     #---------------------------------------------------------------------------
     #  
