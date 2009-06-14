@@ -29,6 +29,8 @@ describe InputParser do
   #  
   #-----------------------------------------------------------------------------
   
+  NIL = nil
+  
   #-----------------------------------------------------------------------------
   #  
   #  Set up, tear down
@@ -60,16 +62,24 @@ describe InputParser do
   #  nil
   
   it "nil -> nil" do
-    
+    result = @input_parser.parse_yaml( NIL )
+    result.should == NIL
   end
+  
   
   # Parse scalar:
   #  invalid component name -> scalar
   #  valid, known component name -> component instance
   #  valid but unknown component name -> scalar
   
-  it "invalid component name -> scalar"
+  it "invalid component name -> scalar" do
+    1.should == 2
+  end
+  
+  
   it "valid, known component name -> component instance"
+  
+  
   it "valid but unknown component name -> scalar"
   
   # Parse hash:
@@ -79,9 +89,16 @@ describe InputParser do
   #  length > 1 -> hash of parsed values
   
   it "length 1 with valid, know component name -> component instance"
+  
+  
   it "length 1 with valid, unknown component name -> hash of parsed values"
+  
+  
   it "length 1 with invalid component name -> hash of parsed values"
+  
+  
   it "length > 1 -> hash of parsed values"
+  
   
   # Parse arrays:
   #  empty array -> empty array
@@ -98,16 +115,39 @@ describe InputParser do
   #  array of mixed scalars and hashes -> array of parsed values
   
   it "empty array -> empty array"
+  
+  
   it "array of single, non-component scalar -> array of parsed values"
+  
+  
   it "array of single, component scalar -> array of component instance"
+  
+  
   it "array of many non-component scalars -> array of parsed values"
+  
+  
   it "array of many component scalars -> array of component instances"
+  
+  
   it "array of mixed scalars -> array of parsed values"
+  
+  
   it "array of single, non-component hash -> array of parsed hash"
+  
+  
   it "array of single, component hash -> array of component instance"
+  
+  
   it "array of many non-component hashes -> array of parsed hashes"
+  
+  
   it "array of many component hashes -> array of component instances"
+  
+  
   it "array of mixed hashes -> array of parsed hashes"
+  
+  
   it "array of mixed scalars and hashes -> array of parsed values"
+  
   
 end
