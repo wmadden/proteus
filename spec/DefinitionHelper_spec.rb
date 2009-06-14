@@ -88,9 +88,6 @@ describe DefinitionHelper do
   end
   
   
-  it "should load classes that haven't already been loaded"
-  
-  
   it "should return classes that have already been loaded" do
     result = @definition_helper.get_class( ["TestComponent4"] )
     result.name.should == "TestComponent4"
