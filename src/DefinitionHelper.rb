@@ -66,26 +66,31 @@ module Bob
     #
     # Returns the given class.
     # 
-    # class_name: the name of the class to load
-    # ns_path: its namespace path, an array of namespace identifiers
+    # class_path: an array containing the namespaces and class id of the class
     # current_ns: the current namespace, an array of namespace identifiers
     #
-    def get_class( class_name, ns_path = [], current_ns = [] )
+    def get_class( class_path, current_ns = nil )
       
-      # Get the full class path
-      if ns_path.length > 0
-        class_path = ns_path + class_name
-      else
-        class_path = current_ns + class_name
+      current_ns = current_ns || @current_ns
+      
+      # Use the current namespace if the class_path doesn't specify one.
+      if class_path.length == 1
+        class_path = current_ns + class_path
       end
       
-      # If it's already loaded, return it
+      # If it's already loaded, return it.
       if @loaded_classes.has_key?( class_path )
         return @loaded_classes[ class_path ]
       end
       
-      # Otherwise load it
-      return load_class( class_path )
+      # Otherwise load it,
+      new_class = load_class( class_path )
+      
+      # add it to the dictionary,
+      @loaded_classes[ class_path ] = new_class
+      
+      # and return it.
+      return new_class
       
     end
     
@@ -99,12 +104,7 @@ module Bob
     #
     def load_class( class_path )
       
-      # Create a new class, add it to the loaded_classes dictionary, load and
-      # parse its definition and return the result.
-      
       new_class = ComponentClass.new
-      
-      @loaded_classes[ class_path ] = new_class
       
       file = FileHelper.find_definition( class_path, @path )
       

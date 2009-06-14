@@ -177,7 +177,7 @@ describe DefinitionParser do
     @definition_parser.parse_yaml( @@DEFINITION, component_class )
     
     @dummy_dh.called.should == true
-    @dummy_dh.class_id.should == @@PARENT_NAME
+    @dummy_dh.class_id.should == [ @@PARENT_NAME ]
     
   end
   

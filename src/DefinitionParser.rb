@@ -81,7 +81,7 @@ module Bob
       
       # Get the parent class
       if result.parent != nil
-        result.parent = @definition_helper.get_class( result.parent )
+        result.parent = @definition_helper.get_class( result.parent.split(':') )
       end
       
       # Parse properties

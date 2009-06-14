@@ -57,7 +57,7 @@ describe DefinitionHelper do
     @definition_helper = DefinitionHelper.new
     @definition_helper.definition_parser = @definition_parser
     @definition_helper.path = "spec/lib"
-    @definition_helper.current_ns = "NS1"
+    @definition_helper.current_ns = ["NS1"]
     
     @definition_parser.definition_helper = @definition_helper
     
