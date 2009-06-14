@@ -22,7 +22,6 @@
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentClass.rb') )
-require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
 
 module Bob
   
@@ -41,21 +40,8 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( document_parser, definition_helper )
-      @definition_helper = definition_helper
-      @document_parser = document_parser
+    def initialize( )
     end
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Properties
-    #  
-    #---------------------------------------------------------------------------
-    
-  private
-    
-    attr_accessor :definition_helper
-    attr_accessor :document_parser
     
     #---------------------------------------------------------------------------
     #  

@@ -77,7 +77,7 @@ module Bob
       # class and parse all the values in the children and properties of the new
       # component class.
       
-      @class_parser.parse_yaml( yaml, component_class )
+      @class_parser.parse_yaml( yaml, result )
       
       # Get the parent class
       if result.parent != nil
@@ -91,7 +91,7 @@ module Bob
       end
       
       # Parse children
-      result.children.times do |i|
+      result.children.length.times do |i|
         result.children[i] = @input_parser.parse_yaml( child )
       end
       

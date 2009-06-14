@@ -32,8 +32,6 @@ class DummyInputParser
   def parse_yaml( yaml )
     @called = true
     @inputs += yaml
-    
-    return DIP_PREFIX
   end
   
 end
