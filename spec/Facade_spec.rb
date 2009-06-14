@@ -21,7 +21,7 @@ require File.expand_path( 'src/Facade.rb' )
 include Bob
 
 
-describe TemplateRenderer do
+describe Facade do
   
   #-----------------------------------------------------------------------------
   #  
