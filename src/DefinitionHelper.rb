@@ -35,7 +35,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( definition_parser = nil, path = [], current_ns = [] )
+    def initialize( definition_parser = nil, path = nil, current_ns = [] )
       @current_ns = []
       @path = path
       @definition_parser = definition_parser

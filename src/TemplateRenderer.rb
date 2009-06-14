@@ -23,37 +23,17 @@
 require 'erb'
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
+require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceProxy.rb') )
 
 
 module Bob
-  
-  #
-  # Add the get_binding function to the ComponentInstance class to support ERB
-  # templating.
-  #
-  class ComponentInstance
-    
-    #---------------------------------------------------------------------------
-    #  
-    #  Methods
-    #  
-    #---------------------------------------------------------------------------
-    
-  public
-    
-    #
-    # Returns the binding in the scope of the instance.
-    #
-    def get_binding( )
-      return binding
-    end
-    
-  end
   
   # 
   # Renders a document tree.
   # 
   class TemplateRenderer
+    
+    TEMPLATE_PROPERTY = "template"
     
     #---------------------------------------------------------------------------
     #  
@@ -128,12 +108,15 @@ module Bob
     # Renders an instance.
     #
     def render_instance( instance )
-    
-      template = instance.properties[ TEMPLATE_PROPERTY ]
+      
+      result = ''
+      template = instance.final_properties[ TEMPLATE_PROPERTY ]
       
       if template != nil
-        e = ERB.new(  )
-        e.result( instance.get_binding() )
+        proxy = InstanceProxy.new( self, instance )
+        
+        e = ERB.new( template )
+        result = e.result( proxy.get_binding() )
       end
       
       return result
