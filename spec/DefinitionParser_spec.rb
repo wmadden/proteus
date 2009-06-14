@@ -89,46 +89,44 @@ describe DefinitionParser do
     
   end
   
+  @@PARENT_NAME = "SomeParent"
+  @@COMPONENT_NAME = "SomeComponent"
+  @@COMPONENT_CHILDREN = [
+    "child1",
+    "child2",
+    "child3"
+  ]
+  @@COMPONENT_PROPS = {
+    "prop1" => "value1",
+    "prop2" => "value2",
+    "prop3" => "value3"
+  }
+
+  @@COMPONENT_FULL_PROPS = {
+    "prop1" => "value1",
+    "prop2" => "value2",
+    "prop3" => "value3",
+    "children" => @@COMPONENT_CHILDREN
+  }
+
+  @@EXPECTED_INPUTS = [
+    "value1",
+    "value2",
+    "value3",
+    "child1",
+    "child2",
+    "child3"
+  ]
+
+  @@DEFINITION = {
+    @@COMPONENT_NAME + " < " + @@PARENT_NAME => @@COMPONENT_FULL_PROPS
+  }
+  
   #-----------------------------------------------------------------------------
   #  
   #  Set up, tear down
   #  
   #-----------------------------------------------------------------------------
-  
-  before(:all) do
-    @PARENT_NAME = "SomeParent"
-    @COMPONENT_NAME = "SomeComponent"
-    @COMPONENT_CHILDREN = [
-      "child1",
-      "child2",
-      "child3"
-    ]
-    @COMPONENT_PROPS = {
-      "prop1" => "value1",
-      "prop2" => "value2",
-      "prop3" => "value3"
-    }
-
-    @COMPONENT_FULL_PROPS = {
-      "prop1" => "value1",
-      "prop2" => "value2",
-      "prop3" => "value3",
-      "children" => @COMPONENT_CHILDREN
-    }
-
-    @EXPECTED_INPUTS = [
-      "value1",
-      "value2",
-      "value3",
-      "child1",
-      "child2",
-      "child3"
-    ]
-
-    @DEFINITION = {
-      @COMPONENT_NAME + " < " + @PARENT_NAME => @COMPONENT_FULL_PROPS
-    }
-  end
   
   #------------------------------
   #  before(:each)
@@ -153,11 +151,11 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( @DEFINITION, component_class )
+    @definition_parser.parse_yaml( @@DEFINITION, component_class )
     
     @dummy_cp.called.should == true
     @dummy_cp.component_class.should == component_class
-    @dummy_cp.yaml.should == @DEFINITION
+    @dummy_cp.yaml.should == @@DEFINITION
     
   end
   
@@ -165,10 +163,10 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( @DEFINITION, component_class )
+    @definition_parser.parse_yaml( @@DEFINITION, component_class )
     
     @dummy_ip.called.should == true
-    @dummy_ip.inputs.should == @EXPECTED_INPUTS
+    @dummy_ip.inputs.should == @@EXPECTED_INPUTS
     
   end
   
@@ -176,10 +174,10 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( @DEFINITION, component_class )
+    @definition_parser.parse_yaml( @@DEFINITION, component_class )
     
     @dummy_dh.called.should == true
-    @dummy_dh.class_id.should == @PARENT_NAME
+    @dummy_dh.class_id.should == @@PARENT_NAME
     
   end
   
