@@ -68,13 +68,6 @@ describe InstanceParser do
     @instance_parser = InstanceParser.new
   end
   
-  #------------------------------
-  #  after(:all)
-  #------------------------------
-  
-  after(:all) do
-  end
-  
   #-----------------------------------------------------------------------------
   #  
   #  Tests
@@ -94,8 +87,8 @@ describe InstanceParser do
     
     comp = @instance_parser.parse_yaml( HASH_2 )
     
-    comp.properties.should == HASH_1
     comp.children.should == CHILDREN_1
+    comp.properties.should == HASH_1
     
   end
   
@@ -114,8 +107,8 @@ describe InstanceParser do
     
     comp = @instance_parser.parse_yaml( SCALAR_1 )
     
-    comp.properties.should == {}
     comp.children.should == CHILDREN_2
+    comp.properties.should == {}
     
   end
   

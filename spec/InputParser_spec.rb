@@ -40,6 +40,7 @@ describe InputParser do
   #------------------------------
   
   before(:all) do
+    @input_parser = InputParser.new
   end
   
   #------------------------------
@@ -58,7 +59,9 @@ describe InputParser do
   # Parse nil:
   #  nil
   
-  it "nil -> nil"
+  it "nil -> nil" do
+    
+  end
   
   # Parse scalar:
   #  invalid component name -> scalar

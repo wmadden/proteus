@@ -103,6 +103,10 @@ describe ClassParser do
     VALID_NAME + " > " + VALID_PARENT => {}
   }
   
+  HASH_WITH_CHILDREN = {
+    VALID_NAME => PROPERTIES_WITH_CHILDREN
+  }
+  
   #-----------------------------------------------------------------------------
   #  
   #  Set up, tear down
@@ -278,8 +282,8 @@ describe ClassParser do
     
     result = @class_parser.parse_yaml( HASH_WITH_PARENT )
     
-    result.name.should = VALID_NAME
-    result.parent.should = VALID_PARENT
+    result.name.should == VALID_NAME
+    result.parent.should == VALID_PARENT
     
   end
   
@@ -296,8 +300,8 @@ describe ClassParser do
     
     result = @class_parser.parse_yaml( HASH_WITH_CHILDREN )
     
-    result.children.should = CHILDREN
-    result.properties.should = PROPERTIES
+    result.children.should == CHILDREN
+    result.properties.should == PROPERTIES
     
   end
   
