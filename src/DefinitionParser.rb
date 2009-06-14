@@ -22,8 +22,6 @@
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentClass.rb') )
 
-include Bob
-
 
 module Bob
   

@@ -136,10 +136,10 @@ module Bob
       
       # Otherwise return the hash, parsing each value.
       return yaml.inject({}) do |acc, pair|
-          acc[pair[0]] = parse_yaml(pair[1])
-          acc
+        acc[pair[0]] = parse_yaml(pair[1])
+        acc
       end
-        
+      
     end
     
     #------------------------------

@@ -24,6 +24,7 @@ require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionParser.rb
 require File.expand_path( File.join(File.dirname(__FILE__), 'FileHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'exceptions.rb') )
 
+
 module Bob
 
   class DefinitionHelper
