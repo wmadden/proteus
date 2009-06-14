@@ -15,3 +15,36 @@
 # You should have received a copy of the GNU General Public License along with
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
+
+require File.expand_path( 'src/ComponentInstance.rb' )
+
+include Bob
+
+
+describe ComponentInstance do
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Input Constants
+  #  
+  #-----------------------------------------------------------------------------
+
+  #-----------------------------------------------------------------------------
+  #  
+  #  Set up, tear down
+  #  
+  #-----------------------------------------------------------------------------
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Tests
+  #  
+  #-----------------------------------------------------------------------------
+  
+  it "should override its class's default properties"
+  
+  
+  it "should drop its class's children in favour of its own, if present"
+  
+  
+end
