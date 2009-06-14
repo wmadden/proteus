@@ -79,9 +79,6 @@ module Bob
       
       @class_parser.parse_yaml( yaml, result )
       
-      puts yaml.inspect
-      puts result.inspect
-      
       # Get the parent class
       if result.parent != nil
         result.parent = @definition_helper.get_class( result.parent )
@@ -95,7 +92,7 @@ module Bob
       
       # Parse children
       result.children.length.times do |i|
-        result.children[i] = @input_parser.parse_yaml( child )
+        result.children[i] = @input_parser.parse_yaml( result.children[i] )
       end
       
       return result

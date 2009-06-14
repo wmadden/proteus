@@ -21,104 +21,114 @@ require File.expand_path( 'src/InputParser.rb' )
 include Bob
 
 
-#-----------------------------------------------------------------------------
-#  
-#  Input Constants
-#  
-#-----------------------------------------------------------------------------
-
-PARENT_NAME = "SomeParent"
-COMPONENT_NAME = "SomeComponent"
-COMPONENT_CHILDREN = [
-  "child1",
-  "child2",
-  "child3"
-]
-COMPONENT_PROPS = {
-  "prop1" => "value1",
-  "prop2" => "value2",
-  "prop3" => "value3"
-}
-
-COMPONENT_FULL_PROPS = {
-  "prop1" => "value1",
-  "prop2" => "value2",
-  "prop3" => "value3",
-  "children" => COMPONENT_CHILDREN
-}
-
-EXPECTED_INPUTS = [
-  "value1",
-  "value2",
-  "value3",
-  "child1",
-  "child2",
-  "child3"
-]
-
-DEFINITION = {
-  COMPONENT_NAME + " < " + PARENT_NAME => COMPONENT_FULL_PROPS
-}
-
-class DummyInputParser
-  
-  attr_accessor :called, :inputs
-  
-  def initialize
-    @inputs = []
-  end
-  
-  def parse_yaml( yaml )
-    @called = true
-    @inputs.push( yaml )
-  end
-  
-end
-
-class DummyClassParser
-  
-  attr_accessor :called, :yaml, :component_class
-  
-  def initialize()
-    @called = false
-  end
-  
-  def parse_yaml( yaml, component_class )
-    @called = true
-    
-    @yaml = yaml
-    @component_class = component_class
-    
-    component_class.name = COMPONENT_NAME
-    component_class.parent = PARENT_NAME
-    component_class.children = COMPONENT_CHILDREN
-    component_class.properties = COMPONENT_PROPS
-    
-    return component_class
-  end
-  
-end
-
-class DummyDefinitionHelper
-  
-  attr_accessor :called, :class_id
-  
-  def get_class( class_id )
-    @called = true
-    @class_id = class_id
-    
-    return nil
-  end
-  
-end
-
 describe DefinitionParser do
+  
+  #-----------------------------------------------------------------------------
+  #  
+  #  Input Constants
+  #  
+  #-----------------------------------------------------------------------------
+
+  class DummyInputParser
+    
+    attr_accessor :called, :inputs
+    
+    def initialize
+      @inputs = []
+    end
+    
+    def parse_yaml( yaml )
+      @called = true
+      @inputs.push( yaml )
+    end
+    
+  end
+
+  class DummyClassParser
+    
+    attr_accessor :called, :yaml, :component_class
+    
+    def initialize()
+      @called = false
+    end
+    
+    def parse_yaml( yaml, component_class )
+      @called = true
+      
+      @yaml = yaml
+      @component_class = component_class
+      
+      component_class.name = "SomeComponent"
+      component_class.parent = "SomeParent"
+      component_class.children = [
+        "child1",
+        "child2",
+        "child3"
+      ]
+      component_class.properties = {
+        "prop1" => "value1",
+        "prop2" => "value2",
+        "prop3" => "value3"
+      }
+      
+      return component_class
+    end
+    
+  end
+
+  class DummyDefinitionHelper
+    
+    attr_accessor :called, :class_id
+    
+    def get_class( class_id )
+      @called = true
+      @class_id = class_id
+      
+      return nil
+    end
+    
+  end
   
   #-----------------------------------------------------------------------------
   #  
   #  Set up, tear down
   #  
   #-----------------------------------------------------------------------------
+  
+  before(:all) do
+    @PARENT_NAME = "SomeParent"
+    @COMPONENT_NAME = "SomeComponent"
+    @COMPONENT_CHILDREN = [
+      "child1",
+      "child2",
+      "child3"
+    ]
+    @COMPONENT_PROPS = {
+      "prop1" => "value1",
+      "prop2" => "value2",
+      "prop3" => "value3"
+    }
+
+    @COMPONENT_FULL_PROPS = {
+      "prop1" => "value1",
+      "prop2" => "value2",
+      "prop3" => "value3",
+      "children" => @COMPONENT_CHILDREN
+    }
+
+    @EXPECTED_INPUTS = [
+      "value1",
+      "value2",
+      "value3",
+      "child1",
+      "child2",
+      "child3"
+    ]
+
+    @DEFINITION = {
+      @COMPONENT_NAME + " < " + @PARENT_NAME => @COMPONENT_FULL_PROPS
+    }
+  end
   
   #------------------------------
   #  before(:each)
@@ -143,11 +153,11 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( DEFINITION, component_class )
+    @definition_parser.parse_yaml( @DEFINITION, component_class )
     
     @dummy_cp.called.should == true
     @dummy_cp.component_class.should == component_class
-    @dummy_cp.yaml.should == DEFINITION
+    @dummy_cp.yaml.should == @DEFINITION
     
   end
   
@@ -155,10 +165,10 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( DEFINITION, component_class )
+    @definition_parser.parse_yaml( @DEFINITION, component_class )
     
     @dummy_ip.called.should == true
-    @dummy_ip.inputs.should == EXPECTED_INPUTS
+    @dummy_ip.inputs.should == @EXPECTED_INPUTS
     
   end
   
@@ -166,10 +176,10 @@ describe DefinitionParser do
     
     component_class = ComponentClass.new
     
-    @definition_parser.parse_yaml( DEFINITION, component_class )
+    @definition_parser.parse_yaml( @DEFINITION, component_class )
     
     @dummy_dh.called.should == true
-    @dummy_dh.class_id.should == PARENT_NAME
+    @dummy_dh.class_id.should == @PARENT_NAME
     
   end
   
