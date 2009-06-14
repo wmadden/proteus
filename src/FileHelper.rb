@@ -47,13 +47,13 @@ module Bob
       path = path.split(':')
       
       for filepath in path
-        for file in Dir.new(filepath)
-          
-          if file == target
-            return File.join(filepath, file)
-          end
-          
+        
+        candidate = File.join( filepath, target )
+        
+        if ( File.file?(candidate) )
+          return candidate
         end
+        
       end
       
       return nil
