@@ -38,14 +38,21 @@ describe InputParser do
   
   @@UNKNOWN_SCALAR_COMPONENT = "TestComponent2"
   
+  @@COMPONENT_PROPERTIES = {
+    "prop1" => "val1",
+    "prop2" => "val2",
+    "prop3" => "val3"
+  }
   @@KNOWN_COMPONENT_HASH = {
-    @@KNOWN_SCALAR_COMPONENT => {
-      "prop1" => "val1"
-    }
+    @@KNOWN_SCALAR_COMPONENT => @@COMPONENT_PROPERTIES
+  }
+  @@INVALID_COMPONENT_HASH = {
+    @@INVALID_SCALAR_COMPONENT => @@COMPONENT_PROPERTIES
   }
   
   @@EMPTY_ARRAY = []
   @@NONC_SCALAR_ARRAY = [ @@INVALID_SCALAR_COMPONENT ]
+  @@COMP_SCALAR_ARRAY = [ @@KNOWN_SCALAR_COMPONENT ]
   @@MANY_NONC_SCALAR_ARRAY = [
     "not a component",
     "NotAComponent",
@@ -53,6 +60,12 @@ describe InputParser do
   ]
   @@MANY_COMP_SCALAR_ARRAY = [
     @@KNOWN_SCALAR_COMPONENT,
+    @@KNOWN_SCALAR_COMPONENT2
+  ]
+  @@MIXED_SCALAR_ARRAY = [
+    "not a component",
+    @@KNOWN_SCALAR_COMPONENT,
+    "NotAComponent",
     @@KNOWN_SCALAR_COMPONENT2
   ]
   
@@ -82,7 +95,7 @@ describe InputParser do
     # Definition helper
     @definition_helper = DefinitionHelper.new
     @definition_helper.definition_parser = @definition_parser
-    @definition_helper.path = ["spec/lib"]
+    @definition_helper.path = "spec/lib"
     
     @definition_parser.definition_helper = @definition_helper
     
@@ -188,7 +201,7 @@ describe InputParser do
   
   it "array of single, component scalar -> array of component instance" do
     result = @input_parser.parse_yaml( @@COMP_SCALAR_ARRAY )
-    result.is_a?( ComponentInstance ).should == true
+    result[0].is_a?( ComponentInstance ).should == true
   end
   
   
@@ -200,7 +213,12 @@ describe InputParser do
   
   it "array of many component scalars -> array of component instances" do
     result = @input_parser.parse_yaml( @@MANY_COMP_SCALAR_ARRAY )
-    result.should == @@MANY_COMP_SCALAR_ARRAY
+    
+    result[0].is_a?( ComponentInstance ).should == true
+    result[0].kind.name.should == @@KNOWN_SCALAR_COMPONENT
+    
+    result[1].is_a?( ComponentInstance ).should == true
+    result[1].kind.name.should == @@KNOWN_SCALAR_COMPONENT2
   end
   
   

@@ -180,7 +180,7 @@ module Bob
     # component_id: a component identifier (e.g. HTML:div)
     # yaml: the YAML describing the instance
     # 
-    def parse_component( component_id, yaml )
+    def parse_component( component_id, yaml = nil )
       
       result = ComponentInstance.new
       
