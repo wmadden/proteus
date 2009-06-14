@@ -70,7 +70,7 @@ class DummyInputParser
   
   def parse_yaml( yaml )
     @called = true
-    @inputs += yaml
+    @inputs.push( yaml )
   end
   
 end
