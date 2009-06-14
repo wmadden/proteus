@@ -90,6 +90,8 @@ describe DefinitionParser do
   end
   
   @@PARENT_NAME = "SomeParent"
+  @@UNKNOWN_PARENT_NAME = "UnknownParent"
+  
   @@COMPONENT_NAME = "SomeComponent"
   @@COMPONENT_CHILDREN = [
     "child1",
@@ -120,6 +122,10 @@ describe DefinitionParser do
 
   @@DEFINITION = {
     @@COMPONENT_NAME + " < " + @@PARENT_NAME => @@COMPONENT_FULL_PROPS
+  }
+  
+  @@UNKNOWN_PARENT_DEFINITION = {
+    @@COMPONENT_NAME + " < " + @@UNKNOWN_PARENT_NAME => @@COMPONENT_FULL_PROPS
   }
   
   #-----------------------------------------------------------------------------
@@ -159,6 +165,7 @@ describe DefinitionParser do
     
   end
   
+  
   it "should use the input parser to parse the class's values" do
     
     component_class = ComponentClass.new
@@ -170,6 +177,7 @@ describe DefinitionParser do
     
   end
   
+  
   it "should use the definition helper to get the parent" do
     
     component_class = ComponentClass.new
@@ -180,6 +188,49 @@ describe DefinitionParser do
     @dummy_dh.class_id.should == [ @@PARENT_NAME ]
     
   end
+  
+  
+  it "should fail if the parent is unavailable" do
+    
+    component_class = ComponentClass.new
+    
+    # Set up real parsers
+    
+    # Instance parser
+    @instance_parser = InstanceParser.new
+    
+    # Class parser
+    @class_parser = ClassParser.new
+    
+    # Definition parser
+    @definition_parser = DefinitionParser.new
+    @definition_parser.class_parser = @class_parser
+    
+    # Definition helper
+    @definition_helper = DefinitionHelper.new
+    @definition_helper.definition_parser = @definition_parser
+    @definition_helper.path = "spec/lib"
+    
+    @definition_parser.definition_helper = @definition_helper
+    
+    # Input parser
+    @input_parser = InputParser.new
+    @input_parser.instance_parser = @instance_parser
+    @input_parser.definition_helper = @definition_helper
+    
+    @definition_parser.input_parser = @input_parser
+    
+    begin
+      @definition_parser.parse_yaml( @@UNKNOWN_PARENT_DEFINITION,
+        component_class )
+    rescue Exceptions::DefinitionUnavailable
+      success = true
+    end
+    
+    success.should == true
+    
+  end
+  
   
 end
 

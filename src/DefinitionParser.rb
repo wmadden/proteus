@@ -73,7 +73,7 @@ module Bob
       
       result = component_class || ComponentClass.new
       
-      # Let the class parser handle interpreting the YAML, the load the parent
+      # Let the class parser handle interpreting the YAML, then load the parent
       # class and parse all the values in the children and properties of the new
       # component class.
       
