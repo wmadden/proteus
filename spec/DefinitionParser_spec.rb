@@ -181,5 +181,7 @@ describe DefinitionParser do
     
   end
   
+  it "should fail if the class name is different to the file name"
+  
 end
 
