@@ -79,6 +79,9 @@ module Bob
       
       @class_parser.parse_yaml( yaml, result )
       
+      puts yaml.inspect
+      puts result.inspect
+      
       # Get the parent class
       if result.parent != nil
         result.parent = @definition_helper.get_class( result.parent )

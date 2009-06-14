@@ -21,6 +21,45 @@ require File.expand_path( 'src/InputParser.rb' )
 include Bob
 
 
+#-----------------------------------------------------------------------------
+#  
+#  Input Constants
+#  
+#-----------------------------------------------------------------------------
+
+PARENT_NAME = "SomeParent"
+COMPONENT_NAME = "SomeComponent"
+COMPONENT_CHILDREN = [
+  "child1",
+  "child2",
+  "child3"
+]
+COMPONENT_PROPS = {
+  "prop1" => "value1",
+  "prop2" => "value2",
+  "prop3" => "value3"
+}
+
+COMPONENT_FULL_PROPS = {
+  "prop1" => "value1",
+  "prop2" => "value2",
+  "prop3" => "value3",
+  "children" => COMPONENT_CHILDREN
+}
+
+EXPECTED_INPUTS = [
+  "value1",
+  "value2",
+  "value3",
+  "child1",
+  "child2",
+  "child3"
+]
+
+DEFINITION = {
+  COMPONENT_NAME + " < " + PARENT_NAME => COMPONENT_FULL_PROPS
+}
+
 class DummyInputParser
   
   attr_accessor :called, :inputs
@@ -50,6 +89,11 @@ class DummyClassParser
     @yaml = yaml
     @component_class = component_class
     
+    component_class.name = COMPONENT_NAME
+    component_class.parent = PARENT_NAME
+    component_class.children = COMPONENT_CHILDREN
+    component_class.properties = COMPONENT_PROPS
+    
     return component_class
   end
   
@@ -69,39 +113,6 @@ class DummyDefinitionHelper
 end
 
 describe DefinitionParser do
-  
-  #-----------------------------------------------------------------------------
-  #  
-  #  Input Constants
-  #  
-  #-----------------------------------------------------------------------------
-  
-  PARENT_NAME = "SomeParent"
-  COMPONENT_NAME = "SomeComponent"
-  COMPONENT_CHILDREN = [
-    "child1",
-    "child2",
-    "child3"
-  ]
-  COMPONENT_PROPS = {
-    "prop1" => "value1",
-    "prop2" => "value2",
-    "prop3" => "value3",
-    "children" => COMPONENT_CHILDREN      
-  }
-  
-  EXPECTED_INPUTS = [
-    "value1",
-    "value2",
-    "value3",
-    "child1",
-    "child2",
-    "child3"
-  ]
-  
-  DEFINITION = {
-    COMPONENT_NAME + " < " + PARENT_NAME => COMPONENT_PROPS
-  }
   
   #-----------------------------------------------------------------------------
   #  
