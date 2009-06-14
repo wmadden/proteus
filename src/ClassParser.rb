@@ -32,7 +32,8 @@ module Bob
   class ClassParser
     
     # The regex for valid class names
-    CLASS_RE = /^([A-Z][a-zA-Z_0-9]*)([\s]*<[\s*]([A-Z][a-zA-Z_0-9]*))?$/
+    @@CLASS_RE = /^([A-Z][a-zA-Z_0-9]*)(?:[\s]*<[\s]*([A-Z][a-zA-Z_0-9]*))?$/
+    @@CHILDREN = "children"
     
     #---------------------------------------------------------------------------
     #  
@@ -62,27 +63,26 @@ module Bob
       
       # Must be a hash of length one containing a hash
       if not ( yaml.is_a?(Hash) and yaml.length == 1 and
-        yaml.values[0].is_a?(Hash) ) then
+        (yaml.values[0].nil? or yaml.values[0].is_a?(Hash)) ) then
         
-        raise Exceptions::DefinitionMalformed
+        raise Exceptions::DefinitionMalformed, "Class definition malformed"
       end
       
       # Parse the class name
       name = yaml.keys[0]
-      match = CLASS_RE.match( name )
+      match = @@CLASS_RE.match( name )
       
       # If there's no match, the definition is malformed
       if match.nil?
-        raise Exceptions::DefinitionMalformed
+        raise Exceptions::DefinitionMalformed,
+          "Class identifier '" + name + "' malformed."
       end
       
-      class_name = match[1]
-      parent_name = match[2]
-      
-      properties = yaml.values[0]
-      
-      # Set the properties of the class to the given hash
-      result.properties = properties
+      # Set properties of class
+      result.name = match[1]
+      result.parent = match[2]
+      result.properties = yaml.values[0] || {}
+      result.children = result.properties.delete(@@CHILDREN) || []
       
       return result
     end

@@ -53,11 +53,11 @@ describe ClassParser do
   }
   
   HASH_MISSING_PARENT = {
-    VALID_NAME + " > " => {}
+    VALID_NAME + " < " => {}
   }
   
   HASH_BAD_PARENT = {
-    VALID_NAME + " > bad parent" => {}
+    VALID_NAME + " < bad parent" => {}
   }
   
   HASH_OF_NIL = {
@@ -100,7 +100,7 @@ describe ClassParser do
   }
   
   HASH_WITH_PARENT = {
-    VALID_NAME + " > " + VALID_PARENT => {}
+    VALID_NAME + " < " + VALID_PARENT => {}
   }
   
   HASH_WITH_CHILDREN = {
@@ -118,7 +118,7 @@ describe ClassParser do
   #------------------------------
   
   before(:all) do
-    @class_parser = ClassParser.new( nil, nil )
+    @class_parser = ClassParser.new()
   end
   
   #------------------------------
@@ -278,7 +278,7 @@ describe ClassParser do
   end
   
   
-  it "should parse names in the form 'Name > Parent'" do
+  it "should parse names in the form 'Name < Parent'" do
     
     result = @class_parser.parse_yaml( HASH_WITH_PARENT )
     
