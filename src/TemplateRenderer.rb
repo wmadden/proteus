@@ -116,7 +116,7 @@ module Bob
         proxy = InstanceProxy.new( self, instance )
         
         e = ERB.new( template )
-        result = e.result( proxy.get_binding() )
+        result = e.result( proxy.instance_env() )
       end
       
       return result

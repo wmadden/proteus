@@ -37,6 +37,7 @@ module Bob
       @renderer = renderer
       @instance = instance
       
+      @kind = @instance.kind
       @properties = @instance.properties
       @children = @instance.children
     end
@@ -49,7 +50,7 @@ module Bob
     
   public
     
-    attr_accessor :renderer, :instance
+    attr_accessor :renderer, :instance, :kind, :properties, :children
     
     #---------------------------------------------------------------------------
     #  
@@ -62,7 +63,7 @@ module Bob
     #
     # Returns the binding in the scope of the proxy instance.
     #
-    def get_binding( )
+    def instance_env( )
       return binding()
     end
     
