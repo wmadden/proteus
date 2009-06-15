@@ -74,6 +74,22 @@ module Bob
       @properties[ m.to_s ]
     end
     
+    #
+    # Returns the next child, or nil.
+    #
+    def next_child
+      if @_last_child_index.nil?
+        @last_child = nil
+        @_last_child_index = 0
+        return children[0]
+      end
+      
+      @last_child = children[ @_last_child_index ]
+      @_last_child_index += 1
+      
+      return children[ @_last_child_index ]
+    end
+    
   end
 
 end
