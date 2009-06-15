@@ -60,6 +60,10 @@ module Bob
     
   public
     
+    #------------------------------
+    #  parse_yaml
+    #------------------------------
+    
     #
     # Takes the YAML input read directly from the definition file and parses it,
     # returning the loaded ComponentClass.

@@ -94,6 +94,38 @@ module Bob
       
     end
     
+    #------------------------------
+    #  parse_instance
+    #------------------------------
+    
+    #
+    # Parses the values of a component instance.
+    #
+    def parse_instance( instance )
+    
+      # Parse its properties
+      for property in instance.properties
+        instance.properties[ property[0] ] = parse_yaml( property[1] )
+      end
+      
+      # Parse its children
+      instance.children.length.times do |i|
+        instance.children[i] = parse_yaml( instance.children[i] )
+      end
+      
+    end
+    
+    #------------------------------
+    #  parse_component_id
+    #------------------------------
+    
+    # 
+    # Parses a component identifier for the class path.
+    # 
+    def parse_component_id( component_id )
+      return component_id.split(':')
+    end
+    
   private
     
     #------------------------------
@@ -198,29 +230,11 @@ module Bob
       # Parse the YAML into the instance
       @instance_parser.parse_yaml( yaml, result )
       
-      # Parse its properties
-      for property in result.properties
-        result.properties[ property[0] ] = parse_yaml( property[1] )
-      end
-      
-      # Parse its children
-      result.children.length.times do |i|
-        result.children[i] = parse_yaml( result.children[i] )
-      end
+      # Parse the values of the instance
+      parse_instance( result )
       
       return result
       
-    end
-    
-    #------------------------------
-    #  parse_component_id
-    #------------------------------
-    
-    # 
-    # Parses a component identifier for the class path.
-    # 
-    def parse_component_id( component_id )
-      return component_id.split(':')
     end
     
   end
