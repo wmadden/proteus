@@ -61,8 +61,15 @@ def exit_error( error )
   exit( 1 )
 end
 
-def parse_props
-  return {}
+def parse_props( props )
+  result = {}
+  
+  props.split( ',' ).each do |prop|
+    pair = prop.split(':')
+    result[ pair[0] ] = pair[1]
+  end
+  
+  return result
 end
 
 
