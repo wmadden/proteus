@@ -16,9 +16,8 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-
-require File.expand_path( 'src/DefinitionHelper.rb' )
-require File.expand_path( 'src/exceptions.rb' )
+require File.expand_path( 'lib/DefinitionHelper.rb' )
+require File.expand_path( 'lib/exceptions.rb' )
 
 include Bob
 
@@ -56,7 +55,7 @@ describe DefinitionHelper do
     # Definition helper
     @definition_helper = DefinitionHelper.new
     @definition_helper.definition_parser = @definition_parser
-    @definition_helper.path = "spec/lib"
+    @definition_helper.path = "test/spec/lib"
     @definition_helper.current_ns = ["NS1"]
     
     @definition_parser.definition_helper = @definition_helper

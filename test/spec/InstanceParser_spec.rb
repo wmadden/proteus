@@ -16,7 +16,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/InstanceParser.rb' )
+require File.expand_path( 'lib/InstanceParser.rb' )
 
 include Bob
 

@@ -16,7 +16,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/FileHelper.rb' )
+require File.expand_path( 'lib/FileHelper.rb' )
 
 include Bob
 
@@ -29,8 +29,8 @@ describe FileHelper do
   #  
   #-----------------------------------------------------------------------------
   
-  @@LIB_DIR_1 = "spec/test_lib_dir1"
-  @@LIB_DIR_2 = "spec/test_lib_dir2"
+  @@LIB_DIR_1 = "test/spec/test_lib_dir1"
+  @@LIB_DIR_2 = "test/spec/test_lib_dir2"
   @@PATH = @@LIB_DIR_1 + ":" + @@LIB_DIR_2
   
   # Correct answers

@@ -16,7 +16,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/ComponentInstance.rb' )
+require File.expand_path( 'lib/ComponentInstance.rb' )
 
 include Bob
 
