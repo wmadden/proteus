@@ -7,7 +7,7 @@ require 'spec/rake/spectask'
 
 desc "Run all examples with RCov"
 Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = FileList['spec/**/*.rb']
+  t.spec_files = FileList['test/spec/**/*.rb']
   t.rcov = true
   t.rcov_opts = ['--exclude', 'spec']
   t.rcov_dir = 'coverage/spec/'
@@ -23,7 +23,7 @@ end
 Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "--format pretty"
   t.rcov = true
-  t.rcov_opts << %[-o "features/cucumber"]
+  t.rcov_opts << %[-o "test/features/cucumber"]
 end
 
 task :doc do |t|
