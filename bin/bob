@@ -79,6 +79,7 @@ def parse_command_line
     case opt
       when '--help', '-h'
         puts( USAGE )
+        exit( 0 )
       when '--inline', '-i'
         @inline = true
       when '--props', '-P'
