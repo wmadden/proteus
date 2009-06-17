@@ -51,8 +51,7 @@ spec.summary = 'Tool for generating structured text documents from abstract mark
 
 spec.description = <<-EOF
   Proteus is an abstraction of general document definition and display markup
-  whereby complex patterns of structured content can be created, mixed and
-  reused.
+  that allows you to create and reuse complex patterns of structured content.
 EOF
 
 
