@@ -16,7 +16,7 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-require File.expand_path( 'src/TemplateRenderer.rb' )
+require File.expand_path( 'lib/TemplateRenderer.rb' )
 
 include Bob
 
