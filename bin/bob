@@ -78,7 +78,7 @@ def parse_command_line
   @opts.each do |opt, arg|
     case opt
       when '--help', '-h'
-        puts( usage )
+        puts( USAGE )
       when '--inline', '-i'
         @inline = true
       when '--props', '-P'
