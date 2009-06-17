@@ -1,5 +1,5 @@
 Document:
-  title: Bob Homepage
+  title: Proteus Homepage
   head:
     - Stylesheets:
       - yui-2.6.0/reset-fonts-grids
@@ -7,17 +7,17 @@ Document:
       - formatting
   
   hd:
-    - H1: Welcome to the Bob Homepage
+    - H1: Welcome to the Proteus Homepage
   
   bd:
-    - H2: What is Bob?
+    - H2: What is Proteus?
       
     - Text:
-        - Bob is an abstraction layer above document markup (aimed at HTML/CSS, but
+        - Proteus is an abstraction layer above document markup (aimed at HTML/CSS, but
           implementation independent).
-        - For example, <a href="index.bob">this code</a> produced this document.
+        - For example, <a href="index.proteus">this code</a> produced this document.
     
-    - H2: Bob's Goals
+    - H2: Proteus's Goals
     
     - NumberedList:
         - > Content-orientation: we should be describing content, not the 
@@ -34,5 +34,5 @@ Document:
     
     - H2: How can I find out more?
     
-    - Text: Visit <a href="http://rubyforge.org/projects/bob">RubyForge</a>
-    - Text: or visit <a href="http://projects.willmadden.com/projects/show/bob">Bob's Redmine</a>
+    - Text: Visit <a href="http://rubyforge.org/projects/proteus">RubyForge</a>
+    - Text: or visit <a href="http://projects.willmadden.com/projects/show/proteus">Proteus's Redmine</a>

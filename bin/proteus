@@ -1,25 +1,25 @@
 #!/usr/bin/ruby
 
 ################################################################################
-# bob
+# proteus
 #
 # Executable interface to the system.
 # -----------------------------------------------------------------------------
 # (C) Copyright 2009 William Madden
 # 
-# This file is part of Bob.
+# This file is part of Proteus.
 # 
-# Bob is free software: you can redistribute it and/or modify it under the terms
-# of the GNU General Public License as published by the Free Software
+# Proteus is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
 # version.
 #
-# Bob is distributed in the hope that it will be useful, but WITHOUT ANY
+# Proteus is distributed in the hope that it will be useful, but WITHOUT ANY
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 # A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License along with
-# Bob.  If not, see <http://www.gnu.org/licenses/>.
+# Proteus.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
 require 'getoptlong'
@@ -29,15 +29,15 @@ require 'Facade.rb'
 require 'TemplateRenderer.rb'
 require 'exceptions.rb'
 
-include Bob
+include Proteus
 
 
 USAGE =
 """
   Usage:
-    bob [--path PATH] FILE
-    bob --inline COMPONENT [--props PROPERTIES] [CHILDREN]
-    bob --help
+    proteus [--path PATH] FILE
+    proteus --inline COMPONENT [--props PROPERTIES] [CHILDREN]
+    proteus --help
   
   Options:
     --help, -h            Display this message.
@@ -47,13 +47,13 @@ USAGE =
                           instance.
                          
     --path, -p            Sets the path to search for component definitions.
-                          Defaults to /usr/lib/bob.
+                          Defaults to /usr/lib/proteus.
                           
     --props, -P           Sets the properties for an inline component.
     
 """
 
-BOB_PATH = 'BOB_PATH'
+PROTEUS_PATH = 'PROTEUS_PATH'
 
 def exit_error( error )
   puts error
@@ -99,7 +99,7 @@ end
 
 # Option variables
 @inline = false
-@path = ENV[ BOB_PATH ] || nil
+@path = ENV[ PROTEUS_PATH ] || nil
 @props = {}
 @current_ns = []
 
@@ -174,4 +174,3 @@ else
   puts renderer.render( instance )
   
 end
-
