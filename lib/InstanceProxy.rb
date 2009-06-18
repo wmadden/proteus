@@ -20,7 +20,14 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
+<<<<<<< working:lib/InstanceProxy.rb
 module Bob
+=======
+require File.expand_path( File.join(File.dirname(__FILE__), 'PropertyHash.rb') )
+
+
+module Proteus
+>>>>>>> local:lib/InstanceProxy.rb
   
   #
   # Provides the environment for rendering templates.
@@ -39,6 +46,7 @@ module Bob
       
       @kind = @instance.kind
       @properties = @instance.properties
+      @props = PropertyHash.new( @properties, @renderer )
       @children = @instance.children
     end
     
@@ -50,7 +58,7 @@ module Bob
     
   public
     
-    attr_accessor :renderer, :instance, :kind, :properties, :children
+    attr_accessor :renderer, :instance, :kind, :properties, :props, :children
     
     #---------------------------------------------------------------------------
     #  
@@ -71,7 +79,7 @@ module Bob
     # Redirects missing method calls to the property hash.
     #
     def method_missing(m, *args)
-      @properties[ m.to_s ]
+      @props[ m.to_s ]
     end
     
     #
@@ -81,15 +89,16 @@ module Bob
       if @_last_child_index.nil?
         @last_child = nil
         @_last_child_index = 0
-        return children[0]
+        return renderer.render( children[0] )
       end
       
       @last_child = children[ @_last_child_index ]
       @_last_child_index += 1
       
-      return children[ @_last_child_index ]
+      return renderer.render( children[ @_last_child_index ] )
     end
     
   end
 
 end
+

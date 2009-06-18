@@ -130,7 +130,7 @@ module Bob
       
       yaml = YAML.load_file( file )
       
-      @definition_parser.parse_yaml( yaml, new_class )
+      @definition_parser.parse_yaml( yaml, new_class, class_path.slice(0..-2) )
       
       if new_class.name != class_path[ class_path.length - 1 ]
         raise Exceptions::DefinitionMalformed,

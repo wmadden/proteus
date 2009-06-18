@@ -25,7 +25,12 @@ module Bob
   class FileHelper
     
     # The default path to search for definitions
+<<<<<<< working:lib/FileHelper.rb
     DEFAULT_PATH = '/usr/lib/bob'
+=======
+    DEFAULT_PATH =
+      File.expand_path( File.join(File.dirname(__FILE__), 'defs') )
+>>>>>>> local:lib/FileHelper.rb
     
     #---------------------------------------------------------------------------
     #  

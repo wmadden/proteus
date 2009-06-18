@@ -39,6 +39,7 @@ module Bob
       @definition_helper = definition_helper
       @class_parser = class_parser
       @input_parser = input_parser
+      @current_ns = []
       
     end
     
@@ -50,7 +51,8 @@ module Bob
     
   public
     
-    attr_accessor :definition_helper, :class_parser, :input_parser
+    attr_accessor :definition_helper, :class_parser, :input_parser,
+      :current_ns
     
     #---------------------------------------------------------------------------
     #  
@@ -71,7 +73,7 @@ module Bob
     # yaml: The input YAML to be parsed.
     # component_class: The component class to load.
     #
-    def parse_yaml( yaml, component_class = nil )
+    def parse_yaml( yaml, component_class = nil, current_ns = [] )
       
       result = component_class || ComponentClass.new
       
@@ -83,7 +85,8 @@ module Bob
       
       # Get the parent class
       if result.parent != nil
-        result.parent = @definition_helper.get_class( result.parent.split(':') )
+        result.parent = @definition_helper.get_class( result.parent.split(':'),
+          current_ns )
       end
       
       # Parse properties

@@ -75,21 +75,21 @@ module Bob
     # 
     # Parses yaml and returns the document tree.
     # 
-    def parse_yaml( yaml )
+    def parse_yaml( yaml, current_ns = nil )
       
       case
         when yaml.is_a?( Array ):
           # Parse each node it contains and return the resultant array
-          return parse_yaml_seq( yaml )
+          return parse_yaml_seq( yaml, current_ns )
           
         when yaml.is_a?( Hash ):
-          return parse_yaml_map( yaml )
+          return parse_yaml_map( yaml, current_ns )
         
         when yaml.nil?:
-          return parse_yaml_nil()
+          return parse_yaml_nil( current_ns )
           
         else
-          return parse_yaml_scalar( yaml )
+          return parse_yaml_scalar( yaml, current_ns )
       end
       
     end
@@ -105,12 +105,13 @@ module Bob
     
       # Parse its properties
       for property in instance.properties
-        instance.properties[ property[0] ] = parse_yaml( property[1] )
+        instance.properties[ property[0] ] = 
+          parse_yaml( property[1], current_ns  )
       end
       
       # Parse its children
       instance.children.length.times do |i|
-        instance.children[i] = parse_yaml( instance.children[i] )
+        instance.children[i] = parse_yaml( instance.children[i], current_ns )
       end
       
     end
@@ -135,9 +136,9 @@ module Bob
     # 
     # Parses a YAML sequence (Array) returning the resultant array.
     # 
-    def parse_yaml_seq( yaml )
+    def parse_yaml_seq( yaml, current_ns = nil )
       
-      return yaml.map { |elem| parse_yaml(elem) }
+      return yaml.map { |elem| parse_yaml(elem, current_ns) }
       
     end
     
@@ -148,7 +149,7 @@ module Bob
     # 
     # Parses a YAML map (Hash) returning a component or a hash.
     # 
-    def parse_yaml_map( yaml )
+    def parse_yaml_map( yaml, current_ns = nil )
       
       # If the hash has only one element and it's a valid component name,
       # parse it as a component.
@@ -156,11 +157,11 @@ module Bob
       if yaml.length == 1 and @@COMPONENT_RE === yaml.keys.first
         
         # Parse the value mapped to the key
-        value = parse_yaml( yaml.values.first )
+        value = parse_yaml( yaml.values.first, current_ns )
         
         # Parse the component
         begin
-          return parse_component( yaml.keys.first, value )
+          return parse_component( yaml.keys.first, value, current_ns )
         rescue Exceptions::DefinitionUnavailable
         end
         
@@ -168,7 +169,7 @@ module Bob
       
       # Otherwise return the hash, parsing each value.
       return yaml.inject({}) do |acc, pair|
-        acc[pair[0]] = parse_yaml(pair[1])
+        acc[pair[0]] = parse_yaml( pair[1], current_ns )
         acc
       end
       
@@ -181,11 +182,11 @@ module Bob
     # 
     # Parses a YAML scalar.
     # 
-    def parse_yaml_scalar( yaml )
+    def parse_yaml_scalar( yaml, current_ns = nil )
       
       if @@COMPONENT_RE === yaml then
         begin
-          return parse_component( yaml )
+          return parse_component( yaml, current_ns )
         rescue Exceptions::DefinitionUnavailable
         end
       end
@@ -217,7 +218,9 @@ module Bob
     # component_id: a component identifier (e.g. HTML:div)
     # yaml: the YAML describing the instance
     # 
-    def parse_component( component_id, yaml = nil )
+    def parse_component( component_id, yaml = nil, current_ns = nil )
+      
+      current_ns = current_ns || @current_ns
       
       result = ComponentInstance.new
       
