@@ -26,7 +26,7 @@ module Proteus
   class FileHelper
     
     # The default path to search for definitions
-    DEFAULT_PATH = '/usr/lib/proteus'
+    DEFAULT_PATH = File.expand_path( File.join(File.dirname(__FILE__), 'defs') )
     
     #---------------------------------------------------------------------------
     #  
