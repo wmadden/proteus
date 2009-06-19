@@ -1,6 +1,6 @@
 Feature: DocumentParser
   In order to render documents
-  As a Bob user
+  As a Proteus user
   I need to be able to parse documents
   
   Scenario: parse empty scalar
