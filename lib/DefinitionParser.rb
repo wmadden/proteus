@@ -71,7 +71,7 @@ module Proteus
     # yaml: The input YAML to be parsed.
     # component_class: The component class to load.
     #
-    def parse_yaml( yaml, component_class = nil, current_ns = nil )
+    def parse_yaml( yaml, component_class, current_ns )
       
       result = component_class || ComponentClass.new
       

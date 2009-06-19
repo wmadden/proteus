@@ -73,7 +73,7 @@ module Proteus
     # 
     # Parses yaml and returns the document tree.
     # 
-    def parse_yaml( yaml, current_ns = nil )
+    def parse_yaml( yaml, current_ns )
       
       case
         when yaml.is_a?( Array ):
@@ -99,7 +99,7 @@ module Proteus
     #
     # Parses the values of a component instance.
     #
-    def parse_instance( instance, current_ns = nil )
+    def parse_instance( instance, current_ns )
     
       # Parse its properties
       for property in instance.properties
@@ -134,7 +134,7 @@ module Proteus
     # 
     # Parses a YAML sequence (Array) returning the resultant array.
     # 
-    def parse_yaml_seq( yaml, current_ns = nil )
+    def parse_yaml_seq( yaml, current_ns )
       
       return yaml.map { |elem| parse_yaml(elem, current_ns) }
       
@@ -147,7 +147,7 @@ module Proteus
     # 
     # Parses a YAML map (Hash) returning a component or a hash.
     # 
-    def parse_yaml_map( yaml, current_ns = nil )
+    def parse_yaml_map( yaml, current_ns )
       
       # If the hash has only one element and it's a valid component name,
       # parse it as a component.
@@ -180,11 +180,11 @@ module Proteus
     # 
     # Parses a YAML scalar.
     # 
-    def parse_yaml_scalar( yaml, current_ns = nil )
+    def parse_yaml_scalar( yaml, current_ns )
       
       if @@COMPONENT_RE === yaml then
         begin
-          return parse_component( yaml, current_ns )
+          return parse_component( yaml, nil, current_ns )
         rescue Exceptions::DefinitionUnavailable
         end
       end
@@ -216,7 +216,7 @@ module Proteus
     # component_id: a component identifier (e.g. HTML:div)
     # yaml: the YAML describing the instance
     # 
-    def parse_component( component_id, yaml = nil, current_ns = nil )
+    def parse_component( component_id, yaml, current_ns )
       
       result = ComponentInstance.new
       
@@ -224,7 +224,7 @@ module Proteus
       class_path = parse_component_id( component_id )
       
       # Get the class of the component
-      result.kind = @definition_helper.get_class( class_path )
+      result.kind = @definition_helper.get_class( class_path, current_ns )
       
       # Parse the YAML into the instance
       @instance_parser.parse_yaml( yaml, result )

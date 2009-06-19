@@ -73,7 +73,7 @@ module Proteus
     # class_path: an array containing the namespaces and class id of the class
     # current_ns: the current namespace, an array of namespace identifiers
     #
-    def get_class( class_path, current_ns = nil )
+    def get_class( class_path, current_ns )
       
       current_ns = current_ns || []
       

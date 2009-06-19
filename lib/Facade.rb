@@ -99,14 +99,14 @@ module Proteus
     #
     # Parses the given input YAML.
     #
-    def parse_input( yaml, current_ns = nil )
+    def parse_input( yaml, current_ns = [] )
       return @input_parser.parse_yaml( yaml )
     end
     
     #
     # Parses the given input file.
     #
-    def parse_file( file, current_ns = nil )
+    def parse_file( file, current_ns = [] )
       return @input_parser.parse_yaml( YAML.load_file(file) )
     end
     
