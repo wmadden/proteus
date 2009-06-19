@@ -20,14 +20,10 @@
 # Bob.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-<<<<<<< working:lib/InstanceProxy.rb
-module Bob
-=======
 require File.expand_path( File.join(File.dirname(__FILE__), 'PropertyHash.rb') )
 
 
 module Proteus
->>>>>>> local:lib/InstanceProxy.rb
   
   #
   # Provides the environment for rendering templates.
