@@ -1,0 +1,175 @@
+#!/usr/bin/ruby
+################################################################################
+# proteus
+#
+# Executable interface to the system.
+# -----------------------------------------------------------------------------
+# (C) Copyright 2009 William Madden
+# 
+# This file is part of Proteus.
+# 
+# Proteus is free software: you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation, either version 3 of the License, or (at your option) any later
+# version.
+#
+# Proteus is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along with
+# Proteus.  If not, see <http://www.gnu.org/licenses/>.
+################################################################################
+
+require 'getoptlong'
+require 'rdoc/usage'
+
+require 'Facade.rb'
+require 'TemplateRenderer.rb'
+require 'exceptions.rb'
+
+include Proteus
+
+
+USAGE =
+"""
+  Usage:
+    proteus [--path PATH] FILE
+    proteus --inline COMPONENT [--props PROPERTIES] [CHILDREN]
+    proteus --help
+  
+  Options:
+    --help, -h            Display this message.
+                         
+    --inline, -i          Parse inline. Takes component information on the
+                          command line and outputs the rendered component
+                          instance.
+                         
+    --path, -p            Sets the path to search for component definitions.
+                          Defaults to /usr/lib/proteus.
+                          
+    --props, -P           Sets the properties for an inline component.
+    
+"""
+
+PROTEUS_PATH = 'PROTEUS_PATH'
+
+def exit_error( error )
+  puts error
+  puts USAGE
+  exit( 1 )
+end
+
+def parse_props( props )
+  result = {}
+  
+  props.split( ',' ).each do |prop|
+    pair = prop.split(':')
+    result[ pair[0] ] = pair[1]
+  end
+  
+  return result
+end
+
+
+def parse_command_line
+
+  @opts.each do |opt, arg|
+    case opt
+      when '--help', '-h'
+        puts( USAGE )
+        exit( 0 )
+      when '--inline', '-i'
+        @inline = true
+      when '--props', '-P'
+        @props = parse_props( arg )
+      when '--path', '-p'
+        @path = arg
+      when '--namespace', '-n'
+        @current_ns = arg
+    end
+  end
+
+end
+
+#------------------------------
+#  ENTRY POINT
+#------------------------------
+
+# Option variables
+@inline = false
+@path = ENV[ PROTEUS_PATH ] || nil
+@props = {}
+@current_ns = []
+
+# Valid options
+@opts = GetoptLong.new(
+  [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--path', '-p', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--inline', '-i', GetoptLong::NO_ARGUMENT ],
+  [ '--props', '-P', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ]
+)
+
+# Parse command line
+parse_command_line
+
+# Set up system
+facade = Facade.new
+
+facade.path = @path
+facade.current_ns = @current_ns
+
+# Initialize renderer
+renderer = TemplateRenderer.new
+
+# Parse input
+if not @inline
+  
+  # from file
+  
+  if ARGV.length < 1
+    exit_error( "Error: no target given." )
+  elsif ARGV.length > 1
+    exit_error( "Error: multiple targets given." )
+  end
+  
+  file = ARGV[0]
+  
+  tree = facade.parse_file( file )
+  
+  puts renderer.render( tree )
+  
+else
+  
+  # from command line
+  
+  if ARGV.length < 1
+    exit_error( "Error: no component identifier given." )
+  end
+  
+  component_id = ARGV[0]
+  
+  ARGV.shift
+  component_children = ARGV
+  
+  component_properties = @props
+  
+  class_path = facade.input_parser.parse_component_id( component_id )
+  
+  begin
+    component_class = facade.definition_helper.get_class( class_path )
+  rescue Exceptions::DefinitionUnavailable
+    exit_error( "Error: no definition found for '" + component_id + "'." )
+  end
+  
+  component_children = facade.input_parser.parse_yaml( component_children )
+  
+  instance = ComponentInstance.new( component_class, component_properties,
+    component_children )
+  
+  facade.input_parser.parse_instance( instance )
+  
+  puts renderer.render( instance )
+  
+end
