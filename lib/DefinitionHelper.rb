@@ -37,8 +37,7 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( definition_parser = nil, path = nil, current_ns = [] )
-      @current_ns = []
+    def initialize( definition_parser = nil, path = nil )
       @path = path
       @definition_parser = definition_parser
       
@@ -54,7 +53,7 @@ module Bob
   
   public
     
-    attr_accessor :path, :current_ns, :definition_parser
+    attr_accessor :path, :definition_parser
   
   private
   
@@ -76,12 +75,27 @@ module Bob
     #
     def get_class( class_path, current_ns = nil )
       
-      current_ns = current_ns || @current_ns
+      current_ns = current_ns || []
       
-      # Use the current namespace if the class_path doesn't specify one.
-      if class_path.length == 1
-        class_path = current_ns + class_path
+      # 1. Search the current namespace
+      # 2. Search the default namespace
+      begin
+        result = find_class( current_ns.concat(class_path) )
+      rescue Exceptions::DefinitionUnavailable
+        result = find_class( class_path )
       end
+      
+    end
+    
+    
+  private
+  
+    #
+    # Searches for the given class and loads it if not found.
+    #
+    # class_path: the fully qualified class path, including ALL namespaces.
+    #
+    def find_class( class_path )
       
       # If it's already loaded, return it.
       if @loaded_classes.has_key?( class_path )
@@ -111,9 +125,6 @@ module Bob
       
     end
     
-    
-  private
-    
     #
     # Loads the given class.
     #
@@ -140,9 +151,7 @@ module Bob
       end
       
       return new_class
-      
     end
     
   end
-  
 end

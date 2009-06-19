@@ -41,10 +41,8 @@ module Bob
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( instance_parser = nil, definition_helper = nil,
-      current_ns = [] )
+    def initialize( instance_parser = nil, definition_helper = nil )
       
-      @current_ns = current_ns
       @instance_parser = instance_parser
       @definition_helper = definition_helper
       
@@ -58,7 +56,7 @@ module Bob
     
   public
     
-    attr_accessor :current_ns, :instance_parser, :definition_helper
+    attr_accessor :instance_parser, :definition_helper
     
     #---------------------------------------------------------------------------
     #  
@@ -101,7 +99,7 @@ module Bob
     #
     # Parses the values of a component instance.
     #
-    def parse_instance( instance )
+    def parse_instance( instance, current_ns = nil )
     
       # Parse its properties
       for property in instance.properties
@@ -220,21 +218,19 @@ module Bob
     # 
     def parse_component( component_id, yaml = nil, current_ns = nil )
       
-      current_ns = current_ns || @current_ns
-      
       result = ComponentInstance.new
       
       # Parse the id for namespaces and type
-      class_path = parse_component_id( component_id )
+      class_path = parse_component_id( component_id, current_ns )
       
       # Get the class of the component
       result.kind = @definition_helper.get_class( class_path )
       
       # Parse the YAML into the instance
-      @instance_parser.parse_yaml( yaml, result )
+      @instance_parser.parse_yaml( yaml, result, current_ns )
       
       # Parse the values of the instance
-      parse_instance( result )
+      parse_instance( result, current_ns )
       
       return result
       

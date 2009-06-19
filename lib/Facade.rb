@@ -81,17 +81,11 @@ module Bob
     attr_accessor :definition_helper
     
     # Properties
-    attr_reader :path, :current_ns
+    attr_reader :path
     
     def path=( value )
       @path = value
       @definition_helper.path = value
-    end
-
-    def current_ns=( value )
-      @current_ns = value
-      @definition_helper.current_ns = value
-      @input_parser.current_ns = value
     end
     
     #---------------------------------------------------------------------------
@@ -105,14 +99,14 @@ module Bob
     #
     # Parses the given input YAML.
     #
-    def parse_input( yaml )
+    def parse_input( yaml, current_ns = nil )
       return @input_parser.parse_yaml( yaml )
     end
     
     #
     # Parses the given input file.
     #
-    def parse_file( file )
+    def parse_file( file, current_ns = nil )
       return @input_parser.parse_yaml( YAML.load_file(file) )
     end
     
