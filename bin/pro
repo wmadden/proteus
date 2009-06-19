@@ -53,6 +53,8 @@ USAGE =
     
     --no-current, -C      Don't add current directory to path.
     
+    --version, -V      Output version.
+    
 """
 
 PROTEUS_PATH = 'PROTEUS_PATH'
