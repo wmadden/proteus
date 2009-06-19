@@ -37,7 +37,7 @@ describe DefinitionParser do
       @inputs = []
     end
     
-    def parse_yaml( yaml )
+    def parse_yaml( yaml, current_ns )
       @called = true
       @inputs.push( yaml )
     end
@@ -80,7 +80,7 @@ describe DefinitionParser do
     
     attr_accessor :called, :class_id
     
-    def get_class( class_id )
+    def get_class( class_id, current_ns )
       @called = true
       @class_id = class_id
       

@@ -79,7 +79,7 @@ module Proteus
       # class and parse all the values in the children and properties of the new
       # component class.
       
-      @class_parser.parse_yaml( yaml, result, current_ns )
+      @class_parser.parse_yaml( yaml, result )
       
       # Get the parent class
       if result.parent != nil

@@ -56,7 +56,6 @@ describe DefinitionHelper do
     @definition_helper = DefinitionHelper.new
     @definition_helper.definition_parser = @definition_parser
     @definition_helper.path = "test/spec/lib"
-    @definition_helper.current_ns = ["NS1"]
     
     @definition_parser.definition_helper = @definition_helper
     
@@ -76,29 +75,29 @@ describe DefinitionHelper do
   #-----------------------------------------------------------------------------
   
   it "should use the current namespace if no namespace is given" do
-    result = @definition_helper.get_class( ["TestComponent4"] )
+    result = @definition_helper.get_class( ["TestComponent4"], ["NS1"] )
     result.name.should == "TestComponent4"
   end
   
   
   it "should use the given namespace if present" do
-    result = @definition_helper.get_class( ["NS2", "TestComponent6"] )
+    result = @definition_helper.get_class( ["NS2", "TestComponent6"], ["NS1"] )
     result.name.should == "TestComponent6"
   end
   
   
   it "should return classes that have already been loaded" do
-    result = @definition_helper.get_class( ["TestComponent4"] )
+    result = @definition_helper.get_class( ["TestComponent4"], ["NS1"] )
     result.name.should == "TestComponent4"
     
-    result2 = @definition_helper.get_class( ["TestComponent4"] )
+    result2 = @definition_helper.get_class( ["TestComponent4"], ["NS1"] )
     result2.should == result
   end
   
   
   it "should fail if it can't find the class definition" do
     begin
-      result = @definition_helper.get_class( ["TestComponent7"] )
+      result = @definition_helper.get_class( ["TestComponent7"], ["NS1"] )
     rescue Exceptions::DefinitionUnavailable
       success = true
     end
@@ -108,12 +107,12 @@ describe DefinitionHelper do
   
   
   it "should be able to handle recursive classes" do
-    result = @definition_helper.get_class( ["TestComponent8"] )
+    result = @definition_helper.get_class( ["TestComponent8"], ["NS1"] )
     result.is_a?( ComponentClass ).should == true
     result.name.should == "TestComponent8"
     result.parent.should == result
     
-    result = @definition_helper.get_class( ["TestComponent9"] )
+    result = @definition_helper.get_class( ["TestComponent9"], ["NS1"] )
     result.is_a?( ComponentClass ).should == true
     result.name.should == "TestComponent9"
     result.parent.is_a?( ComponentClass ).should == true
@@ -124,7 +123,7 @@ describe DefinitionHelper do
   
   it "should fail if the definition's class name doesn't match its filename" do
     begin
-      result = @definition_helper.get_class( ["TestComponent11"] )
+      result = @definition_helper.get_class( ["TestComponent11"], ["NS1"] )
     rescue Exceptions::DefinitionMalformed
       success = true
     end

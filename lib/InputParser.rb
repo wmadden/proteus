@@ -84,7 +84,7 @@ module Proteus
           return parse_yaml_map( yaml, current_ns )
         
         when yaml.nil?:
-          return parse_yaml_nil( current_ns )
+          return parse_yaml_nil()
           
         else
           return parse_yaml_scalar( yaml, current_ns )
@@ -221,13 +221,13 @@ module Proteus
       result = ComponentInstance.new
       
       # Parse the id for namespaces and type
-      class_path = parse_component_id( component_id, current_ns )
+      class_path = parse_component_id( component_id )
       
       # Get the class of the component
       result.kind = @definition_helper.get_class( class_path )
       
       # Parse the YAML into the instance
-      @instance_parser.parse_yaml( yaml, result, current_ns )
+      @instance_parser.parse_yaml( yaml, result )
       
       # Parse the values of the instance
       parse_instance( result, current_ns )
