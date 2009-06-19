@@ -73,7 +73,7 @@ module Proteus
     # 
     # Parses yaml and returns the document tree.
     # 
-    def parse_yaml( yaml, current_ns )
+    def parse_yaml( yaml, current_ns = nil )
       
       case
         when yaml.is_a?( Array ):
@@ -99,7 +99,7 @@ module Proteus
     #
     # Parses the values of a component instance.
     #
-    def parse_instance( instance, current_ns )
+    def parse_instance( instance, current_ns = nil )
     
       # Parse its properties
       for property in instance.properties

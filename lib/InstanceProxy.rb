@@ -41,7 +41,7 @@ module Proteus
       @instance = instance
       
       @kind = @instance.kind
-      @properties = @instance.properties
+      @properties = @instance.final_properties
       @props = PropertyHash.new( @properties, @renderer )
       @children = @instance.children
     end

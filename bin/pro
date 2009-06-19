@@ -118,7 +118,6 @@ parse_command_line
 facade = Facade.new
 
 facade.path = @path
-facade.current_ns = @current_ns
 
 # Initialize renderer
 renderer = TemplateRenderer.new
@@ -136,7 +135,7 @@ if not @inline
   
   file = ARGV[0]
   
-  tree = facade.parse_file( file )
+  tree = facade.parse_file( file, @current_ns )
   
   puts renderer.render( tree )
   
@@ -158,17 +157,19 @@ else
   class_path = facade.input_parser.parse_component_id( component_id )
   
   begin
-    component_class = facade.definition_helper.get_class( class_path )
+    component_class = facade.definition_helper.get_class( class_path,
+      @current_ns )
   rescue Exceptions::DefinitionUnavailable
     exit_error( "Error: no definition found for '" + component_id + "'." )
   end
   
-  component_children = facade.input_parser.parse_yaml( component_children )
+  component_children = facade.input_parser.parse_yaml( component_children,
+    @current_ns )
   
   instance = ComponentInstance.new( component_class, component_properties,
     component_children )
   
-  facade.input_parser.parse_instance( instance )
+  facade.input_parser.parse_instance( instance, @current_ns )
   
   puts renderer.render( instance )
   
