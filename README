@@ -1,46 +1,77 @@
-Welcome to Proteus.
+                              
+                              
+                              
+                              Welcome to Proteus
+                              
+                              
 
-Proteus is an abstraction of general document definition and display markup whereby
-simple patterns of structured content can be created, mixed and reused.
+Proteus is an abstraction of general document definition and display markup that
+allows you to create and reuse complex patterns of structured content.
+
+The purpose of Proteus is to allow you to describe documents in terms of their
+content, abstracting away from the often cumbersome markup or syntax of its
+native form (for example in HTML).
+
 
 Project Goals:
+
   1. Content-orientation: we should be describing content, not the structure
-     used to display it
-  2. Human-readability: it should be easy for a human to write documents, and
-     hence easy to maintain them
-  3. Implementation independence: since we're content-oriented, it should be
-     possible to output HAML, or XML, or plain-text instead of hardwired XHTML
-  4. Extensibility: it should be possible to easily extend the solution to
-     handle new behaviour, as it is required
+     used to display it.
+  2. Human-readability: it should be easy for a human to write and maintain
+     documents.
+  3. Flexibility: it should be easy to adapt the solution to solve a wide
+     variety of problems.
+  4. Extensibility: it should be easy to change the behaviour of the system as
+     it is required.
+
 
 For Users:
-  Proteus works by interpreting document definitions in YAML, for example:
 
-    Form:
-        - Control:
-            name: name
-        - Control:
-            name: age
-        - Control:
-            name: gender
-            type: select
-            options:
-              - male
-              - female
+Proteus works by interpreting document definitions in YAML, for example:
 
-Each camelcase node indicates a "component" - an abstract part of the document,
-usually with a specific purpose, and which displays in a unique way. In the
-above example, the "Form" and "Control" nodes indicate components, the rest of
-the information describes those components.
+   Form:
+       - Control:
+           name: name
+       - Control:
+           name: age
+       - Control:
+           name: gender
+           type: select
+           options:
+             - male
+             - female
 
-More information is available on the Proteus website (or will be soon),
+Each camelcase node indicates a "component" - a piece of content which displays
+in a unique way. In the above example, the "Form" and "Control" nodes are
+components and the rest of the information describes those components.
+
+
+For Developers:
+
+Proteus provides a simple system for describing new component types that
+permits inheritance and composition of existing types, again in human readable
+syntax. This allows users to create custom languages from existing components
+quickly and easily.
+
+
+The Name:
+
+In Greek mythology, Proteus is an early sea-god who can foretell the future
+and change his shape. From this feature of Proteus comes the adjective protean,
+with the general meaning of "versatile", "mutable", "capable of assuming many
+forms". -- Wikipedia
+
+
+Homepage:
+
+More information is available on the Proteus website,
     
     proteus.rubyforge.org
 
-For Developers:
-  Reference documentation and further information is available at
-  
-    proteus.rubyforge.org
+or on Github,
+
+    github.com/wmadden/proteus
+
 
 Licensing:
   Proteus is free software: you can redistribute it and/or modify it under the
@@ -48,9 +79,9 @@ terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
 version.
 
-Proteus is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-PURPOSE.  See the GNU General Public License for more details.
+Proteus is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 Proteus.  If not, see <http://www.gnu.org/licenses/>.
