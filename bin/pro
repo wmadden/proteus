@@ -30,7 +30,7 @@ require 'exceptions.rb'
 
 include Proteus
 
-VERSION = "v0.9.0"
+PROTEUS_VERSION = "v0.9.0"
 
 USAGE =
 """
@@ -93,7 +93,7 @@ def parse_command_line
       when '--no-current', '-C'
         @exclude_current = true
       when '--version', '-V'
-        puts( VERSION )
+        puts( PROTEUS_VERSION )
         exit( 0 )
     end
   end
