@@ -118,7 +118,7 @@ end
   [ '--inline', '-i', GetoptLong::NO_ARGUMENT ],
   [ '--props', '-P', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ],
-  [ '--no-current', '-C', GetoptLong::NO_ARGUMENT ]
+  [ '--no-current', '-C', GetoptLong::NO_ARGUMENT ],
   [ '--version', '-V', GetoptLong::NO_ARGUMENT ]
 )
 
