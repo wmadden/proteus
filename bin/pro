@@ -30,6 +30,7 @@ require 'exceptions.rb'
 
 include Proteus
 
+VERSION = "v0.9.0"
 
 USAGE =
 """
@@ -89,6 +90,11 @@ def parse_command_line
         @path = arg
       when '--namespace', '-n'
         @current_ns = arg
+      when '--no-current', '-C'
+        @exclude_current = true
+      when '--version', '-V'
+        puts( VERSION )
+        exit( 0 )
     end
   end
 
@@ -113,6 +119,7 @@ end
   [ '--props', '-P', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--no-current', '-C', GetoptLong::NO_ARGUMENT ]
+  [ '--version', '-V', GetoptLong::NO_ARGUMENT ]
 )
 
 # Parse command line
