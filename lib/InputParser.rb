@@ -20,7 +20,6 @@
 # Proteus.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-
 require File.expand_path( File.join(File.dirname(__FILE__), 'DefinitionHelper.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
 require File.expand_path( File.join(File.dirname(__FILE__), 'InstanceParser.rb') )

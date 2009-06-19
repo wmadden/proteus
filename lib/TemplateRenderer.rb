@@ -20,7 +20,6 @@
 # Proteus.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-
 require 'erb'
 
 require File.expand_path( File.join(File.dirname(__FILE__), 'ComponentInstance.rb') )
