@@ -32,7 +32,7 @@ spec.name = 'proteus'
 
 spec.version = '0.9.0'
 
-spec.executables << 'proteus'
+spec.executables << 'pro'
 
 spec.has_rdoc = true
 
