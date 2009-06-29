@@ -33,7 +33,7 @@ module Proteus
   class ClassParser
     
     # The regex for valid class names
-    @@CLASS_RE = /^([A-Z][a-zA-Z_0-9]*)(?:[\s]*<[\s]*([A-Z][a-zA-Z_0-9]*))?$/
+    @@CLASS_RE = /^([A-Z][a-zA-Z0-9_]*)(?:[\s]*<[\s]*((?:[a-zA-Z0-9_]+:)*[A-Z][a-zA-Z0-9_]*))?$/
     @@CHILDREN = "children"
     
     #---------------------------------------------------------------------------
