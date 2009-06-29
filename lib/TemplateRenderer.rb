@@ -50,7 +50,7 @@ module Proteus
       
       case
         when tree.is_a?( ComponentInstance ):
-          return render_instance( tree, binding )
+          return render_instance( tree )
         
         when tree.is_a?( Array ):
           return render_array( tree, binding )
