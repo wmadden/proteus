@@ -124,7 +124,7 @@ module Proteus
       if template != nil
         proxy = InstanceProxy.new( self, instance )
         
-        e = ERB.new( template )
+        e = ERB.new( template, nil, '>' )
         result = e.result( proxy.instance_env() )
       end
       
