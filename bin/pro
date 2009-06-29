@@ -91,7 +91,7 @@ def parse_command_line
       when '--path', '-p'
         @path = arg
       when '--namespace', '-n'
-        @current_ns = arg
+        @current_ns = arg.split(':')
       when '--no-current', '-C'
         @exclude_current = true
       when '--version', '-V'
