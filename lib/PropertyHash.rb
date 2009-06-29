@@ -55,6 +55,12 @@ module Proteus
     #
     def []( val )
       result = super[val]
+      
+      # Return nil immediately for convenience
+      if result.nil?
+        return nil
+      end
+      
       return @instance_proxy.render( result )
     end
     
