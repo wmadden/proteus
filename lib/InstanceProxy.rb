@@ -85,7 +85,7 @@ module Proteus
         return @renderer.render( @children[0] )
       end
       
-      @last_child = children[ @_last_child_index ]
+      @last_child = @children[ @_last_child_index ]
       @_last_child_index += 1
       
       return @renderer.render( @children[@_last_child_index], self )
