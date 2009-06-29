@@ -30,4 +30,8 @@ task :doc do |t|
   `rdoc -aUd src/ -o doc/api`
 end
 
+task :install do
+  `cp -R lib /usr/lib/ruby/gems/1.8/gems/proteus-0.9.0/`
+end
+
 task :default => [:spec, :features, :verify_rcov]
