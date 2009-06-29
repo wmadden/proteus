@@ -60,7 +60,7 @@ module Proteus
     # Merges the component's properties with the class's and returns the result.
     #
     def final_properties
-      return kind.properties.merge( @properties )
+      return kind.final_properties.merge( @properties )
     end
     
     #

@@ -44,25 +44,25 @@ module Proteus
   public
     
     #
-    # Renders a document tree.
+    # Renders a document tree (optionally in the given scope).
     #
-    def render( tree )
+    def render( tree, binding = nil )
       
       case
         when tree.is_a?( ComponentInstance ):
-          return render_instance( tree )
+          return render_instance( tree, binding )
         
         when tree.is_a?( Array ):
-          return render_array( tree )
+          return render_array( tree, binding )
           
         when tree.is_a?( Hash ):
-          return render_hash( tree )
+          return render_hash( tree, binding )
         
         when tree.nil?:
           return ''
           
         else
-          return render_scalar( tree )
+          return render_scalar( tree, binding )
       end
       
     end
@@ -72,10 +72,10 @@ module Proteus
     #
     # Renders a hash.
     #
-    def render_hash( hash )
+    def render_hash( hash, binding )
       
       for pair in hash
-        hash[ pair[0] ] = render( pair[1] )
+        hash[ pair[0] ] = render( pair[1], binding )
       end
       
       return hash.to_s
@@ -85,12 +85,12 @@ module Proteus
     #
     # Renders an array.
     #
-    def render_array( array )
+    def render_array( array, binding )
       
       result = ''
       
       array.each do |elem|
-        result += render( elem )
+        result += render( elem, binding )
       end
       
       return result
@@ -100,12 +100,21 @@ module Proteus
     #
     # Renders a scalar.
     #
-    def render_scalar( scalar )
-      return scalar.to_s
+    def render_scalar( scalar, binding )
+      e = ERB.new( scalar.to_s )
+      
+      if binding.nil?
+        return e.result()
+      end
+      
+      return e.result( binding )
     end
     
     #
     # Renders an instance.
+    #
+    # Unlike its siblings, this method does not accept a binding, instead using
+    # the scope of the given instance.
     #
     def render_instance( instance )
       

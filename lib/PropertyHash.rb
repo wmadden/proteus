@@ -36,9 +36,9 @@ module Proteus
     #  
     #---------------------------------------------------------------------------
     
-    def initialize( properties, renderer )
+    def initialize( properties, instance_proxy )
       super( properties )
-      @renderer = renderer
+      @instance_proxy = instance_proxy
     end
     
     #---------------------------------------------------------------------------
@@ -55,7 +55,7 @@ module Proteus
     #
     def []( val )
       result = super[val]
-      return @renderer.render( result )
+      return @instance_proxy.render( result )
     end
     
   end

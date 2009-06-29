@@ -42,7 +42,7 @@ module Proteus
       
       @kind = @instance.kind
       @properties = @instance.final_properties
-      @props = PropertyHash.new( @properties, @renderer )
+      @props = PropertyHash.new( @properties, self )
       @children = @instance.children
     end
     
@@ -55,6 +55,13 @@ module Proteus
   public
     
     #
+    # Renders the target in the scope of the proxy.
+    #
+    def render( target )
+      @renderer.render( target, instance_env() )
+    end
+    
+    #
     # Returns the binding in the scope of the proxy instance.
     #
     def instance_env( )
@@ -65,7 +72,7 @@ module Proteus
     # Redirects missing method calls to the property hash.
     #
     def method_missing(m, *args)
-      @props[ m.to_s ]
+      return @props[ m.to_s ]
     end
     
     #
@@ -75,13 +82,13 @@ module Proteus
       if @_last_child_index.nil?
         @last_child = nil
         @_last_child_index = 0
-        return renderer.render( children[0] )
+        return @renderer.render( @children[0] )
       end
       
       @last_child = children[ @_last_child_index ]
       @_last_child_index += 1
       
-      return renderer.render( children[ @_last_child_index ] )
+      return @renderer.render( @children[@_last_child_index], self )
     end
     
   end

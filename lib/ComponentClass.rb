@@ -45,6 +45,23 @@ module Proteus
     
     attr_accessor :name, :namespace, :parent, :properties, :children
     
+    #---------------------------------------------------------------------------
+    #  
+    #  Methods
+    #  
+    #---------------------------------------------------------------------------
+    
+    #
+    # Merges the class's properties with its parent's and returns the result.
+    #
+    def final_properties
+      if parent.nil?
+        return @properties
+      end
+      
+      return @parent.final_properties.merge( @properties )
+    end
+    
   end
   
 end

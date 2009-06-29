@@ -99,6 +99,9 @@ module Proteus
           current_ns )
       end
       
+      # Set result namespace
+      result.namespace = current_ns || []
+      
       return result
     end
     
