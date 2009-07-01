@@ -104,7 +104,16 @@ module Proteus
       e = ERB.new( scalar.to_s )
       
       if binding.nil?
-        return e.result()
+        begin
+          return e.result()
+        rescue => e
+          if e.is_a? Exceptions::RenderError
+            raise e
+          end
+          
+          raise Exceptions::RenderError,
+            "Error while rendering " + instance.inspect + ": " + e.message
+        end
       end
       
       return e.result( binding )
@@ -125,7 +134,19 @@ module Proteus
         proxy = InstanceProxy.new( self, instance )
         
         e = ERB.new( template, nil, '>' )
-        result = e.result( proxy.instance_env() )
+        
+        begin
+          result = e.result( proxy.instance_env() )
+        rescue => e
+          if e.is_a? Exceptions::RenderError
+            raise e
+          end
+          
+          raise Exceptions::RenderError,
+            "Error while rendering " + instance.kind.name + ":\n" + e.message +
+              "\n\t" + e.backtrace.join("\n\t") +
+              "\nComponent:\n\t" + instance.inspect
+        end
       end
       
       return result

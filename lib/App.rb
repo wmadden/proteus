@@ -199,7 +199,12 @@ module Proteus
       tree = @facade.parse_file( file, ns )
       
       # Render the document tree
-      result = @renderer.render( tree )
+      begin
+        result = @renderer.render( tree )
+      rescue Exceptions::RenderError => e
+        puts e
+        exit( 1 )
+      end
       
       if output_path and not @to_stdout
         puts( "Writing to " + output_path ) if @verbose
@@ -217,13 +222,15 @@ module Proteus
       
       class_path = @facade.input_parser.parse_component_id( component_id )
       
+      puts( "Component id = " + component_id.inspect ) if @verbose
+      puts( "Class path = " + class_path.inspect ) if @verbose
       puts( "Using namespace " + @current_ns.inspect ) if @verbose
       
       begin
         component_class = facade.definition_helper.get_class( class_path,
           @current_ns )
-      rescue Exceptions::DefinitionUnavailable
-        exit_error( "Error: no definition found for '" + component_id + "'." )
+      rescue Exceptions::DefinitionUnavailable => e
+        exit_error( e )
       end
       
       component_children = facade.input_parser.parse_yaml( component_children,
@@ -234,7 +241,12 @@ module Proteus
       
       facade.input_parser.parse_instance( instance, @current_ns )
       
-      puts renderer.render( instance )
+      begin
+        puts renderer.render( instance )
+      rescue Exceptions::RenderError => e
+        puts e
+        exit( 1 )
+      end
       
     end
     
