@@ -68,7 +68,11 @@ module Proteus
     
     --no-current, -C      Don't add current directory to path.
     
-    --version, -V         Output version."""
+    --version, -V         Output version.
+    
+    --ignore-extension,   Ignore the extension, if any. By default this will be
+    -E                    interpreted as the default namespace (appended to any
+                          specified)."""
     
     PATH_ENV_VAR = 'PROTEUS_PATH'
     
@@ -85,6 +89,7 @@ module Proteus
       @props = {}
       @current_ns = []
       @exclude_current = false
+      @ignore_extension = false
       
       # Valid options
       @opts = GetoptLong.new(
@@ -94,7 +99,8 @@ module Proteus
         [ '--props', '-P', GetoptLong::REQUIRED_ARGUMENT ],
         [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ],
         [ '--no-current', '-C', GetoptLong::NO_ARGUMENT ],
-        [ '--version', '-V', GetoptLong::NO_ARGUMENT ]
+        [ '--version', '-V', GetoptLong::NO_ARGUMENT ],
+        [ '--ignore-extension', '-E', GetoptLong::NO_ARGUMENT ]
       )
 
       # Parse command line
@@ -166,15 +172,26 @@ module Proteus
     #
     def parse_file( file )
       
+      # If the file ends in '.pro', infer the current namespace from the file and
+      # output to the filename minus the '.pro'
+      if /(.*)\.pro/ === file
+        output_path = $1
+        
+        if not @ignore_extension
+          # Take the second last extension
+          new_ns = output_path.split('.')
+          new_ns = new_ns.length > 1 ? [new_ns.last] : nil
+        end
+      end
+      
       # Parse the document
-      tree = @facade.parse_file( file, @current_ns )
+      tree = @facade.parse_file( file, @current_ns.concat(new_ns || []) )
       
       # Render the document tree
       result = @renderer.render( tree )
       
-      # If the filename ends in .pro, output to that file (minus the '.pro')
-      if file.match( /(.*)\.pro/ )
-        File.new( $1 ) << result
+      if output_path
+        File.new( output_path, 'w' ) << result
       else
         puts result
       end
@@ -255,6 +272,8 @@ module Proteus
             @current_ns = arg.split(':')
           when '--no-current', '-C'
             @exclude_current = true
+          when '--ignore-extension', '-E'
+            @ignore_extension = true
           when '--version', '-V'
             puts( PROTEUS_VERSION )
             exit( 0 )
