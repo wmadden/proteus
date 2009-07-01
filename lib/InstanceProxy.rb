@@ -66,8 +66,21 @@ module Proteus
     
     #
     # Renders the target in the scope of the proxy.
+    # 
+    # If the target is a component instance and the properties and children
+    # parameters are provided, they will be used in place of the target's
+    # initial properties and children.
     #
-    def render( target )
+    def render( target, properties = nil, children = nil )
+      if target.is_a? ComponentInstance
+        if not properties.nil?
+          target.properties.merge!( properties )
+        end
+        if not children.nil?
+          target.children = children
+        end
+      end
+      
       @renderer.render( target, instance_env() )
     end
     
