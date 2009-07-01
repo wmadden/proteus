@@ -237,5 +237,4 @@ module Proteus
     end
     
   end
-  
 end
