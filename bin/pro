@@ -48,6 +48,7 @@ USAGE =
                          
     --path, -p            Sets the path to search for component definitions.
                           Defaults to /usr/lib/proteus.
+                          (If omitted, prints path and exits.)
                           
     --props, -P           Sets the properties for an inline component.
     
@@ -89,7 +90,12 @@ def parse_command_line
       when '--props', '-P'
         @props = parse_props( arg )
       when '--path', '-p'
-        @path = arg
+        if arg and arg != ''
+          @path = arg
+        else
+          puts @path
+          exit( 0 )
+        end
       when '--namespace', '-n'
         @current_ns = arg.split(':')
       when '--no-current', '-C'
@@ -116,7 +122,7 @@ end
 # Valid options
 @opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
-  [ '--path', '-p', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--path', '-p', GetoptLong::OPTIONAL_ARGUMENT ],
   [ '--inline', '-i', GetoptLong::NO_ARGUMENT ],
   [ '--props', '-P', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ],
