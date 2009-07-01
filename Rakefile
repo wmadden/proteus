@@ -32,6 +32,7 @@ end
 
 task :install do
   `cp -R lib /usr/lib/ruby/gems/1.8/gems/proteus-0.9.0/`
+  `cp bin/pro /usr/bin`
 end
 
 task :default => [:spec, :features, :verify_rcov]
