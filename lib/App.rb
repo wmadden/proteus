@@ -54,25 +54,28 @@ module Proteus
   
   Options:
     --help, -h            Display this message.
-                         
+                          
     --inline, -i          Parse inline. Takes component information on the
                           command line and outputs the rendered component
                           instance.
-                         
+                          
     --path, -p            Sets the path to search for component definitions.
                           Defaults to /usr/lib/proteus.
                           (If omitted, prints path and exits.)
                           
     --props, -P           Sets the properties for an inline component.
                           (e.g. `--props p1=v1,p2=v2,p3=v3`)
-    
+                          
     --no-current, -C      Don't add current directory to path.
-    
+                          
     --version, -V         Output version.
-    
+                          
     --ignore-extension,   Ignore the extension, if any. By default this will be
     -E                    interpreted as the default namespace (appended to any
-                          specified)."""
+                          specified).
+                          
+    --to-stdout           Outputs to stdout where it would otherwise output to
+                          file."""
     
     PATH_ENV_VAR = 'PROTEUS_PATH'
     
@@ -90,6 +93,8 @@ module Proteus
       @current_ns = []
       @exclude_current = false
       @ignore_extension = false
+      @to_stdout = false
+      @verbose = false
       
       # Valid options
       @opts = GetoptLong.new(
@@ -100,7 +105,9 @@ module Proteus
         [ '--namespace', '-n', GetoptLong::REQUIRED_ARGUMENT ],
         [ '--no-current', '-C', GetoptLong::NO_ARGUMENT ],
         [ '--version', '-V', GetoptLong::NO_ARGUMENT ],
-        [ '--ignore-extension', '-E', GetoptLong::NO_ARGUMENT ]
+        [ '--ignore-extension', '-E', GetoptLong::NO_ARGUMENT ],
+        [ '--to-stdout', GetoptLong::NO_ARGUMENT ],
+        [ '--verbose', '-v', GetoptLong::NO_ARGUMENT ]
       )
 
       # Parse command line
@@ -184,13 +191,18 @@ module Proteus
         end
       end
       
+      ns = @current_ns.concat(new_ns || [])
+      
+      puts( "Using namespace " + ns.inspect ) if @verbose
+      
       # Parse the document
-      tree = @facade.parse_file( file, @current_ns.concat(new_ns || []) )
+      tree = @facade.parse_file( file, ns )
       
       # Render the document tree
       result = @renderer.render( tree )
       
-      if output_path
+      if output_path and not @to_stdout
+        puts( "Writing to " + output_path ) if @verbose
         File.new( output_path, 'w' ) << result
       else
         puts result
@@ -204,6 +216,8 @@ module Proteus
     def parse_inline( component_id, component_properties, component_children )
       
       class_path = @facade.input_parser.parse_component_id( component_id )
+      
+      puts( "Using namespace " + @current_ns.inspect ) if @verbose
       
       begin
         component_class = facade.definition_helper.get_class( class_path,
@@ -274,6 +288,10 @@ module Proteus
             @exclude_current = true
           when '--ignore-extension', '-E'
             @ignore_extension = true
+          when '--to-stdout'
+            @to_stdout = true
+          when '--verbose', '-v'
+            @verbose = true
           when '--version', '-V'
             puts( PROTEUS_VERSION )
             exit( 0 )
