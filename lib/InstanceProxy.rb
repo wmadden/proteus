@@ -99,19 +99,26 @@ module Proteus
     end
     
     #
-    # Returns the next child, or nil.
+    # Renders and returns the next child.
     #
     def next_child
+      return @renderer.render( _next_child(), instance_env() )
+    end
+    
+    #
+    # Returns the next child, or nil.
+    #
+    def _next_child
       if @_last_child_index.nil?
         @last_child = nil
         @_last_child_index = 0
-        return @renderer.render( @children[0] )
+        return @children[ 0 ]
       end
       
       @last_child = @children[ @_last_child_index ]
       @_last_child_index += 1
       
-      return @renderer.render( @children[@_last_child_index], instance_env() )
+      return @children[ @_last_child_index ]
     end
     
     #
@@ -119,7 +126,8 @@ module Proteus
     # next_child.
     #
     def remaining_children
-      return @children.slice( @_last_child_index..-1 ) || []
+      i = (@_last_child_index || 0) + 1
+      return @children.slice( i..-1 ) || []
     end
     
   end
