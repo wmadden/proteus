@@ -114,6 +114,14 @@ module Proteus
       return @renderer.render( @children[@_last_child_index], self )
     end
     
+    #
+    # Returns the remaining children (that have not been accessed using
+    # next_child.
+    #
+    def remaining_children
+      return @children.slice( @_last_child_index..-1 ) || []
+    end
+    
   end
 
 end
