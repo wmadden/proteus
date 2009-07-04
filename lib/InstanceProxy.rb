@@ -111,7 +111,7 @@ module Proteus
       @last_child = @children[ @_last_child_index ]
       @_last_child_index += 1
       
-      return @renderer.render( @children[@_last_child_index], self )
+      return @renderer.render( @children[@_last_child_index], instance_env() )
     end
     
     #

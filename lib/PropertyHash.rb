@@ -61,7 +61,7 @@ module Proteus
         return nil
       end
       
-      return @instance_proxy.render( result )
+      return @instance_proxy.render( result, @instance_proxy.instance_env() )
     end
     
   end

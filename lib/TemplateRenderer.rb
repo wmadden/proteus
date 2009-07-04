@@ -101,7 +101,7 @@ module Proteus
     # Renders a scalar.
     #
     def render_scalar( scalar, binding )
-      e = ERB.new( scalar.to_s )
+      e = ERB.new( scalar.to_s, nil, '-' )
       
       if binding.nil?
         begin
@@ -112,11 +112,24 @@ module Proteus
           end
           
           raise Exceptions::RenderError,
-            "Error while rendering " + instance.inspect + ": " + e.message
+            "Error while rendering scalar:\n" + e.message +
+              "\n\t" + e.backtrace.join("\n\t") +
+              "\nScalar:\n\t" + scalar.inspect
         end
       end
       
-      return e.result( binding )
+      begin
+        return e.result( binding )
+      rescue => e
+        if e.is_a? Exceptions::RenderError
+          raise e
+        end
+        
+        raise Exceptions::RenderError,
+          "Error while rendering scalar:\n" + e.message +
+            "\n\t" + e.backtrace.join("\n\t") +
+            "\nScalar:\n\t" + scalar.inspect
+      end
     end
     
     #
@@ -133,7 +146,7 @@ module Proteus
       if template != nil
         proxy = InstanceProxy.new( self, instance )
         
-        e = ERB.new( template, nil, '>' )
+        e = ERB.new( template, nil, '-' )
         
         begin
           result = e.result( proxy.instance_env() )
@@ -143,7 +156,7 @@ module Proteus
           end
           
           raise Exceptions::RenderError,
-            "Error while rendering " + instance.kind.name + ":\n" + e.message +
+            "Error while rendering " + instance.kind.name + " component:\n" + e.message +
               "\n\t" + e.backtrace.join("\n\t") +
               "\nComponent:\n\t" + instance.inspect
         end
