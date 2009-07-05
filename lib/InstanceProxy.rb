@@ -92,10 +92,21 @@ module Proteus
     end
     
     #
-    # Redirects missing method calls to the property hash.
+    # Redirects missing method calls to the properties or 'props' hashes.
+    #
+    # If the method name begins with '_', redirects it to the @props hash. If it
+    # begins with '__', redirects it to the @properties hash.
     #
     def method_missing(m, *args)
-      return @props[ m.to_s ]
+      if /__.*/ === m
+        return @properties[ m ]
+      end
+      
+      if /_.*/ === m
+        return @props[ m ]
+      end
+      
+      super.method_missing( m, args )
     end
     
     #
